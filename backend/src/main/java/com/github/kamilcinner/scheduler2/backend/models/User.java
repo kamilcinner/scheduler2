@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend;
+package com.github.kamilcinner.scheduler2.backend.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

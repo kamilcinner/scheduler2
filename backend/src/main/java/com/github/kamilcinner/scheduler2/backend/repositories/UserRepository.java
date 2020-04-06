@@ -1,5 +1,6 @@
-package com.github.kamilcinner.scheduler2.backend;
+package com.github.kamilcinner.scheduler2.backend.repositories;
 
+import com.github.kamilcinner.scheduler2.backend.models.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
