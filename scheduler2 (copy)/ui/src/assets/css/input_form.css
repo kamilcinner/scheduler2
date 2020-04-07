@@ -1,0 +1,58 @@
+.form-group {
+    /*max-width: 400px !important;*/
+    margin-left: auto;
+    margin-right: auto;
+}
+.form-control {
+    /*border-color: #00a161 !important;*/
+    color: white;
+    border: none !important;
+}
+.form-control:focus {
+    /*border-color: #00a161 !important;*/
+    color: white;
+    /*box-shadow: 0 0 0 0.1rem #00a161;*/
+    border: none !important;
+    box-shadow: none !important;
+}
+.btn {
+    box-shadow: none;
+}
+.btn:focus {
+    /*color: #191d21 !important;*/
+    box-shadow: 0 0 0 0.1rem #00a161;
+}
+.btn:hover {
+    /*color: #191d21 !important;*/
+    box-shadow: 0 0 0 0.1rem #00a161;
+}
+.btn:active {
+    color: #191d21 !important;
+    box-shadow: 0 0 0 0.1rem #00a161;
+}
+.input-group-text {
+    /*border: 1px solid #00a161;*/
+    border: none;
+}
+.input-group .form-control {
+    border: none !important;
+    border-left: 1px solid #00a161 !important;
+    color: white;
+}
+.input-group .form-control:focus {
+    color: white;
+    box-shadow: none;
+}
+
+/* Custom switch */
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    border-color: #00a161;
+    background-color: #00a161;
+}
+.custom-switch .custom-control-label::after {
+    background-color: #424240;
+}
+.custom-control-label::before {
+    box-shadow: none !important;
+}
