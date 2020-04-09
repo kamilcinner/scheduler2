@@ -1,22 +1,33 @@
-import { Component } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 
-import { User } from '@app/_models';
-import { UserService} from '@app/_services';
+import { TaskService} from '@app/_services/task.service';
+import { Task } from '@app/_models';
 
-@Component({ templateUrl: 'home.component.html' })
-export class HomeComponent {
+@Component({
+  templateUrl: 'home.component.html'
+})
+export class HomeComponent implements OnInit {
+  tasks: Array<Task> = [];
   loading = false;
-  users: User[];
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private taskService: TaskService,
+  ) { }
 
-  // tslint:disable-next-line:use-lifecycle-interface
   ngOnInit() {
     this.loading = true;
-    this.userService.getAll().pipe(first()).subscribe(users => {
-      this.loading = false;
-      this.users = users;
+    // Get Tasks data from server.
+    this.taskService.getAll().subscribe(tasks => {
+      // Loop over JSON taskList.
+      for (const task of tasks) {
+        // Create new Task.
+        const t = new Task(task.id, task.name, task._links.self.href);
+        // Log.
+        console.warn('New Task', t); // TODO delete this
+        // Add Task to the tasks Array.
+        this.tasks.push(t);
+      }
     });
+    this.loading = false;
   }
 }
