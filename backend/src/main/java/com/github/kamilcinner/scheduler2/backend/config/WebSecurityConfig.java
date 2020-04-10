@@ -1,5 +1,6 @@
 package com.github.kamilcinner.scheduler2.backend.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,12 +10,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -86,11 +91,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.inMemoryAuthentication()
-                .withUser("user")
-                .password("{noop}password")
-                .roles("USER");
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
+//        builder.inMemoryAuthentication()
+//                .withUser("user")
+//                .password("{noop}password")
+//                .roles("USER");
+//    }
+
+    @Autowired
+    protected void configure(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
+        auth.jdbcAuthentication()
+                .dataSource(dataSource);
+//                .withDefaultSchema()
+//                .withUser(
+//                        User.withUsername("user")
+//                        .password("{noop}pass")
+//                        .roles("USER"));
     }
 }

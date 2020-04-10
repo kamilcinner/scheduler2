@@ -7,7 +7,7 @@ import { Task } from '@app/_models';
   templateUrl: 'home.component.html'
 })
 export class HomeComponent implements OnInit {
-  tasks: Array<Task> = [];
+  tasks: Task[] = [];
   loading = false;
 
   constructor(
@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
         // Create new Task.
         const t = new Task(task.id, task.name, task._links.self.href);
         // Log.
-        console.warn('New Task', t); // TODO delete this
+        console.warn('New Task', t); // TODH2 - default@localhostO delete this
         // Add Task to the tasks Array.
         this.tasks.push(t);
       }
