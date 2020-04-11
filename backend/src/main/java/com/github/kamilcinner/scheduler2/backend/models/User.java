@@ -4,16 +4,19 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @Entity(name = "SchedulerUser")
 public class User {
+    @NotBlank(message = "Username is mandatory")
     private @Id String username;
+
+    @NotBlank(message = "Password is mandatory")
     private String password;
-    private boolean active;
-    private String roles;
+
+    private boolean active = true;
+    private String roles = "ROLE_USER";
 
     public User() {}
 

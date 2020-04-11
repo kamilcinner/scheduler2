@@ -35,19 +35,19 @@ class TaskController {
     // Aggregate root
 
     @GetMapping("/tasks")
-    CollectionModel all() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserName = null;
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            currentUserName = authentication.getName();
-        }
+    CollectionModel all(@Nullable Principal principal) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String currentUserName = null;
+//        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+//            currentUserName = authentication.getName();
+//        }
 
-        List<EntityModel<Task>> tasks = repository.findByOwnerUsername(currentUserName).stream()
+        List<EntityModel<Task>> tasks = repository.findByOwnerUsername(principal.getName()).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
         return new CollectionModel<>(tasks,
-                linkTo(methodOn(TaskController.class).all()).withSelfRel());
+                linkTo(methodOn(TaskController.class).all(null)).withSelfRel());
     }
 
     @PostMapping("/tasks")
