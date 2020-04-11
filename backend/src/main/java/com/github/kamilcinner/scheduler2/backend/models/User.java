@@ -1,37 +1,26 @@
 package com.github.kamilcinner.scheduler2.backend.models;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
-@Entity
+@Data
+@Entity(name = "SchedulerUser")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String username;
+    private @Id String username;
     private String password;
+    private boolean active;
+    private String roles;
 
-    protected User() {}
+    public User() {}
 
-    public User(String username, String password) {
+    public User(String username, String password, boolean active, String roles) {
         this.username = username;
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "User[id=%d, username=%s",
-                id, username
-        );
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public String getUsername() {
-        return username;
+        this.active = active;
+        this.roles = roles;
     }
 }

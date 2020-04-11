@@ -6,9 +6,14 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,8 +36,13 @@ class TaskController {
 
     @GetMapping("/tasks")
     CollectionModel all() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = null;
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            currentUserName = authentication.getName();
+        }
 
-        List<EntityModel<Task>> tasks = repository.findAll().stream()
+        List<EntityModel<Task>> tasks = repository.findByOwnerUsername(currentUserName).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 

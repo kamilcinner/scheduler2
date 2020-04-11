@@ -1,6 +1,7 @@
 package com.github.kamilcinner.scheduler2.backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
@@ -29,16 +34,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private RestAuthenticationSuccessHandler authenticationSuccessHandler;
     private RestAuthenticationFailureHandler authenticationFailureHandler;
-    private final UserDetailsManager userDetailsManager;
+    private final UserDetailsService userDetailsService;
     private final String secret;
 
     public WebSecurityConfig(RestAuthenticationSuccessHandler authenticationSuccessHandler,
                           RestAuthenticationFailureHandler authenticationFailureHandler,
-                          UserDetailsManager userDetailsManager,
+                          @Qualifier("myUserDetailsService") UserDetailsService userDetailsService,
                           @Value("${jwt.secret}") String secret) {
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
-        this.userDetailsManager = userDetailsManager;
+        this.userDetailsService = userDetailsService;
         this.secret = secret;
     }
 
@@ -48,14 +53,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http
             .authorizeRequests()
-                .antMatchers("/").permitAll()
+//                .antMatchers("/").permitAll()
+                .antMatchers("/tasks").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .addFilter(authenticationFilter())
-            .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsManager, secret))
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService, secret))
             .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
     }
@@ -95,18 +101,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
 //        builder.inMemoryAuthentication()
 //                .withUser("user")
-//                .password("{noop}password")
+//                .password("{noop}pass")
+//                .roles("USER")
+//                .and()
+//                .withUser("testowo")
+//                .password("{noop}pass")
 //                .roles("USER");
 //    }
 
-    @Autowired
-    protected void configure(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource);
-//                .withDefaultSchema()
-//                .withUser(
-//                        User.withUsername("user")
-//                        .password("{noop}pass")
-//                        .roles("USER"));
+//    @Autowired
+//    protected void configure(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
+//        auth.jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .and()
+//                .userDetailsService(userDetailsService);
+////                .withDefaultSchema()
+////                .withUser(
+////                        User.withUsername("user")
+////                        .password("{noop}pass")
+////                        .roles("USER"));
+//    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
     }
+
+
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService);
+//    }
 }
