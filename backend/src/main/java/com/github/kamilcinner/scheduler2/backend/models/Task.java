@@ -1,7 +1,6 @@
 package com.github.kamilcinner.scheduler2.backend.models;
 
 import lombok.Data;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

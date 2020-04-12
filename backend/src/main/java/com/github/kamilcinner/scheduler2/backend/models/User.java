@@ -15,15 +15,19 @@ public class User {
     @NotBlank(message = "Password is mandatory")
     private String password;
 
-    private boolean active = true;
+    @NotBlank(message = "Email is mandatory")
+    private String email;
+
+    private boolean enabled = true;
     private String roles = "ROLE_USER";
 
     public User() {}
 
-    public User(String username, String password, boolean active, String roles) {
+    public User(String username, String password, String email, boolean enabled, String roles) {
         this.username = username;
         this.password = password;
-        this.active = active;
+        this.email = email;
+        this.enabled = enabled;
         this.roles = roles;
     }
 }

@@ -1,5 +1,6 @@
-package com.github.kamilcinner.scheduler2.backend.config;
+package com.github.kamilcinner.scheduler2.backend.services;
 
+import com.github.kamilcinner.scheduler2.backend.models.MyUserDetails;
 import com.github.kamilcinner.scheduler2.backend.models.User;
 import com.github.kamilcinner.scheduler2.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
 
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found" + username));
+        user.orElseThrow(() -> new UsernameNotFoundException("Not found user: " + username));
 
         return user.map(MyUserDetails::new).get();
     }
