@@ -9,7 +9,7 @@ import { appRoutingModule } from './app.routing';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
-import { RegistrationComponent } from './registration/registration.component';
+import { RegisterComponent } from './register';
 
 @NgModule({
   imports: [
@@ -22,7 +22,7 @@ import { RegistrationComponent } from './registration/registration.component';
     AppComponent,
     HomeComponent,
     LoginComponent,
-    RegistrationComponent
+    RegisterComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

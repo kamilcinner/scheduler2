@@ -15,6 +15,6 @@ class TaskModelAssembler implements RepresentationModelAssembler<Task, EntityMod
 
         return new EntityModel<>(task,
                 linkTo(methodOn(TaskController.class).one(task.getId())).withSelfRel(),
-                linkTo(methodOn(TaskController.class).all(null)).withRel("tasks"));
+                linkTo(methodOn(TaskController.class).all()).withRel("tasks"));
     }
 }
