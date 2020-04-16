@@ -36,15 +36,13 @@ public class UserController {
     ResponseEntity<String> addUser(@Valid @RequestBody User user) {
         // Check if the username is available.
         if (repository.existsById(user.getUsername())) {
-//            return ResponseEntity.badRequest().body("{ok: false, errors: \"blabla\", timestamp: \"2020-04-15T18:57:32.834+0000\", status: 400, error: \"Bad Request\", message: \"The given login is already in use\"}");
-            return ResponseEntity.badRequest().body("{\"message\":\"The given login is already in use\"}");
-//            return ResponseEntity.badRequest().body("{\"status\":400,\"error\":\"Bad Request\",\"message\":\"Validation failed for object='user'. Error count: 1\"}");
+            return ResponseEntity.badRequest().body("{\"errors\":[{\"field\":\"username\",\"defaultMessage\":\"The given login is already in use.\"}]}");
         }
 
         // Encode password and add User to database.
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
 
-        return ResponseEntity.ok("User has been created");
+        return ResponseEntity.ok("{\"message\":\"User has been created.\"}");
     }
 }

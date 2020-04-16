@@ -33,7 +33,7 @@ public class Task {
     // Is Task shared to other users.
     // Shared means that anyone (even anonymous user)
     // can see this Task by URL but can't edit it.
-    private boolean isShared = false;
+    private boolean shared = false;
 
     // Task priority.
     // h - high
@@ -44,13 +44,13 @@ public class Task {
     public Task() {}
 
     public Task(String ownerUsername, String name, Timestamp dueDateTime, String description,
-                boolean status, boolean isShared, char priority) {
+                boolean status, boolean shared, char priority) {
         this.ownerUsername = ownerUsername;
         this.name = name;
         this.dueDateTime = dueDateTime;
         this.description = description;
         this.status = status;
-        this.isShared = isShared;
+        this.shared = shared;
         this.priority = priority;
     }
 }

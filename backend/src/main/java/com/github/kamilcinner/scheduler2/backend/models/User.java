@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
@@ -16,12 +17,23 @@ public class User {
         max = 20,
         message = "Username must be between {min} and {max} characters long."
     )
+    @Pattern(regexp = "^[a-zA-Z0-9_.]+$",
+            message = "You can use only letters, numbers and _. signs."
+    )
     private @Id String username;
 
     @NotBlank(message = "Password is required.")
+    @Size(
+            min = 8,
+            max = 100,
+            message = "Password must be between {min} and {max} characters long."
+    )
     private String password;
 
     @NotBlank(message = "Email is required.")
+    @Pattern(regexp = "^[a-zA-Z0-9_.]+@[a-zA-Z0-9\\-]+\\.[a-zA-Z0-9\\-.]+$",
+            message = "Email is invalid - follow example@email.com."
+    )
     private String email;
 
     private boolean enabled = true;

@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
-import { Task } from '@app/_models';
-import {filter, map} from 'rxjs/operators';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +14,12 @@ export class TaskService {
   ) { }
 
   getAll() {
-    return this.http.get<any>(`${environment.apiUrl}/tasks`).pipe(
-      map(tasks => tasks._embedded.taskList)
+    return this.http.get<any>(`${environment.apiUrl}/tasks`)
+      .pipe(map(tasks => {
+        if (tasks._embedded && tasks._embedded.taskList) {
+          return tasks._embedded.taskList;
+        } else { return undefined; }
+      })
     );
   }
 }

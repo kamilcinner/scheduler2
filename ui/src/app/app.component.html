@@ -1,13 +1,9 @@
-<!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-  <div class="navbar-nav">
-    <a class="nav-item nav-link" routerLink="/">Home</a>
-    <a class="nav-item nav-link" routerLink="/register">Register</a>
-    <a class="nav-item nav-link" (click)="logout()">Logout</a>
-  </div>
-</nav>
+<app-top-nav></app-top-nav>
 
-<!-- main app container -->
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
+<main>
+  <div class="container my-3 min-vh-100">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+
+<app-footer></app-footer>

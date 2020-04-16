@@ -1,0 +1,28 @@
+<div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+
+<div *ngIf="tasks" class="list-group">
+  <a *ngFor="let task of tasks" class="list-group-item mb-3 list-group-item-action"
+      [ngClass]="{'bg-scheduler-dark-2 c-scheduler-white': task.priority === 'h',
+                  'bg-scheduler-light c-scheduler-dark': task.priority === 'l',
+                  'bg-scheduler-dark-3 c-scheduler-light': task.priority === 'n'}">
+
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ task.name }}</h5>
+      <small [ngClass]="{'text-danger font-weight-bold': task.isOverdue}">
+        {{ task.dueDateTime | date:'d MMM yyyy HH:mm' }}
+      </small>
+    </div>
+
+    <p class="font-weight-light mb-1">{{ task.description }}</p>
+
+    <small [ngClass]="{'font-weight-bold text-warning': task.priority === 'h',
+                       'text-muted': task.priority === 'l',
+                       'font-weight-bold': task.priority === 'n'}">
+      {{ task.get_priority_display }}
+    </small>
+
+    <p *ngIf="task.shared" class="font-weight-light my-0 text-success">Shared</p>
+    <p *ngIf="task.isOverdue" class="my-0"><strong class="text-danger"> Overdue!</strong></p>
+    <p *ngIf="!task.status" class="my-0"><strong class="text-success"> Already done!</strong></p>
+  </a>
+</div>

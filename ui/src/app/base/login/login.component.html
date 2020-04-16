@@ -1,0 +1,25 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="jumbotron py-3 bg-scheduler-dark-2">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input id="username" type="text" formControlName="username" class="form-control bg-scheduler-dark-3">
+<!--TODO: fix this      <small class="text-danger">{{ form.username.errors }}</small>-->
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" class="form-control bg-scheduler-dark-3">
+<!--TODO: fix this      <small class="text-danger">{{ form.password.errors }}</small>-->
+    </div>
+
+    <div class="form-group">
+      <button [disabled]="loading" type="submit" class="btn mb-3 bg-scheduler c-scheduler-dark">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Login
+      </button>
+      <p><a class="text-decoration-none text-muted">Lost password?</a></p>
+<!--   TODO: add password recovery method   -->
+    </div>
+
+    <small *ngIf="errors" class="text-danger">{{errors}}</small>
+  </div>
+</form>

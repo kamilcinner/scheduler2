@@ -4,19 +4,21 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '@app/_services';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
+    private router: Router,
     private authenticationService: AuthenticationService
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(catchError(err => {
       if (err.status === 401) {
-        // auto logout if 401 response returned from api
+        // Auto logout if 401 response returned from api.
         this.authenticationService.logout();
-        location.reload(true);
+        this.router.navigate(['/login']);
 
       } else if (err.status === 400) {
         const es = err.error.errors || null;
@@ -50,6 +52,9 @@ export class ErrorInterceptor implements HttpInterceptor {
 
           return throwError(errors);
         }
+      } else if (!err.status) {
+        const error = {server: 'Server connection error.'};
+        return throwError(error);
       }
 
       const error = err.error.message || err.statusText;
