@@ -15,13 +15,13 @@ import java.util.UUID;
 public class Task {
     private @Id @GeneratedValue UUID id;
 
-    // Owner username must be automatically added during Task creating.
+    // Owner username will be added during Task creating.
     private String ownerUsername;
 
-    @NotBlank(message = "Task name is mandatory")
+    @NotBlank(message = "Task name is required.")
     private String name;
 
-    @NotNull(message = "Task due date is mandatory")
+    @NotNull(message = "Task due date and time is required.")
     private Timestamp dueDateTime;
 
     // Description is optional.

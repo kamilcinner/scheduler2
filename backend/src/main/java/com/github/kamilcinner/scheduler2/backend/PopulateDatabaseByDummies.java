@@ -22,6 +22,19 @@ class PopulateDatabaseByDummies {
         return args -> {
             log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
                     Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
+            log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
+            log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
+            log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
+            log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
+            log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
+
+            log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
             log.info("Preloading " + taskRepository.save(new Task("user1", "Clean house",
                     Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", false, false, 'h')));
             log.info("Preloading " + taskRepository.save(new Task("testowo", "Gogogo VP!",
