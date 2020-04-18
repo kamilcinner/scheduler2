@@ -61,6 +61,10 @@ class TaskController {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
 
+        if (task.getOwnerUsername() != CurrentUserUsername.get()) {
+            throw new TaskNotFoundException(id);
+        }
+
         return assembler.toModel(task);
     }
 

@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '@app/_services';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -55,6 +55,8 @@ export class ErrorInterceptor implements HttpInterceptor {
       } else if (!err.status) {
         const error = {server: 'Server connection error.'};
         return throwError(error);
+      } else if (err.status === 404) {
+        this.router.navigate(['/404']);
       }
 
       const error = err.error.message || err.statusText;

@@ -12,6 +12,7 @@ export class WelcomeComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
   ) {
+    // Add username to template.
     this.username = this.authenticationService.currentUserValue.username;
   }
 

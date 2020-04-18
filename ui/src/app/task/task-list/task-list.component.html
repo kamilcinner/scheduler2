@@ -1,7 +1,7 @@
 <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
 
 <div *ngIf="tasks" class="list-group">
-  <a *ngFor="let task of tasks" class="list-group-item mb-3 list-group-item-action"
+  <a *ngFor="let task of tasks" [routerLink]="['/tasks/one', task.id]" class="list-group-item mb-3 list-group-item-action"
       [ngClass]="{'bg-scheduler-dark-2 c-scheduler-white': task.priority === 'h',
                   'bg-scheduler-light c-scheduler-dark': task.priority === 'l',
                   'bg-scheduler-dark-3 c-scheduler-light': task.priority === 'n'}">
@@ -15,14 +15,25 @@
 
     <p class="font-weight-light mb-1">{{ task.description }}</p>
 
-    <small [ngClass]="{'font-weight-bold text-warning': task.priority === 'h',
+    <small [ngClass]="{'text-warning': task.priority === 'h',
                        'text-muted': task.priority === 'l',
-                       'font-weight-bold': task.priority === 'n'}">
-      {{ task.get_priority_display }}
+                       'font-weight-bold': task.isOneOfPriorities('n', 'h')}">
+      {{ task.priorityName }}
     </small>
 
     <p *ngIf="task.shared" class="font-weight-light my-0 text-success">Shared</p>
     <p *ngIf="task.isOverdue" class="my-0"><strong class="text-danger"> Overdue!</strong></p>
-    <p *ngIf="!task.status" class="my-0"><strong class="text-success"> Already done!</strong></p>
+    <p *ngIf="task.isDone" class="my-0"><strong class="text-success"> Already done!</strong></p>
   </a>
+</div>
+
+<!--TODO: maybe simplify this-->
+<div class="jumbotron py-0 bg-scheduler">
+  <p *ngIf="tasks" class="lead text-center">That's all! Would You mind add another
+    <a class="btn py-0 my-2 bg-scheduler-dark-2 c-scheduler btn-lg" routerLink="/tasks/create" role="button">Task</a>
+  </p>
+
+  <p *ngIf="!tasks" class="lead text-center">Would You mind add your first
+    <a class="btn py-0 my-2 bg-scheduler-dark-2 c-scheduler btn-lg" routerLink="/tasks/create" role="button">Task</a>
+  </p>
 </div>

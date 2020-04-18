@@ -22,4 +22,13 @@ export class TaskService {
       })
     );
   }
+
+  getById(id) {
+    return this.http.get<any>(`${environment.apiUrl}/tasks/${id}`);
+  }
+
+  new(name: string, dueDateTime: Date, description: string, priority: string, shared: boolean) {
+    return this.http.post<any>(`${environment.apiUrl}/tasks`,
+      { name, dueDateTime, description, priority, shared });
+  }
 }

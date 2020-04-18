@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-
 
 @Configuration
 @Slf4j
@@ -23,13 +21,13 @@ class PopulateDatabaseByDummies {
     CommandLineRunner initDatabase(TaskRepository taskRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
-                    Timestamp.valueOf("2020-4-12 17:00:00"), "", true, false, 'h')));
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
             log.info("Preloading " + taskRepository.save(new Task("user1", "Clean house",
-                    Timestamp.valueOf("2020-4-12 17:00:00"), "", false, false, 'h')));
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", false, false, 'h')));
             log.info("Preloading " + taskRepository.save(new Task("testowo", "Gogogo VP!",
-                    Timestamp.valueOf("2020-4-12 17:00:00"), "", true, false, 'h')));
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
             log.info("Preloading " + taskRepository.save(new Task("testowo", "Hakuna Matata!!!",
-                    Timestamp.valueOf("2020-4-12 17:00:00"), "", false, false, 'h')));
+                    Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", false, false, 'h')));
 
             log.info("Preloading " + userRepository.save(new User("user1", passwordEncoder.encode("pass"),
                     "user@gmail.com", true, "ROLE_USER")));

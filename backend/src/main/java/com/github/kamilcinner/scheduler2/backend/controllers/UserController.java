@@ -12,14 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-class Message {
-    private String message;
-
-    Message(String message) {
-        this.message = message;
-    }
-}
-
 @RestController
 public class UserController {
     private final UserRepository repository;

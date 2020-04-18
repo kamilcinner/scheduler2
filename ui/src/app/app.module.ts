@@ -13,17 +13,18 @@ import { RegisterComponent } from './base/register';
 import { TaskListComponent } from './task/task-list';
 import { TopNavComponent } from './base/top-nav';
 import { LogoutComponent } from './base/logout';
-import {FooterComponent} from './base/footer';
+import { FooterComponent } from './base/footer';
 import { WelcomeComponent } from './base/welcome';
-import { TaskFormComponent } from './task/task-form/task-form.component';
-import { TaskDetailComponent } from './task/task-detail/task-detail.component';
+import { TaskFormComponent } from '@app/task/task-form';
+import { TaskDetailComponent } from '@app/task/task-detail';
+import { PageNotFoundComponent } from './base/page-not-found/page-not-found.component';
 
 @NgModule({
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    appRoutingModule
+    appRoutingModule,
   ],
   declarations: [
     AppComponent,
@@ -36,7 +37,8 @@ import { TaskDetailComponent } from './task/task-detail/task-detail.component';
     FooterComponent,
     WelcomeComponent,
     TaskFormComponent,
-    TaskDetailComponent
+    TaskDetailComponent,
+    PageNotFoundComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

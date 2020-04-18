@@ -23,4 +23,23 @@ export class Task {
   get isOverdue() {
     return (this.dueDateTime.getTime() < Date.now()) && this.status;
   }
+
+  get priorityName() {
+    switch (this.priority) {
+      case 'h': return 'High';
+      case 'l': return 'Low';
+      default: return 'Normal';
+    }
+  }
+
+  get isDone() {
+    return !this.status;
+  }
+
+  isOneOfPriorities(prior1: string, prior2: string) {
+    if (this.priority === prior1 || this.priority === prior2) {
+      return true;
+    }
+    return false;
+  }
 }
