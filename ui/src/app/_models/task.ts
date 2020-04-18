@@ -20,11 +20,11 @@ export class Task {
     this.selfLink = selfLink;
   }
 
-  get isOverdue() {
+  get isOverdue(): boolean {
     return (this.dueDateTime.getTime() < Date.now()) && !this.done;
   }
 
-  get priorityName() {
+  get priorityName(): string {
     switch (this.priority) {
       case 'h': return 'High';
       case 'l': return 'Low';
@@ -32,10 +32,18 @@ export class Task {
     }
   }
 
-  isOneOfPriorities(prior1: string, prior2: string) {
+  isOneOfPriorities(prior1: string, prior2: string): boolean {
     if (this.priority === prior1 || this.priority === prior2) {
       return true;
     }
     return false;
+  }
+
+  negateDone(): void {
+    this.done = !this.done;
+  }
+
+  negateShare(): void {
+    this.shared = !this.shared;
   }
 }

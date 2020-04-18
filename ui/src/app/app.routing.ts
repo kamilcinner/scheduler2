@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
 
   { path: 'tasks', canActivate: [AuthGuard], children: [
-    { path: 'all', component: TaskListComponent },
+    { path: '', component: TaskListComponent },
     { path: 'one/:id', component: TaskDetailComponent },
     { path: 'create', component: TaskFormComponent },
     { path: 'edit/:id', component: TaskFormComponent }

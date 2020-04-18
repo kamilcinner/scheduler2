@@ -1,5 +1,5 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-  <div class="jumbotron py-3 bg-scheduler-dark-2">
+  <div class="jumbotron py-3 bg-scheduler-dark-2 overlay-parent">
     <div class="form-group">
       <label for="name">Name</label>
       <input id="name" class="form-control bg-scheduler-dark-3" type="text" formControlName="name">
@@ -57,5 +57,8 @@
     </div>
 
     <small *ngIf="errors && errors.server" class="text-danger">{{ errors.server }}</small>
+    <div *ngIf="loadingForm" class="overlay bg-scheduler-dark-3">
+      <span class="spinner-border"></span>
+    </div>
   </div>
 </form>

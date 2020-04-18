@@ -2,3 +2,7 @@
 @import "assets/css/clean_links.css";
 @import "assets/css/input_form.css";
 @import "assets/css/main.css";
+
+.jumbotron {
+  border-radius: 10px;
+}
