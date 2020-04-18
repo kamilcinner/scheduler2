@@ -27,8 +27,8 @@ export class TaskService {
     return this.http.get<any>(`${environment.apiUrl}/tasks/${id}`);
   }
 
-  new(name: string, dueDateTime: Date, description: string, priority: string, shared: boolean) {
+  new(name: string, dueDateTime: Date, description: string, priority: string) {
     return this.http.post<any>(`${environment.apiUrl}/tasks`,
-      { name, dueDateTime, description, priority, shared });
+      { name, dueDateTime, description, priority });
   }
 }

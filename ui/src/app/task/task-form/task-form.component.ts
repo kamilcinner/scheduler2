@@ -29,7 +29,7 @@ export class TaskFormComponent implements OnInit {
       dueTime: formatDate(new Date(), 'HH:mm', 'en-US'),
       description: '',
       priority: 'n',
-      status: '',
+      done: false,
       shared: false
     });
   }
@@ -49,12 +49,11 @@ export class TaskFormComponent implements OnInit {
       this.f.name.value,
       new Date(this.f.dueDate.value + ' ' + this.f.dueTime.value),
       this.f.description.value,
-      this.f.priority.value,
-      this.f.shared.value
+      this.f.priority.value
     ).subscribe(
       task => {
         if (task) {
-          this.router.navigate(['/tasks', task.id]);
+          this.router.navigate(['/tasks/one', task.id]);
         } else {
           alert('Something went wrong.');
         }

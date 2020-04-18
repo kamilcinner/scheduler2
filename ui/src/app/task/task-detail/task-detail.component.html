@@ -9,7 +9,7 @@
 
   <p *ngIf="task.isOverdue" class="my-0"><strong class="text-danger"> Overdue!</strong></p>
 
-  <p *ngIf="task.isDone" class="my-0"><strong class="text-success"> Already done!</strong></p>
+  <p *ngIf="task.done" class="my-0"><strong class="text-success"> Already done!</strong></p>
 
   <hr class="my-4" [ngClass]="{'bg-scheduler-light': task.priority === 'h',
                                'bg-scheduler-dark-3': task.priority === 'l',
@@ -54,7 +54,7 @@
     <a class="btn c-scheduler btn-lg" role="button" [routerLink]="['/tasks/mark', task.id]"
        [ngClass]="{'bg-scheduler-dark-2': task.priority === 'n',
                     'bg-scheduler-dark-3': task.isOneOfPriorities('l', 'h')}"
-       [ngSwitch]="task.isDone">
+       [ngSwitch]="task.done">
 
       <div *ngSwitchCase="true">Undone</div>
       <div *ngSwitchDefault>Mark done</div>

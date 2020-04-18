@@ -61,7 +61,7 @@ class TaskController {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
 
-        if (task.getOwnerUsername() != CurrentUserUsername.get()) {
+        if (!task.getOwnerUsername().equals(CurrentUserUsername.get())) {
             throw new TaskNotFoundException(id);
         }
 

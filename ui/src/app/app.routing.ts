@@ -19,7 +19,7 @@ const routes: Routes = [
     { path: 'all', component: TaskListComponent },
     { path: 'one/:id', component: TaskDetailComponent },
     { path: 'create', component: TaskFormComponent },
-    { path: 'update/:id', component: TaskFormComponent }
+    { path: 'edit/:id', component: TaskFormComponent }
   ]},
 
   { path: '', component: HomeComponent },

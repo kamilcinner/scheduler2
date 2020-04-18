@@ -27,8 +27,8 @@ public class Task {
     // Description is optional.
     private String description = "";
 
-    // Status means that is Task active (ongoing).
-    private boolean status = true;
+    // Done means that is Task inactive (already done).
+    private boolean done = false;
 
     // Is Task shared to other users.
     // Shared means that anyone (even anonymous user)
@@ -44,12 +44,12 @@ public class Task {
     public Task() {}
 
     public Task(String ownerUsername, String name, Timestamp dueDateTime, String description,
-                boolean status, boolean shared, char priority) {
+                boolean done, boolean shared, char priority) {
         this.ownerUsername = ownerUsername;
         this.name = name;
         this.dueDateTime = dueDateTime;
         this.description = description;
-        this.status = status;
+        this.done = done;
         this.shared = shared;
         this.priority = priority;
     }

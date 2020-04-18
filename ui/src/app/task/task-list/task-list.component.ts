@@ -29,7 +29,7 @@ export class TaskListComponent implements OnInit {
         for (const task of tasks) {
           // Create new Task.
           const newTask = new Task(task.id, task.name, new Date(task.dueDateTime),
-            task.description, task.priority, task.status, task.shared,
+            task.description, task.priority, task.done, task.shared,
             task._links.self.href);
 
           // Log.

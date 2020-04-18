@@ -32,7 +32,7 @@ export class TaskDetailComponent implements OnInit {
       if (task) {
         // Create new Task.
         this.task = new Task(task.id, task.name, new Date(task.dueDateTime),
-          task.description, task.priority, task.status, task.shared,
+          task.description, task.priority, task.done, task.shared,
           task._links.self.href);
 
         // Log.
