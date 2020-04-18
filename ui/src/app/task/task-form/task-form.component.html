@@ -1,23 +1,24 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-  <div class="jumbotron py-3 bg-scheduler-dark-2">
+  <div class="jumbotron py-3 bg-scheduler-dark-2 overlay-parent">
     <div class="form-group">
       <label for="name">Name</label>
       <input id="name" class="form-control bg-scheduler-dark-3" type="text" formControlName="name">
-<!--      <div *ngIf="errors && errors.name">-->
-<!--        <small *ngFor="let error of errors.name" class="text-danger">-->
-<!--          {{error}}-->
-<!--        </small>-->
-<!--      </div>-->
+      <div *ngIf="errors && errors.name">
+        <small *ngFor="let error of errors.name" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
     </div>
 
     <div class="form-group">
       <label for="description">Description</label>
-      <input id="description" class="form-control bg-scheduler-dark-3" type="text" formControlName="description">
-<!--      <div *ngIf="errors && errors.description">-->
-<!--        <small *ngFor="let error of errors.description" class="text-danger">-->
-<!--          {{error}}-->
-<!--        </small>-->
-<!--      </div>-->
+      <textarea rows="10" id="description" class="form-control bg-scheduler-dark-3"
+                formControlName="description"></textarea>
+      <div *ngIf="errors && errors.description">
+        <small *ngFor="let error of errors.description" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
     </div>
 
     <div class="form-group">
@@ -27,11 +28,11 @@
         <option value="n">Normal</option>
         <option value="l">Low</option>
       </select>
-<!--      <div *ngIf="errors && errors.priority">-->
-<!--        <small *ngFor="let error of errors.priority" class="text-danger">-->
-<!--          {{error}}-->
-<!--        </small>-->
-<!--      </div>-->
+      <div *ngIf="errors && errors.priority">
+        <small *ngFor="let error of errors.priority" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
     </div>
 
     <div class="form-group">
@@ -47,15 +48,15 @@
     </div>
 
     <div class="form-group">
-      <button [disabled]="loading" type="submit" class="btn bg-scheduler c-scheduler-dark">
+      <button [disabled]="loading" type="submit" class="btn bg-scheduler c-scheduler-dark mr-2">
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Save
       </button>
-<!--      <a class="btn btn-warning c-scheduler-dark" role="button"-->
-<!--         [routerLink]="task ? ['/tasks', task.id] : ['/tasks']">-->
-<!--        Cancel-->
-<!--      </a>-->
+      <a class="btn btn-warning c-scheduler-dark" role="button" routerLink="/tasks">Cancel</a>
     </div>
 
     <small *ngIf="errors && errors.server" class="text-danger">{{ errors.server }}</small>
+    <div *ngIf="loadingForm" class="overlay-flex bg-scheduler-dark-3">
+      <span class="spinner-border"></span>
+    </div>
   </div>
 </form>
