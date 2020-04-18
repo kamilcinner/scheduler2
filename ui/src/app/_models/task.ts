@@ -1,5 +1,6 @@
 export class Task {
   id: string;
+  ownerUsername: string;
   name: string;
   dueDateTime: Date;
   description: string;
@@ -8,9 +9,10 @@ export class Task {
   shared: boolean;
   selfLink: string;
 
-  constructor(id: string, name: string, dueDateTime: Date, description: string, priority: string,
+  constructor(id: string, ownerUsername: string, name: string, dueDateTime: Date, description: string, priority: string,
               done: boolean, shared: boolean, selfLink: string) {
     this.id = id;
+    this.ownerUsername = ownerUsername;
     this.name = name;
     this.dueDateTime = dueDateTime;
     this.description = description;
@@ -45,5 +47,9 @@ export class Task {
 
   negateShare(): void {
     this.shared = !this.shared;
+  }
+
+  get toString(): string {
+    return this.name + ' (' + this.dueDateTime.toDateString() + ')';
   }
 }

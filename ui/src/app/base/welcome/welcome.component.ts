@@ -7,7 +7,7 @@ import {AuthenticationService } from '@app/_services';
   styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
-  username;
+  username: string;
 
   constructor(
     private authenticationService: AuthenticationService,

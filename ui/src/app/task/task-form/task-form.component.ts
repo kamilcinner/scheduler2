@@ -40,15 +40,13 @@ export class TaskFormComponent implements OnInit {
           // Check if there is a Task.
           if (task) {
             // Save Task to component object.
-            this.task = new Task(task.id, task.name, new Date(task.dueDateTime),
-              task.description, task.priority, task.done, task.shared,
-              task._links.self.href);
+            this.task = task;
 
             // Log.
             // TODO: delete this
             console.warn('Task to edit', this.task);
 
-            // Build for with edited Task data.
+            // Build form with edited Task data.
             this.buildTaskForm(task.name,
               formatDate(task.dueDateTime, 'yyyy-MM-dd', 'en-US'),
               formatDate(task.dueDateTime, 'HH:mm', 'en-US'),
@@ -68,7 +66,7 @@ export class TaskFormComponent implements OnInit {
   // Convenience getter for easy access to form fields.
   get f() { return this.taskForm.controls; }
 
-  onSubmit() {
+  onSubmit(): void {
     this.loading = true;
 
     // Stop here if form is invalid.
@@ -108,7 +106,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   private buildTaskForm(name: string, dueDateFormat: string, dueTimeFormat: string, description: string,
-                        priority: string) {
+                        priority: string): void {
     this.taskForm = this.formBuilder.group({
       name,
       dueDate: dueDateFormat,

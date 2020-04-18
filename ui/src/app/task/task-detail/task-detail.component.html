@@ -1,3 +1,7 @@
+<div *ngIf="loadingDetail" class="overlay">
+  <span class="spinner-border"></span>
+</div>
+
 <div *ngIf="task" class="jumbotron mb-3 p-2"
      [ngClass]="{'bg-scheduler-dark-2 c-scheduler-white': task.priority === 'h',
                  'bg-scheduler-light c-scheduler-dark': task.priority === 'l',
@@ -30,40 +34,53 @@
     <strong>Priority:</strong>
     <span [ngClass]="{'font-weight-bold text-warning': task.priority === 'h',
                       'text-muted': task.priority === 'l'}">
-      {{ task.priorityName }}</span>
+      {{ task.priorityName }}
+    </span>
   </p>
 
-  <div class="d-flex mb-2 w-100 justify-content-between">
-    <a class="btn c-scheduler btn-lg" role="button" (click)="onShare()"
-        [ngClass]="{'bg-scheduler-dark-2': task.priority === 'n',
+  <div *ngIf="currentUserIsOwner">
+    <div class="d-flex mb-2 w-100 justify-content-between">
+      <a class="btn c-scheduler btn-lg" role="button" (click)="onShare()"
+         [ngClass]="{'bg-scheduler-dark-2': task.priority === 'n',
                     'bg-scheduler-dark-3': task.isOneOfPriorities('l', 'h')}"
-        [ngSwitch]="task.shared">
+         [ngSwitch]="task.shared">
 
-      <div *ngSwitchCase="true">Unshare</div>
-      <div *ngSwitchDefault>Share</div>
-    </a>
+        <span *ngIf="loadingShareBtn" class="spinner-border spinner-border-sm"></span>
+        <span *ngSwitchCase="true">Unshare</span>
+        <span *ngSwitchDefault>Share</span>
+      </a>
 
-    <a class="btn c-scheduler btn-lg" role="button" [routerLink]="['/tasks/edit', task.id]"
-       [ngClass]="{'bg-scheduler-dark-2': task.priority === 'n',
+      <a class="btn c-scheduler btn-lg" role="button" [routerLink]="['/tasks/update', task.id]"
+         [ngClass]="{'bg-scheduler-dark-2': task.priority === 'n',
                     'bg-scheduler-dark-3': task.isOneOfPriorities('l', 'h')}">
-      Edit
-    </a>
-  </div>
+        Edit
+      </a>
+    </div>
 
-  <div class="d-flex w-100 justify-content-between">
-    <a class="btn c-scheduler btn-lg" role="button" (click)="onMark()"
-       [ngClass]="{'bg-scheduler-dark-2': task.priority === 'n',
+    <div class="d-flex w-100 justify-content-between">
+      <a class="btn c-scheduler btn-lg" role="button" (click)="onMark()"
+         [ngClass]="{'bg-scheduler-dark-2': task.priority === 'n',
                     'bg-scheduler-dark-3': task.isOneOfPriorities('l', 'h')}"
-       [ngSwitch]="task.done">
+         [ngSwitch]="task.done">
 
-      <div *ngSwitchCase="true">Undone</div>
-      <div *ngSwitchDefault>Mark done</div>
-    </a>
+        <span *ngIf="loadingMarkBtn" class="spinner-border spinner-border-sm"></span>
+        <span *ngSwitchCase="true">Undone</span>
+        <span *ngSwitchDefault>Mark done</span>
+      </a>
 
-    <a class="btn btn-danger btn-lg" role="button" (click)="onDelete()">Delete</a>
+      <a class="btn btn-danger btn-lg" role="button" (click)="onShowDeleteConfirmation()">Delete</a>
+    </div>
+
+    <app-task-confirm-delete *ngIf="!hideDelete" [task]="task" (abortDelete)="onHideDeleteConfirmation()"
+                             (confirmDelete)="onDelete()">
+    </app-task-confirm-delete>
   </div>
 </div>
 
-<a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100" role="button" routerLink="/tasks">Go to Tasks</a>
-<!--<a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100" role="button">Go to Schedule Week</a>-->
-<!--<a class="btn bg-scheduler c-scheduler-dark btn-lg w-100" role="button">Create another Task</a>-->
+<div *ngIf="task && authenticated">
+  <a *ngIf="!loadingDetail" class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100"
+     role="button" routerLink="/tasks">Go to Tasks</a>
+  <!--<a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100" role="button">Go to Schedule Week</a>-->
+  <a *ngIf="!loadingDetail" class="btn bg-scheduler c-scheduler-dark btn-lg w-100"
+     role="button" routerLink="/tasks/new">Create another Task</a>
+</div>

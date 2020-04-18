@@ -18,6 +18,7 @@ import { WelcomeComponent } from './base/welcome';
 import { TaskFormComponent } from '@app/task/task-form';
 import { TaskDetailComponent } from '@app/task/task-detail';
 import { PageNotFoundComponent } from './base/page-not-found/page-not-found.component';
+import { TaskConfirmDeleteComponent } from './task/task-confirm-delete/task-confirm-delete.component';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { PageNotFoundComponent } from './base/page-not-found/page-not-found.comp
     WelcomeComponent,
     TaskFormComponent,
     TaskDetailComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    TaskConfirmDeleteComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

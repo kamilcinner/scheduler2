@@ -17,10 +17,12 @@ const routes: Routes = [
 
   { path: 'tasks', canActivate: [AuthGuard], children: [
     { path: '', component: TaskListComponent },
-    { path: 'one/:id', component: TaskDetailComponent },
-    { path: 'create', component: TaskFormComponent },
-    { path: 'edit/:id', component: TaskFormComponent }
+    // { path: 'one/:id', component: TaskDetailComponent },
+    { path: 'new', component: TaskFormComponent },
+    { path: 'update/:id', component: TaskFormComponent }
   ]},
+
+  { path: 'tasks/one/:id', component: TaskDetailComponent },
 
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },

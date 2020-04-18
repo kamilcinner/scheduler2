@@ -1,4 +1,6 @@
-<div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+<div *ngIf="loading" class="overlay-flex">
+  <span class="spinner-border"></span>
+</div>
 
 <div *ngIf="tasks" class="list-group">
   <a *ngFor="let task of tasks" [routerLink]="['/tasks/one', task.id]"
@@ -28,12 +30,11 @@
   </a>
 </div>
 
-<!--TODO: maybe simplify this-->
-<div class="jumbotron py-0 bg-scheduler">
+<div *ngIf="!loading" class="jumbotron py-0 bg-scheduler">
   <p [ngSwitch]="tasks" class="lead text-center">
     <span *ngSwitchCase="tasks">That's all! Would You mind add another </span>
     <span *ngSwitchDefault>Would You mind add your first </span>
 
-    <a class="btn py-0 my-2 bg-scheduler-dark-2 c-scheduler btn-lg" routerLink="/tasks/create" role="button">Task</a>
+    <a class="btn py-0 my-2 bg-scheduler-dark-2 c-scheduler btn-lg" routerLink="/tasks/new" role="button">Task</a>
   </p>
 </div>
