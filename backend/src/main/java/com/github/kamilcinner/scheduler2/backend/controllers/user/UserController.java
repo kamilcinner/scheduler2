@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.controllers;
+package com.github.kamilcinner.scheduler2.backend.controllers.user;
 
 import com.github.kamilcinner.scheduler2.backend.models.User;
 import com.github.kamilcinner.scheduler2.backend.repositories.UserRepository;

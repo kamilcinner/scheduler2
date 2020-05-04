@@ -1,10 +1,10 @@
-package com.github.kamilcinner.scheduler2.backend.controllers;
+package com.github.kamilcinner.scheduler2.backend.controllers.user;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-class CurrentUserUsername {
+public class CurrentUserUsername {
 
     public static String get() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

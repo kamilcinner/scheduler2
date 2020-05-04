@@ -1,8 +1,9 @@
-package com.github.kamilcinner.scheduler2.backend.controllers;
+package com.github.kamilcinner.scheduler2.backend.controllers.task;
 
+import com.github.kamilcinner.scheduler2.backend.controllers.user.CurrentUserUsername;
 import com.github.kamilcinner.scheduler2.backend.models.Task;
-import com.github.kamilcinner.scheduler2.backend.models.User;
 import com.github.kamilcinner.scheduler2.backend.repositories.TaskRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,11 +30,12 @@ class TaskController {
         this.assembler = assembler;
     }
 
-    // Aggregate root
+    // Aggregate root.
 
     @GetMapping("/tasks")
-    CollectionModel all() {
-        List<EntityModel<Task>> tasks = taskRepository.findByOwnerUsername(CurrentUserUsername.get()).stream()
+    CollectionModel<?> all() {
+        List<EntityModel<Task>> tasks = taskRepository.findByOwnerUsername(CurrentUserUsername.get(),
+                Sort.by(Sort.Direction.ASC, "done", "dueDateTime", "priority")).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
@@ -53,7 +54,7 @@ class TaskController {
                 .body(entityModel);
     }
 
-    // Single item
+    // Single item.
 
     // Get Task by id.
     // Can be accessed always by Task owner.

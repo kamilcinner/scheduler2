@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.controllers;
+package com.github.kamilcinner.scheduler2.backend.controllers.task;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,7 +12,7 @@ class TaskNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(TaskNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String employeeNotFoundHandler(TaskNotFoundException ex) {
+    String taskNotFoundHandler(TaskNotFoundException ex) {
         return ex.getMessage();
     }
 }
