@@ -1,7 +1,9 @@
 package com.github.kamilcinner.scheduler2.backend;
 
+import com.github.kamilcinner.scheduler2.backend.models.Activity;
 import com.github.kamilcinner.scheduler2.backend.models.Task;
 import com.github.kamilcinner.scheduler2.backend.models.User;
+import com.github.kamilcinner.scheduler2.backend.repositories.ActivityRepository;
 import com.github.kamilcinner.scheduler2.backend.repositories.TaskRepository;
 import com.github.kamilcinner.scheduler2.backend.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Configuration
@@ -18,8 +22,11 @@ import java.sql.Timestamp;
 class PopulateDatabaseByDummies {
 
     @Bean
-    CommandLineRunner initDatabase(TaskRepository taskRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner initDatabase(TaskRepository taskRepository, ActivityRepository activityRepository,
+                                   UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
+            // Add Tasks.
+
             log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
                     Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", true, false, 'h')));
             log.info("Preloading " + taskRepository.save(new Task("user1", "Do shopping",
@@ -42,12 +49,26 @@ class PopulateDatabaseByDummies {
             log.info("Preloading " + taskRepository.save(new Task("testowo", "Hakuna Matata!!!",
                     Timestamp.valueOf("2020-4-12 17:00:00"), "That's my super task", false, false, 'h')));
 
+            // Add Users.
+
             log.info("Preloading " + userRepository.save(new User("user1", passwordEncoder.encode("pass"),
                     "user@gmail.com", true, "ROLE_USER")));
             log.info("Preloading " + userRepository.save(new User("testowo", passwordEncoder.encode("pass"),
                     "testowo@gmail.com", true, "ROLE_USER")));
             log.info("Preloading " + userRepository.save(new User("kamil", passwordEncoder.encode("pass"),
                     "kamil@gmail.com", true, "ROLE_USER")));
+
+            // Add Activities.
+
+            log.info("Preloading " + activityRepository.save(new Activity("user1", "System Programming Lectures",
+                    "I like to roll", Time.valueOf("12:31:00"), Time.valueOf("14:31:00"), Date.valueOf("2020-05-05"),
+                    true, true)));
+            log.info("Preloading " + activityRepository.save(new Activity("user1", "PE Lectures",
+                    "I like to roll", Time.valueOf("12:31:00"), Time.valueOf("14:31:00"), Date.valueOf("2020-05-05"),
+                    true, true)));
+            log.info("Preloading " + activityRepository.save(new Activity("user1", "AI Lectures",
+                    "I like to roll", Time.valueOf("12:31:00"), Time.valueOf("14:31:00"), Date.valueOf("2020-05-05"),
+                    true, true)));
         };
     }
 }
