@@ -19,6 +19,7 @@ import { TaskFormComponent } from '@app/task/task-form';
 import { TaskDetailComponent } from '@app/task/task-detail';
 import { PageNotFoundComponent } from './base/page-not-found/page-not-found.component';
 import { TaskConfirmDeleteComponent } from './task/task-confirm-delete/task-confirm-delete.component';
+import { ActivityListComponent } from './activity/activity-list/activity-list.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { TaskConfirmDeleteComponent } from './task/task-confirm-delete/task-conf
     TaskFormComponent,
     TaskDetailComponent,
     PageNotFoundComponent,
-    TaskConfirmDeleteComponent
+    TaskConfirmDeleteComponent,
+    ActivityListComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
