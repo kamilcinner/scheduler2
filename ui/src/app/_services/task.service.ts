@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Task } from '@app/_models';
 import { AuthenticationService } from '@app/_services/authentication.service';
+import { ValidationService } from '@app/_services/validation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,15 +18,6 @@ export class TaskService {
     private router: Router,
     private authenticationService: AuthenticationService
   ) { }
-
-  // Checks if the id is a valid UUID.
-  // Use it to prevent connecting to the API with an invalid id.
-  private static checkUUID(id: string): boolean {
-    if (id.match('^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')) {
-      return true;
-    }
-    return false;
-  }
 
   // Checks if every Task field send from API is in acceptable format.
   private static checkTaskTypes(task): boolean {
@@ -70,7 +62,7 @@ export class TaskService {
 
   // Get Task by id.
   getOne(id: string) {
-    if (TaskService.checkUUID(id)) {
+    if (ValidationService.checkUUID(id)) {
       const url: string = `${environment.apiUrl}/tasks/` +
         (this.authenticated ? '' : 'shared/') + `${id}`;
 
@@ -93,7 +85,7 @@ export class TaskService {
   // Create or update Task.
   update(id: string, name: string, dueDateTime: Date, description: string, priority: string) {
     if (id) {
-      if (TaskService.checkUUID(id)) {
+      if (ValidationService.checkUUID(id)) {
         return this.http.put<any>(`${environment.apiUrl}/tasks/${id}`,
           { name, dueDateTime, description, priority });
       }
@@ -106,7 +98,7 @@ export class TaskService {
 
   // Delete Task.
   delete(id: string) {
-    if (TaskService.checkUUID(id)) {
+    if (ValidationService.checkUUID(id)) {
       return this.http.delete(`${environment.apiUrl}/tasks/${id}`);
     }
     return this.push404();
@@ -114,7 +106,7 @@ export class TaskService {
 
   // Share/Unshare Task.
   share(id: string) {
-    if (TaskService.checkUUID(id)) {
+    if (ValidationService.checkUUID(id)) {
       return this.http.get(`${environment.apiUrl}/tasks/share/${id}`);
     }
     return this.push404();
@@ -122,7 +114,7 @@ export class TaskService {
 
   // Mark Task done/undone.
   mark(id: string) {
-    if (TaskService.checkUUID(id)) {
+    if (ValidationService.checkUUID(id)) {
       return this.http.get(`${environment.apiUrl}/tasks/mark/${id}`);
     }
     return this.push404();
