@@ -1,1 +1,35 @@
-<p>activity-list works!</p>
+<div *ngIf="loading" class="overlay-flex">
+  <span class="spinner-border"></span>
+</div>
+
+<div *ngIf="activities" class="list-group">
+  <a *ngFor="let activity of activities" [routerLink]="['/activities/one', activity.id]"
+     class="list-group-item mb-3 bg-scheduler-dark-2 c-scheduler-white list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h1 class="h5 mb-1">{{ activity.name }}</h1>
+      <small [ngClass]="{'text-danger': !activity.statusActive,
+                         'c-scheduler-light': activity.statusActive}">
+        {{ activity.date | date:'d MMM yyyy' }} ({{ activity.date | date:'EEEE' }})</small>
+    </div>
+
+    <small class="c-scheduler-light">{{ activity.timeStart | date:'HH:mm' }} - {{ activity.timeEnd | date:'HH:mm' }}</small>
+
+    <p class="my-0"><small class="c-scheduler-light">{{ activity.description }}</small></p>
+
+    <p *ngIf="activity.repeatWeekly" class="my-0 font-weight-light c-scheduler">Repeat every {{ activity.date | date:'EEEE' }}</p>
+
+    <div [ngSwitch]="activity.statusActive">
+      <p *ngSwitchCase="true" class="my-0 font-weight-light text-success">Active</p>
+      <p *ngSwitchDefault class="my-0 font-weight-bold text-danger">Inactive</p>
+    </div>
+  </a>
+</div>
+
+<div *ngIf="!loading" class="jumbotron py-0 bg-scheduler">
+  <p [ngSwitch]="activities" class="lead text-center">
+    <span *ngSwitchCase="activities">That's all! Would You mind add another </span>
+    <span *ngSwitchDefault>Would You mind add your first </span>
+
+    <a class="btn py-0 my-2 bg-scheduler-dark-2 c-scheduler btn-lg" routerLink="/activities/new" role="button">Activity</a>
+  </p>
+</div>

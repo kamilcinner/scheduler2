@@ -5,15 +5,15 @@ export class Activity {
   ownerUsername: string;
   name: string;
   description: string;
-  timeStart: Time;
-  timeEnd: Time;
+  timeStart: Date;
+  timeEnd: Date;
   date: Date;
   statusActive: boolean;
   repeatWeekly: boolean;
   selfLink: string;
 
-  constructor(id: string, ownerUsername: string, name: string, description: string, timeStart: Time,
-              timeEnd: Time, date: Date, statusActive: boolean, repeatWeekly: boolean, selfLink: string) {
+  constructor(id: string, ownerUsername: string, name: string, description: string, timeStart: Date,
+              timeEnd: Date, date: Date, statusActive: boolean, repeatWeekly: boolean, selfLink: string) {
     this.id = id;
     this.ownerUsername = ownerUsername;
     this.name = name;
@@ -26,7 +26,8 @@ export class Activity {
     this.selfLink = selfLink;
   }
 
-  get toString(): string {
-    return this.name + ' (' + this.date.toDateString() + ')';
-  }
+  // get toString(): string {
+  //   return this.name + ' (' + this.date.toDateString() + ')';
+  // }
+  // TODO: change in java to timestamp maybe
 }
