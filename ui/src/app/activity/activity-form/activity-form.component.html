@@ -1,0 +1,91 @@
+<form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+  <div class="jumbotron py-1 bg-scheduler-dark-2 c-scheduler-light">
+
+    <div class="form-group">
+      <label for="name">Activity name</label>
+      <input id="name" class="form-control bg-scheduler-dark-3" type="text" formControlName="name">
+
+      <div *ngIf="errors && errors.name">
+        <small *ngFor="let error of errors.name" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input id="description" class="form-control bg-scheduler-dark-3" type="text" formControlName="description">
+
+      <div *ngIf="errors && errors.description">
+        <small *ngFor="let error of errors.description" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-row">
+
+        <div class="col-6">
+          <label for="timeStart">Time start</label>
+          <input id="timeStart" class="form-control bg-scheduler-dark-3" type="time" formControlName="timeStart">
+        </div>
+
+        <div class="col-6">
+          <label for="timeEnd">Time start</label>
+          <input id="timeEnd" class="form-control bg-scheduler-dark-3" type="time" formControlName="timeEnd">
+        </div>
+
+      </div>
+
+      <div *ngIf="errors && errors.timeStart">
+        <small *ngFor="let error of errors.timeStart" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
+
+      <div *ngIf="errors && errors.timeEnd">
+        <small *ngFor="let error of errors.timeEnd" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input id="date" class="form-control bg-scheduler-dark-3" type="date" formControlName="date">
+
+      <div *ngIf="errors && errors.date">
+        <small *ngFor="let error of errors.date" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="custom-control custom-switch">
+        <input id="statusActive" class="custom-control-input" type="checkbox" formControlName="statusActive">
+        <label class="custom-control-label" for="statusActive">Status active</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="custom-control custom-switch">
+        <input id="repeatWeekly" class="custom-control-input" type="checkbox" formControlName="repeatWeekly">
+        <label class="custom-control-label" for="repeatWeekly">Repeat weekly</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button [disabled]="loading" type="submit" class="btn bg-scheduler c-scheduler-dark mr-2">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Save
+      </button>
+      <a class="btn btn-warning c-scheduler-dark" role="button" routerLink="/activities">Cancel</a>
+    </div>
+
+    <small *ngIf="errors && errors.server" class="text-danger">{{ errors.server }}</small>
+    <div *ngIf="loadingForm" class="overlay-flex bg-scheduler-dark-3">
+      <span class="spinner-border"></span>
+    </div>
+  </div>
+</form>

@@ -1,1 +1,46 @@
-<p>activity-detail works!</p>
+<div *ngIf="loadingDetail" class="overlay">
+  <span class="spinner-border"></span>
+</div>
+
+<div *ngIf="activity" class="jumbotron mb-3 p-2 bg-scheduler-dark-2 c-scheduler-white overlay-parent">
+  <h1 class="font-weight-light">{{ activity.name }}</h1>
+
+  <p class="my-0 font-weight-light" [ngClass]="{'text-danger': !activity.statusActive,
+                                                'c-scheduler-light': activity.statusActive}">
+    {{ activity.date | date:'d MMM yyyy' }} ({{ activity.date | date:'EEEE' }})
+  </p>
+
+  <p class="mt-0 lead c-scheduler-light">
+    {{ activity.timeStart | date:'HH:mm' }} - {{ activity.timeEnd | date:'HH:mm' }}
+  </p>
+
+  <p *ngIf="activity.repeatWeekly" class="my-0 font-weight-light text-success">Repeat every {{ activity.date | date:'EEEE' }}</p>
+
+  <div [ngSwitch]="activity.statusActive">
+    <p *ngSwitchCase="true" class="my-0 ml-1 font-weight-light text-success">Active</p>
+    <p *ngSwitchDefault class="ml-1 my-0 font-weight-bold text-danger">Inactive</p>
+  </div>
+
+  <hr class="mb-4 mt-0 bg-scheduler-dark-3">
+
+  <p class="my-0 c-scheduler-light">{{ activity.description }}</p>
+
+  <hr class="my-4 mt-0 bg-scheduler-dark-3">
+
+  <div class="d-flex w-100 justify-content-between">
+    <a class="btn bg-scheduler-dark-3 c-scheduler btn-lg" role="button" [routerLink]="['/activities/update', activity.id]">Edit</a>
+    <a class="btn btn-danger btn-lg" role="button" (click)="onShowDeleteConfirmation()">Delete</a>
+  </div>
+
+  <app-activity-confirm-delete *ngIf="!hideDelete" [activity]="activity" (abortDelete)="onHideDeleteConfirmation()"
+                               (confirmDelete)="onDelete()">
+  </app-activity-confirm-delete>
+</div>
+
+<div *ngIf="activity && !loadingDetail">
+  <a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100"
+     role="button" routerLink="/activities">Go to Activities</a>
+  <!--<a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100" role="button">Go to Schedule Week</a>-->
+  <a class="btn bg-scheduler c-scheduler-dark btn-lg w-100"
+     role="button" routerLink="/activities/new">Create another Activity</a>
+</div>

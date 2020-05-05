@@ -1,0 +1,11 @@
+<div class="overlay bg-scheduler-dark-2">
+  <h1 class="py-3">Delete Activity</h1>
+  <p>Are you sure you want to delete the activity:</p>
+  <p><strong class="text-success">{{ activity.toString }}</strong></p>
+
+  <button (click)="abortDelete.emit()"
+          class="btn bg-scheduler c-scheduler-dark mr-4 mt-3">No, go back</button>
+
+  <button (click)="confirmDelete.emit()"
+          class="btn btn-danger ml-4 mt-3">Yes, delete</button>
+</div>

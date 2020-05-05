@@ -71,6 +71,7 @@ export class TaskFormComponent implements OnInit {
 
     // Stop here if form is invalid.
     if (this.taskForm.invalid) {
+      this.loading = false;
       return;
     }
 
@@ -88,6 +89,7 @@ export class TaskFormComponent implements OnInit {
       this.f.description.value,
       this.f.priority.value
     );
+
     if (result) {
       result.subscribe(
         task => {

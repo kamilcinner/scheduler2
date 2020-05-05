@@ -2,7 +2,7 @@
   <span class="spinner-border"></span>
 </div>
 
-<div *ngIf="task" class="jumbotron mb-3 p-2"
+<div *ngIf="task" class="jumbotron mb-3 p-2 overlay-parent"
      [ngClass]="{'bg-scheduler-dark-2 c-scheduler-white': task.priority === 'h',
                  'bg-scheduler-light c-scheduler-dark': task.priority === 'l',
                  'bg-scheduler-dark-3 c-scheduler-light': task.priority === 'n'}">
@@ -77,10 +77,10 @@
   </div>
 </div>
 
-<div *ngIf="task && authenticated">
-  <a *ngIf="!loadingDetail" class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100"
+<div *ngIf="task && authenticated && !loadingDetail">
+  <a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100"
      role="button" routerLink="/tasks">Go to Tasks</a>
   <!--<a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100" role="button">Go to Schedule Week</a>-->
-  <a *ngIf="!loadingDetail" class="btn bg-scheduler c-scheduler-dark btn-lg w-100"
+  <a class="btn bg-scheduler c-scheduler-dark btn-lg w-100"
      role="button" routerLink="/tasks/new">Create another Task</a>
 </div>

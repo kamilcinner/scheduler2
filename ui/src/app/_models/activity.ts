@@ -26,8 +26,8 @@ export class Activity {
     this.selfLink = selfLink;
   }
 
-  // get toString(): string {
-  //   return this.name + ' (' + this.date.toDateString() + ')';
-  // }
-  // TODO: change in java to timestamp maybe
+  get toString(): string {
+    return this.name + ' (' + this.date.toDateString() + ') (' +
+      this.timeStart.toLocaleTimeString() + ' - ' + this.timeEnd.toLocaleTimeString() + ')';
+  }
 }

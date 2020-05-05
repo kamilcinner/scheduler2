@@ -11,6 +11,9 @@ import { TaskDetailComponent } from './task/task-detail';
 import { TaskFormComponent } from '@app/task/task-form';
 import { PageNotFoundComponent } from '@app/base/page-not-found/page-not-found.component';
 import { ActivityListComponent } from '@app/activity/activity-list/activity-list.component';
+import { ActivityDetailComponent } from '@app/activity/activity-detail/activity-detail.component';
+import { Activity } from '@app/_models';
+import { ActivityFormComponent } from '@app/activity/activity-form/activity-form.component';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent, canActivate: [AuthGuard] },
@@ -26,6 +29,9 @@ const routes: Routes = [
 
   { path: 'activities', canActivate: [AuthGuard], children:[
     { path: '', component: ActivityListComponent },
+    { path: 'one/:id', component: ActivityDetailComponent },
+    { path: 'new', component: ActivityFormComponent },
+    { path: 'update/:id', component: ActivityFormComponent },
   ]},
 
   { path: '', component: HomeComponent },

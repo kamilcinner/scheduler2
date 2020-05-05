@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '@app/_services/authentication.service';
 import { Activity } from '@app/_models';
 import { map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { ValidationService } from '@app/_services/validation.service';
-import { Time } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +14,6 @@ export class ActivityService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private authenticationService: AuthenticationService
   ) { }
 
   // Checks if every Activity field send from API is in acceptable format.
@@ -29,7 +26,8 @@ export class ActivityService {
 
   // Returns proper Activity object created from API JSON.
   private static newActivityFromApiJSON(activity): Activity {
-    return new Activity(activity.id, activity.ownerUsername, activity.name, activity.description, new Date('01/01/1900 ' + activity.timeStart), new Date('01/01/1900 ' + activity.timeEnd),
+    return new Activity(activity.id, activity.ownerUsername, activity.name, activity.description,
+      new Date('01/01/1900 ' + activity.timeStart), new Date('01/01/1900 ' + activity.timeEnd),
       new Date(activity.date), activity.statusActive, activity.repeatWeekly, activity._links.self.href);
   }
 
@@ -79,8 +77,9 @@ export class ActivityService {
   }
 
   // Create or update Activity.
-  update(id: string, name: string, description: string, timeStart: Time,
-         timeEnd: Time, date: Date, statusActive: boolean, repeatWeekly: boolean) {
+  // 'timeStart' and 'timeEnd' parameters must be provided as strings format.
+  update(id: string, name: string, description: string, timeStart: string,
+         timeEnd: string, date: Date, statusActive: boolean, repeatWeekly: boolean) {
     if (id) {
       if (ValidationService.checkUUID(id)) {
         return this.http.put<any>(`${environment.apiUrl}/activities/${id}`,

@@ -18,11 +18,13 @@ export class ErrorInterceptor implements HttpInterceptor {
       if (err.status === 401) {
         // Auto logout if 401 response returned from api.
         this.authenticationService.logout();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login']).then(r => console.log(r));
 
       } else if (err.status === 400) {
         const errs = err.error.errors || null;
 
+        // If null there is no errors related to Object fields.
+        // Eg. Task, Activity.
         if (errs) {
           const errors = {
             username: undefined,
@@ -66,17 +68,20 @@ export class ErrorInterceptor implements HttpInterceptor {
           if (priorityErrors.length > 0) { errors.priority = priorityErrors; }
 
           return throwError(errors);
+        } else {
+          const error = {server: err.error.message}
+          return throwError(error);
         }
       } else if (!err.status) {
-        const error = 'Server connection error.';
+        const error = {server: 'Server connection error.'};
         return throwError(error);
       } else if (err.status === 404) {
         this.router.navigate(['/404']).then(r => console.log(r));
       } else if (err.status === 500) {
-        const error = 'Internal server error 500.';
+        const error = {server: 'Internal server error 500.'};
         return throwError(error);
       } else {
-        const error = err.error.message || err.statusText;
+        const error = {server: err.error.message} || {server: err.statusText};
         return throwError(error);
       }
     }));

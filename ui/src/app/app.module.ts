@@ -21,6 +21,9 @@ import { PageNotFoundComponent } from './base/page-not-found/page-not-found.comp
 import { TaskConfirmDeleteComponent } from './task/task-confirm-delete/task-confirm-delete.component';
 import { ActivityListComponent } from './activity/activity-list/activity-list.component';
 import { ActivityDetailComponent } from './activity/activity-detail/activity-detail.component';
+import { ActivityConfirmDeleteComponent } from './activity/activity-confirm-delete/activity-confirm-delete.component';
+import { ActivityFormComponent } from './activity/activity-form/activity-form.component';
+import { WeekScheduleComponent } from './week/week-schedule/week-schedule.component';
 
 @NgModule({
   imports: [
@@ -44,7 +47,10 @@ import { ActivityDetailComponent } from './activity/activity-detail/activity-det
     PageNotFoundComponent,
     TaskConfirmDeleteComponent,
     ActivityListComponent,
-    ActivityDetailComponent
+    ActivityDetailComponent,
+    ActivityConfirmDeleteComponent,
+    ActivityFormComponent,
+    WeekScheduleComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

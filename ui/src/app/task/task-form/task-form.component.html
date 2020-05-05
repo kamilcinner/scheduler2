@@ -1,7 +1,7 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
   <div class="jumbotron py-3 bg-scheduler-dark-2 overlay-parent">
     <div class="form-group">
-      <label for="name">Name</label>
+      <label for="name">Task name</label>
       <input id="name" class="form-control bg-scheduler-dark-3" type="text" formControlName="name">
       <div *ngIf="errors && errors.name">
         <small *ngFor="let error of errors.name" class="text-danger">
