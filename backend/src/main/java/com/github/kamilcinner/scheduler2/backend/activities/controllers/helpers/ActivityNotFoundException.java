@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.controllers.activity;
+package com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers;
 
 import java.util.UUID;
 

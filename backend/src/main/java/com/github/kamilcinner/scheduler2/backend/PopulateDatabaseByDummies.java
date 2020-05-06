@@ -1,11 +1,11 @@
 package com.github.kamilcinner.scheduler2.backend;
 
-import com.github.kamilcinner.scheduler2.backend.models.Activity;
-import com.github.kamilcinner.scheduler2.backend.models.Task;
-import com.github.kamilcinner.scheduler2.backend.models.User;
-import com.github.kamilcinner.scheduler2.backend.repositories.ActivityRepository;
-import com.github.kamilcinner.scheduler2.backend.repositories.TaskRepository;
-import com.github.kamilcinner.scheduler2.backend.repositories.UserRepository;
+import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
+import com.github.kamilcinner.scheduler2.backend.tasks.models.Task;
+import com.github.kamilcinner.scheduler2.backend.users.models.User;
+import com.github.kamilcinner.scheduler2.backend.activities.repositories.ActivityRepository;
+import com.github.kamilcinner.scheduler2.backend.tasks.repositories.TaskRepository;
+import com.github.kamilcinner.scheduler2.backend.users.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.CommandLineRunner;

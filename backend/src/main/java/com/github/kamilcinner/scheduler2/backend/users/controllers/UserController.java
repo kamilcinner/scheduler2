@@ -1,8 +1,7 @@
-package com.github.kamilcinner.scheduler2.backend.controllers.user;
+package com.github.kamilcinner.scheduler2.backend.users.controllers;
 
-import com.github.kamilcinner.scheduler2.backend.models.User;
-import com.github.kamilcinner.scheduler2.backend.repositories.UserRepository;
-import jdk.nashorn.internal.parser.JSONParser;
+import com.github.kamilcinner.scheduler2.backend.users.models.User;
+import com.github.kamilcinner.scheduler2.backend.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

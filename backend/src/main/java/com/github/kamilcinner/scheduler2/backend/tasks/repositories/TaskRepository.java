@@ -1,6 +1,6 @@
-package com.github.kamilcinner.scheduler2.backend.repositories;
+package com.github.kamilcinner.scheduler2.backend.tasks.repositories;
 
-import com.github.kamilcinner.scheduler2.backend.models.Task;
+import com.github.kamilcinner.scheduler2.backend.tasks.models.Task;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 

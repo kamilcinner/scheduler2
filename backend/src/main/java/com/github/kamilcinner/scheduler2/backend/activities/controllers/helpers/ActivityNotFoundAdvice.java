@@ -1,18 +1,16 @@
-package com.github.kamilcinner.scheduler2.backend.controllers.task;
+package com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice
-class TaskNotFoundAdvice {
+public class ActivityNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(TaskNotFoundException.class)
+    @ExceptionHandler(ActivityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String taskNotFoundHandler(TaskNotFoundException ex) {
+    String activityNotFoundHandler(ActivityNotFoundException ex) {
         return ex.getMessage();
     }
 }

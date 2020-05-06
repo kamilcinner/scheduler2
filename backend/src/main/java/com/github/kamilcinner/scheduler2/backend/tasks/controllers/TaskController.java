@@ -1,8 +1,10 @@
-package com.github.kamilcinner.scheduler2.backend.controllers.task;
+package com.github.kamilcinner.scheduler2.backend.tasks.controllers;
 
-import com.github.kamilcinner.scheduler2.backend.controllers.user.CurrentUserUsername;
-import com.github.kamilcinner.scheduler2.backend.models.Task;
-import com.github.kamilcinner.scheduler2.backend.repositories.TaskRepository;
+import com.github.kamilcinner.scheduler2.backend.tasks.controllers.helpers.TaskModelAssembler;
+import com.github.kamilcinner.scheduler2.backend.tasks.controllers.helpers.TaskNotFoundException;
+import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.CurrentUserUsername;
+import com.github.kamilcinner.scheduler2.backend.tasks.models.Task;
+import com.github.kamilcinner.scheduler2.backend.tasks.repositories.TaskRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -20,7 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-class TaskController {
+public class TaskController {
 
     private final TaskRepository taskRepository;
     private final TaskModelAssembler assembler;
@@ -33,7 +35,7 @@ class TaskController {
     // Aggregate root.
 
     @GetMapping("/tasks")
-    CollectionModel<?> all() {
+    public CollectionModel<?> all() {
         List<EntityModel<Task>> tasks = taskRepository.findByOwnerUsername(CurrentUserUsername.get(),
                 Sort.by(Sort.Direction.ASC, "done", "dueDateTime", "priority")).stream()
                 .map(assembler::toModel)
@@ -60,7 +62,7 @@ class TaskController {
     // Can be accessed always by Task owner.
     // Can be accessed by other users only if Task is shared.
     @GetMapping("/tasks/{id}")
-    EntityModel<Task> one(@PathVariable UUID id) {
+    public EntityModel<Task> one(@PathVariable UUID id) {
 
         Task task = taskRepository.findById(id)
                 .map(searchedTask -> {

@@ -1,8 +1,8 @@
-package com.github.kamilcinner.scheduler2.backend.services;
+package com.github.kamilcinner.scheduler2.backend.users.services;
 
-import com.github.kamilcinner.scheduler2.backend.models.MyUserDetails;
-import com.github.kamilcinner.scheduler2.backend.models.User;
-import com.github.kamilcinner.scheduler2.backend.repositories.UserRepository;
+import com.github.kamilcinner.scheduler2.backend.users.models.MyUserDetails;
+import com.github.kamilcinner.scheduler2.backend.users.models.User;
+import com.github.kamilcinner.scheduler2.backend.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

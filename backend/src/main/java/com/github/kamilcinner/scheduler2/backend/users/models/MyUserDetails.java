@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.models;
+package com.github.kamilcinner.scheduler2.backend.users.models;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

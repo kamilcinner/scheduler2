@@ -1,6 +1,7 @@
-package com.github.kamilcinner.scheduler2.backend.controllers.activity;
+package com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers;
 
-import com.github.kamilcinner.scheduler2.backend.models.Activity;
+import com.github.kamilcinner.scheduler2.backend.activities.controllers.ActivityController;
+import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;

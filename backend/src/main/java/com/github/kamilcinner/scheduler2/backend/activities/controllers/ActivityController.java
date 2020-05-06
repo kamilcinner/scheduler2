@@ -1,9 +1,10 @@
-package com.github.kamilcinner.scheduler2.backend.controllers.activity;
+package com.github.kamilcinner.scheduler2.backend.activities.controllers;
 
-import com.github.kamilcinner.scheduler2.backend.controllers.task.TaskNotFoundException;
-import com.github.kamilcinner.scheduler2.backend.controllers.user.CurrentUserUsername;
-import com.github.kamilcinner.scheduler2.backend.models.Activity;
-import com.github.kamilcinner.scheduler2.backend.repositories.ActivityRepository;
+import com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers.ActivityModelAssembler;
+import com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers.ActivityNotFoundException;
+import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.CurrentUserUsername;
+import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
+import com.github.kamilcinner.scheduler2.backend.activities.repositories.ActivityRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -34,7 +35,7 @@ public class ActivityController {
     // Aggregate root.
 
     @GetMapping("/activities")
-    CollectionModel<?> all() {
+    public CollectionModel<?> all() {
         List<EntityModel<Activity>> activities = activityRepository.findByOwnerUsername(CurrentUserUsername.get(),
                 Sort.by(Sort.Direction.ASC, "date", "timeStart", "statusActive")).stream()
                 .map(assembler::toModel)
@@ -58,7 +59,7 @@ public class ActivityController {
     // Single item.
 
     @GetMapping("/activities/{id}")
-    EntityModel<Activity> one(@PathVariable UUID id) {
+    public EntityModel<Activity> one(@PathVariable UUID id) {
 
         Activity activity = activityRepository.findById(id)
                 .map(searchedActivity -> {

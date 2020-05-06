@@ -1,6 +1,6 @@
-package com.github.kamilcinner.scheduler2.backend.repositories;
+package com.github.kamilcinner.scheduler2.backend.users.repositories;
 
-import com.github.kamilcinner.scheduler2.backend.models.User;
+import com.github.kamilcinner.scheduler2.backend.users.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

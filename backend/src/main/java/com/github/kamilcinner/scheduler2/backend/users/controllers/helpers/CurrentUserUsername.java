@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.controllers.user;
+package com.github.kamilcinner.scheduler2.backend.users.controllers.helpers;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

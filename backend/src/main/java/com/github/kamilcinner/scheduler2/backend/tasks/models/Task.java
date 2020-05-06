@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.models;
+package com.github.kamilcinner.scheduler2.backend.tasks.models;
 
 import lombok.Data;
 
