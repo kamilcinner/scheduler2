@@ -1,1 +1,74 @@
-<p>week-schedule works!</p>
+<div *ngIf="loading" class="overlay-flex">
+  <span class="spinner-border"></span>
+</div>
+
+<div class="jumbotron py-2 bg-scheduler-dark-2">
+
+  <div class="form-group">
+    <label for="date">Week day date</label>
+    <input id="date" type="date" value="{{ currentDateFormat }}" class="form-control bg-scheduler-dark-3">
+  </div>
+
+  <div class="form-group">
+    <button (click)="onCurrentWeek()" class="btn bg-scheduler c-scheduler-dark btn-lg w-100">Show current week</button>
+  </div>
+
+  <div class="form-group">
+    <div class="form-row">
+
+      <div class="col-6">
+        <button (click)="onPreviousWeek()" class="btn bg-scheduler c-scheduler-dark w-100">Previous week</button>
+      </div>
+
+      <div class="col-6">
+        <button (click)="onNextWeek()" class="btn bg-scheduler c-scheduler-dark w-100">Next week</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="weekDays; else elseBlock">
+  <div *ngFor="let day of weekDays">
+    <div class="jumbotron mb-3 p-2 bg-scheduler-dark-2 c-scheduler-white">
+      <div *ngIf="day.quests; else elseBlock">
+        <h1 class="display-4">{{ day.weekDayName }}</h1>
+
+        <div *ngFor="let quest of day.quests" class="list-group">
+          <a class="list-group-item {% endif %}" [routerLink]="quest.absoluteUrl"
+             [ngClass]="{'bg-scheduler-dark-2 c-scheduler-white': quest.priority === 'h',
+                         'bg-scheduler-light c-scheduler-dark': quest.priority === 'l',
+                         'bg-scheduler-dark-3': quest.priority === 'n',
+                         'bg-scheduler-white c-scheduler-dark-2': !quest.priority}">
+
+            <h1 class="h5 font-weight-bold">{{ quest.time }}</h1>
+
+            <h1 class="h5 lead">{{ quest.name }}</h1>
+
+            <small class="text-muted">{{ quest.description }}</small>
+
+            <p class="my-0">
+              <small [ngClass]="{'text-warning': quest.priority === 'h',
+                       'text-muted': quest.priority === 'l',
+                       'font-weight-bold': quest.isOneOfPriorities('n', 'h')}">
+                {{ quest.priorityName }}
+              </small>
+            </p>
+
+          </a>
+        </div>
+      </div>
+
+      <ng-template #elseBlock>
+        <h1 class="h4 lead text-muted">{{ day.weekDayName }} - no activity</h1>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<ng-template #elseBlock>
+  <div class="jumbotron py-1 bg-scheduler">
+    <p class="my-0 lead text-center">There are no activities in this week</p>
+  </div>
+</ng-template>

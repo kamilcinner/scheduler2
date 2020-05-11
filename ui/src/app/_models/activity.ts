@@ -1,4 +1,5 @@
-import { Time } from '@angular/common';
+import { WEEK_DAYS } from '@app/week/_helpers';
+import { DatePipe } from '@angular/common';
 
 export class Activity {
   id: string;
@@ -29,5 +30,17 @@ export class Activity {
   get toString(): string {
     return this.name + ' (' + this.date.toDateString() + ') (' +
       this.timeStart.toLocaleTimeString() + ' - ' + this.timeEnd.toLocaleTimeString() + ')';
+  }
+
+  get weekDayName(): string {
+    return WEEK_DAYS[this.date.getDay()][0];
+  }
+
+  get crispyTime(): string {
+    let time: string
+    time = DatePipe.ɵfac().transform(this.timeStart, 'HH:mm')
+    time += ' - '
+    time += DatePipe.ɵfac().transform(this.timeEnd, 'HH:mm')
+    return time
   }
 }

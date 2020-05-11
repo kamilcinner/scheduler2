@@ -1,3 +1,5 @@
+import { DatePipe } from '@angular/common';
+
 export class Task {
   id: string;
   ownerUsername: string;
@@ -32,6 +34,10 @@ export class Task {
       case 'l': return 'Low';
       default: return 'Normal';
     }
+  }
+
+  get crispyTime(): string {
+    return DatePipe.ɵfac().transform(this.dueDateTime, 'HH:mm')
   }
 
   isOneOfPriorities(prior1: string, prior2: string): boolean {

@@ -12,4 +12,30 @@ export class Quest {
     this.time = time;
     this.priority = priority;
   }
+
+  get absoluteUrl(): string {
+    let url: string
+    if (this.priority) {
+      url = '/tasks'
+    } else {
+      url = '/activities'
+    }
+    url += `/one/${this.id}`
+    return url
+  }
+
+  isOneOfPriorities(prior1: string, prior2: string): boolean {
+    if (this.priority === prior1 || this.priority === prior2) {
+      return true;
+    }
+    return false;
+  }
+
+  get priorityName(): string {
+    switch (this.priority) {
+      case 'h': return 'High';
+      case 'l': return 'Low';
+      default: return 'Normal';
+    }
+  }
 }

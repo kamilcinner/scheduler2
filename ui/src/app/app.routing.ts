@@ -12,8 +12,8 @@ import { TaskFormComponent } from '@app/task/task-form';
 import { PageNotFoundComponent } from '@app/base/page-not-found/page-not-found.component';
 import { ActivityListComponent } from '@app/activity/activity-list/activity-list.component';
 import { ActivityDetailComponent } from '@app/activity/activity-detail/activity-detail.component';
-import { Activity } from '@app/_models';
 import { ActivityFormComponent } from '@app/activity/activity-form/activity-form.component';
+import { WeekScheduleComponent } from '@app/week/week-schedule/week-schedule.component';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent, canActivate: [AuthGuard] },
@@ -33,6 +33,8 @@ const routes: Routes = [
     { path: 'new', component: ActivityFormComponent },
     { path: 'update/:id', component: ActivityFormComponent },
   ]},
+
+  { path: 'week', component: WeekScheduleComponent, canActivate: [AuthGuard] },
 
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },

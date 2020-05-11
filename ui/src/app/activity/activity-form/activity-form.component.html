@@ -1,5 +1,5 @@
 <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
-  <div class="jumbotron py-1 bg-scheduler-dark-2 c-scheduler-light">
+  <div class="jumbotron py-1 bg-scheduler-dark-2 c-scheduler-light overlay-parent">
 
     <div class="form-group">
       <label for="name">Activity name</label>
@@ -84,6 +84,7 @@
     </div>
 
     <small *ngIf="errors && errors.server" class="text-danger">{{ errors.server }}</small>
+
     <div *ngIf="loadingForm" class="overlay-flex bg-scheduler-dark-3">
       <span class="spinner-border"></span>
     </div>
