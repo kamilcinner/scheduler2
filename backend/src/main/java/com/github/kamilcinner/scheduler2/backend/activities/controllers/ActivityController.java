@@ -2,6 +2,8 @@ package com.github.kamilcinner.scheduler2.backend.activities.controllers;
 
 import com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers.ActivityModelAssembler;
 import com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers.ActivityNotFoundException;
+import com.github.kamilcinner.scheduler2.backend.addons.PollubParser;
+import com.github.kamilcinner.scheduler2.backend.addons.Subject;
 import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.CurrentUserUsername;
 import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
 import com.github.kamilcinner.scheduler2.backend.activities.repositories.ActivityRepository;
@@ -14,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URISyntaxException;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -116,5 +123,25 @@ public class ActivityController {
         activityRepository.deleteById(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    // Get activities from Pollub.
+    @GetMapping("/activities/pollub")
+    void addActivitiesFromPollubToUser() {
+        PollubParser pollubParser = new PollubParser();
+        ArrayList<Subject> subjects = pollubParser.getSubjects();
+
+        for (Subject subject : subjects) {
+            Activity activity = new Activity(CurrentUserUsername.get(),
+                    subject.getName(),
+                    subject.getClass_() + ", " + subject.getLecturer(),
+                    Time.valueOf(subject.getTimeStart()+":00"),
+                    Time.valueOf(subject.getTimeEnd()+":00"),
+                    Date.valueOf(LocalDate.now()),
+                    false,
+                    true
+                    );
+            activityRepository.save(activity);
+        }
     }
 }

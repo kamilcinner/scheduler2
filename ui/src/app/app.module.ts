@@ -24,6 +24,7 @@ import { ActivityDetailComponent } from './activity/activity-detail/activity-det
 import { ActivityConfirmDeleteComponent } from './activity/activity-confirm-delete/activity-confirm-delete.component';
 import { ActivityFormComponent } from './activity/activity-form/activity-form.component';
 import { WeekScheduleComponent } from './week/week-schedule/week-schedule.component';
+import { PollubComponent } from './activity/pollub/pollub.component';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { WeekScheduleComponent } from './week/week-schedule/week-schedule.compon
     ActivityDetailComponent,
     ActivityConfirmDeleteComponent,
     ActivityFormComponent,
-    WeekScheduleComponent
+    WeekScheduleComponent,
+    PollubComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

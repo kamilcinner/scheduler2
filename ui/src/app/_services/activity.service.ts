@@ -102,6 +102,11 @@ export class ActivityService {
     return this.push404();
   }
 
+  // Add university subjects to User Activities in API.
+  addActivitiesFromPollub() {
+    return this.http.get(`${environment.apiUrl}/activities/pollub`)
+  }
+
   private push404(): undefined {
     this.router.navigate(['/404']).then(r => console.log(r));
     return undefined;

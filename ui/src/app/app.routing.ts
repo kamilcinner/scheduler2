@@ -14,6 +14,7 @@ import { ActivityListComponent } from '@app/activity/activity-list/activity-list
 import { ActivityDetailComponent } from '@app/activity/activity-detail/activity-detail.component';
 import { ActivityFormComponent } from '@app/activity/activity-form/activity-form.component';
 import { WeekScheduleComponent } from '@app/week/week-schedule/week-schedule.component';
+import { PollubComponent } from '@app/activity/pollub/pollub.component';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent, canActivate: [AuthGuard] },
@@ -32,6 +33,7 @@ const routes: Routes = [
     { path: 'one/:id', component: ActivityDetailComponent },
     { path: 'new', component: ActivityFormComponent },
     { path: 'update/:id', component: ActivityFormComponent },
+    { path: 'pollub', component: PollubComponent },
   ]},
 
   { path: 'week', component: WeekScheduleComponent, canActivate: [AuthGuard] },

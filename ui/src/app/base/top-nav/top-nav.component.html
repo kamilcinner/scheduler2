@@ -42,13 +42,13 @@
           </div>
         </li>
 
-<!--        <li class="nav-item dropdown">-->
-<!--          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button"-->
-<!--             aria-expanded="false" aria-haspopup="true">Addons</a>-->
-<!--          <div class="dropdown-menu" aria-labelledby="submenu">-->
-<!--            <a class="dropdown-item" href="#">Get Subjects from Pollub</a>-->
-<!--          </div>-->
-<!--        </li>-->
+        <li *ngIf="authenticated" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+             aria-expanded="false" aria-haspopup="true">Addons</a>
+          <div class="dropdown-menu" aria-labelledby="submenu">
+            <a class="dropdown-item" routerLink="/activities/pollub">Get Subjects from Pollub</a>
+          </div>
+        </li>
 
 <!--        <li class="nav-item dropdown">-->
 <!--          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button"-->

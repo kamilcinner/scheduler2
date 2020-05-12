@@ -49,7 +49,7 @@
 
             <small class="text-muted">{{ quest.description }}</small>
 
-            <p class="my-0">
+            <p *ngIf="quest.priority" class="my-0">
               <small [ngClass]="{'text-warning': quest.priority === 'h',
                        'text-muted': quest.priority === 'l',
                        'font-weight-bold': quest.isOneOfPriorities('n', 'h')}">

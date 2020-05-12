@@ -1,6 +1,7 @@
 package com.github.kamilcinner.scheduler2.backend;
 
 import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
+import com.github.kamilcinner.scheduler2.backend.addons.PollubParser;
 import com.github.kamilcinner.scheduler2.backend.tasks.models.Task;
 import com.github.kamilcinner.scheduler2.backend.users.models.User;
 import com.github.kamilcinner.scheduler2.backend.activities.repositories.ActivityRepository;
