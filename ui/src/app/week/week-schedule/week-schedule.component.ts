@@ -20,9 +20,6 @@ export class WeekScheduleComponent implements OnInit {
   private activitiesList: Activity[]
   private weekShift: number
 
-  loadingTasks = true
-  loadingActivities = true
-
   constructor(
     private taskService: TaskService,
     private activityService: ActivityService,
@@ -31,19 +28,17 @@ export class WeekScheduleComponent implements OnInit {
   ngOnInit(): void {
     // Get Tasks and Activities data from server.
 
-    // Get Tasks.
-    this.getTasks().then(r => console.log(r))
+    (async () => {
+      // Get Tasks.
+      await this.getTasks()
 
-    // Get Activities.
-    this.getActivities().then(r => console.log(r))
+      // Get Activities.
+      await this.getActivities()
 
-    // (async () => {
-    //   await this.getTasks()
-    //   await this.getActivities()
-    //   this.onCurrentWeek()
-    // })();
-
-    // this.onCurrentWeek()
+      // Show Quests for current week.
+      this.loading = false
+      this.onCurrentWeek()
+    })();
   }
 
   setQuestsForChosenWeek() {
@@ -132,30 +127,36 @@ export class WeekScheduleComponent implements OnInit {
     this.loading = false
   }
 
-  private async getTasks() {
-    const resultTasks = this.taskService.getAll()
-    if (resultTasks) {
-      await resultTasks.subscribe(tasks => {
-        // Check if there are tasks to save.
-        if (tasks) {
-          this.taskList = tasks
-        }
-      })
-      this.loadingTasks = false
-    }
+  private getTasks() {
+    console.log('getting tasks')
+    return new Promise(resolve => {
+      const resultTasks = this.taskService.getAll()
+      if (resultTasks) {
+        resultTasks.subscribe(tasks => {
+          // Check if there are tasks to save.
+          if (tasks) {
+            this.taskList = tasks
+          }
+          resolve()
+        })
+      }
+    })
   }
 
-  private async getActivities() {
-    const resultActivities = this.activityService.getAll()
-    if (resultActivities) {
-      await resultActivities.subscribe(activities => {
-        // Check if there are activities to save.
-        if (activities) {
-          this.activitiesList = activities
-        }
-      })
-      this.loadingActivities = false
-    }
+  private getActivities() {
+    console.log('getting activities')
+    return new Promise(resolve => {
+      const resultActivities = this.activityService.getAll()
+      if (resultActivities) {
+        resultActivities.subscribe(activities => {
+          // Check if there are activities to save.
+          if (activities) {
+            this.activitiesList = activities
+          }
+          resolve()
+        })
+      }
+    })
   }
 
   onCurrentWeek(): void {
@@ -182,9 +183,4 @@ export class WeekScheduleComponent implements OnInit {
     this.currentDate = date
     this.currentDateFormat = formatDate(date, 'yyyy-MM-dd', 'en-US', Intl.DateTimeFormat().resolvedOptions().timeZone)
   }
-
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
 }

@@ -80,7 +80,10 @@
 <div *ngIf="task && authenticated && !loadingDetail">
   <a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100"
      role="button" routerLink="/tasks">Go to Tasks</a>
-  <!--<a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100" role="button">Go to Schedule Week</a>-->
+
+  <a class="mb-2 btn bg-scheduler c-scheduler-dark btn-lg w-100"
+     role="button" routerLink="/week">Go to Schedule Week</a>
+
   <a class="btn bg-scheduler c-scheduler-dark btn-lg w-100"
      role="button" routerLink="/tasks/new">Create another Task</a>
 </div>
