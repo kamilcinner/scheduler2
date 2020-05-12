@@ -29,9 +29,11 @@ export class TaskService {
 
   // Returns proper Task object created from API JSON.
   private static newTaskFromApiJSON(task): Task {
-    return new Task(task.id, task.ownerUsername, task.name, new Date(task.dueDateTime),
+    const newTask = new Task(task.id, task.ownerUsername, task.name, new Date(task.dueDateTime),
       task.description, task.priority, task.done, task.shared,
       task._links.self.href);
+    console.log('Saved Task', newTask)
+    return newTask
   }
 
   // Get all Tasks.

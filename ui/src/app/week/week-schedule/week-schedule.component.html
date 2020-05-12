@@ -1,4 +1,4 @@
-<div *ngIf="loading" class="overlay-flex">
+<div *ngIf="loadingActivities || loadingTasks" class="overlay-flex">
   <span class="spinner-border"></span>
 </div>
 
@@ -32,7 +32,7 @@
 <div *ngIf="weekDays; else elseBlock">
   <div *ngFor="let day of weekDays">
     <div class="jumbotron mb-3 p-2 bg-scheduler-dark-2 c-scheduler-white">
-      <div *ngIf="day.quests; else elseBlock">
+      <div *ngIf="day.quests.length > 0; else elseBlock">
         <h1 class="display-4">{{ day.weekDayName }}</h1>
 
         <div *ngFor="let quest of day.quests" class="list-group">

@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 
 export class Task {
   id: string;
@@ -37,7 +37,7 @@ export class Task {
   }
 
   get crispyTime(): string {
-    return DatePipe.ɵfac().transform(this.dueDateTime, 'HH:mm')
+    return formatDate(this.dueDateTime, 'HH:mm', 'en-US')
   }
 
   isOneOfPriorities(prior1: string, prior2: string): boolean {

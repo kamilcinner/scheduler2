@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { ActivityService, TaskService } from '@app/_services'
 import { Quest } from '@app/week/_models'
 import { Activity, Task } from '@app/_models'
-import { formatDate, Time } from '@angular/common'
+import { formatDate } from '@angular/common'
 import { SchedulerWeekDay } from '@app/week/_helpers';
 
 @Component({
@@ -13,18 +13,20 @@ import { SchedulerWeekDay } from '@app/week/_helpers';
 export class WeekScheduleComponent implements OnInit {
   loading = true
   weekDays: SchedulerWeekDay[]
+  private currentDate: Date
   currentDateFormat: string
+
+  private taskList: Task[]
+  private activitiesList: Activity[]
+  private weekShift: number
+
+  loadingTasks = true
+  loadingActivities = true
 
   constructor(
     private taskService: TaskService,
     private activityService: ActivityService,
-    private taskList: Task[],
-    private activitiesList: Activity[],
-    private quests: Quest[],
-    private weekShift: number,
-) {
-    this.onCurrentWeek()
-  }
+) { }
 
   ngOnInit(): void {
     // Get Tasks and Activities data from server.
@@ -35,20 +37,33 @@ export class WeekScheduleComponent implements OnInit {
     // Get Activities.
     this.getActivities().then(r => console.log(r))
 
-    this.loading = false
+    // (async () => {
+    //   await this.getTasks()
+    //   await this.getActivities()
+    //   this.onCurrentWeek()
+    // })();
+
+    // this.onCurrentWeek()
   }
 
   setQuestsForChosenWeek() {
     this.loading = true
 
-    // Get date of Monday.
-    let currentDate = new Date(this.currentDateFormat)
-    let mondayDate = new Date(currentDate.getDate() - currentDate.getDay())
+    // Get date of Monday in chosen week.
+    let mondayDate = new Date(this.currentDate)
+    mondayDate.setDate(this.currentDate.getDate() - this.currentDate.getDay() + 1)
+    console.log('Current date', this.currentDate)
+    console.log('Monday date day', mondayDate.getDay())
+    console.log('Monday date', mondayDate)
 
     // Create list of days which occurs in a week in which selected day is present.
     this.weekDays = []
     for (let i = 0; i < 7; i++) {
-      this.weekDays.push(new SchedulerWeekDay(new Date(mondayDate.getDate() + i), []))
+      let weekDayDate = new Date(mondayDate)
+      weekDayDate.setDate(mondayDate.getDate() + i)
+      console.log(weekDayDate.toDateString())
+      console.log(weekDayDate.getDay())
+      this.weekDays.push(new SchedulerWeekDay(weekDayDate, []))
     }
 
     let gotAtLeastOneQuest = false
@@ -60,9 +75,12 @@ export class WeekScheduleComponent implements OnInit {
       }
 
       for (let weekDay of this.weekDays) {
-        if (activity.date === weekDay.date || (activity.repeatWeekly && activity.weekDayName === weekDay.weekDayName)) {
+        console.log(activity.date.toDateString())
+        console.log(weekDay.date.toDateString())
+        if (activity.date.toDateString() === weekDay.date.toDateString() || (activity.repeatWeekly && activity.weekDayName === weekDay.weekDayName)) {
           weekDay.quests.push(new Quest(activity.id, activity.name, activity.description, activity.crispyTime, null))
           gotAtLeastOneQuest = true
+          console.log('Added Activity!', activity)
           break
         }
       }
@@ -75,25 +93,32 @@ export class WeekScheduleComponent implements OnInit {
       }
 
       for (let weekDay of this.weekDays) {
-        // TODO: check if this if statement not compare time also
-        if (task.dueDateTime.getDate() === weekDay.date.getDate()) {
+        if (task.dueDateTime.toDateString() === weekDay.date.toDateString()) {
           let newQuest = new Quest(task.id, task.name, task.description, task.crispyTime, task.priority)
-          let newQuestTime: Time = { hours: task.dueDateTime.getHours(), minutes: task.dueDateTime.getMinutes() }
+          let newQuestDate = new Date('01/01/1900 ' + newQuest.time + ':00')
+          let newQuestTime = newQuestDate.getTime()
+          console.log('New Quest time', newQuestTime)
+
           // Add task in a proper order to the week day.
           let i = 0
+          let addedTask = false
           for (let quest of weekDay.quests) {
-            const questDate = new Date('01/01/1900 ' + quest.time + ':00')
-            let questTime: Time = { hours: questDate.getHours(), minutes: questDate.getMinutes() }
+            const questDate = new Date('01/01/1900 ' + quest.time.substr(0,5) + ':00')
+            let questTime = questDate.getTime()
+            console.log('Quest time', questTime)
             if (newQuestTime < questTime) {
               weekDay.quests.splice(i, 0, newQuest)
               gotAtLeastOneQuest = true
+              console.log('Added Task in loop!', task)
+              addedTask = true
               break
             }
             i++
           }
-          if (i == 0) {
+          if (!addedTask) {
             weekDay.quests.push(newQuest)
             gotAtLeastOneQuest = true
+            console.log('Added Task end loop!', task)
           }
         }
       }
@@ -116,6 +141,7 @@ export class WeekScheduleComponent implements OnInit {
           this.taskList = tasks
         }
       })
+      this.loadingTasks = false
     }
   }
 
@@ -128,6 +154,7 @@ export class WeekScheduleComponent implements OnInit {
           this.activitiesList = activities
         }
       })
+      this.loadingActivities = false
     }
   }
 
@@ -152,7 +179,12 @@ export class WeekScheduleComponent implements OnInit {
   setCurrentDate(): void {
     let date = new Date()
     date.setDate(date.getDate() + 7 * this.weekShift)
-    this.currentDateFormat = formatDate(date, 'yyyy-MM-dd', 'en-US')
+    this.currentDate = date
+    this.currentDateFormat = formatDate(date, 'yyyy-MM-dd', 'en-US', Intl.DateTimeFormat().resolvedOptions().timeZone)
+  }
+
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
 }

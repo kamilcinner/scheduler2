@@ -26,9 +26,11 @@ export class ActivityService {
 
   // Returns proper Activity object created from API JSON.
   private static newActivityFromApiJSON(activity): Activity {
-    return new Activity(activity.id, activity.ownerUsername, activity.name, activity.description,
+    const newActivity = new Activity(activity.id, activity.ownerUsername, activity.name, activity.description,
       new Date('01/01/1900 ' + activity.timeStart), new Date('01/01/1900 ' + activity.timeEnd),
       new Date(activity.date), activity.statusActive, activity.repeatWeekly, activity._links.self.href);
+    console.log('Saved Activity', newActivity)
+    return newActivity
   }
 
   // Get all Activities.
