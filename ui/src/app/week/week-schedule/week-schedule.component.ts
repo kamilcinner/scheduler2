@@ -12,13 +12,11 @@ import { SchedulerWeekDay } from '@app/week/_helpers';
 })
 export class WeekScheduleComponent implements OnInit {
   loading = true
-  weekDays: SchedulerWeekDay[]
-  private currentDate: Date
   currentDateFormat: string
+  weekDays: SchedulerWeekDay[]
 
   private taskList: Task[]
   private activitiesList: Activity[]
-  private weekShift: number
 
   constructor(
     private taskService: TaskService,
@@ -45,9 +43,14 @@ export class WeekScheduleComponent implements OnInit {
     this.loading = true
 
     // Get date of Monday in chosen week.
-    let mondayDate = new Date(this.currentDate)
-    mondayDate.setDate(this.currentDate.getDate() - this.currentDate.getDay() + 1)
-    console.log('Current date', this.currentDate)
+    let mondayDate = this.getChosenDate()
+    // We treat Sunday as the end of the week. Not the start.
+    // mondayOffset for Sunday is 0 and that's why we change it to 7.
+    let mondayOffset = mondayDate.getDay()
+    if (mondayOffset == 0) {
+      mondayOffset = 7
+    }
+    mondayDate.setDate(mondayDate.getDate() - mondayOffset + 1)
     console.log('Monday date day', mondayDate.getDay())
     console.log('Monday date', mondayDate)
 
@@ -160,27 +163,40 @@ export class WeekScheduleComponent implements OnInit {
   }
 
   onCurrentWeek(): void {
-    this.weekShift = 0
-    this.setCurrentDate()
+    this.setCurrentDateFormat()
     this.setQuestsForChosenWeek()
   }
 
   onNextWeek(): void {
-    this.weekShift++
-    this.setCurrentDate()
+    this.setDateFormat(1)
     this.setQuestsForChosenWeek()
   }
 
   onPreviousWeek(): void {
-    this.weekShift--
-    this.setCurrentDate()
+    this.setDateFormat(-1)
     this.setQuestsForChosenWeek()
   }
 
-  setCurrentDate(): void {
-    let date = new Date()
-    date.setDate(date.getDate() + 7 * this.weekShift)
-    this.currentDate = date
-    this.currentDateFormat = formatDate(date, 'yyyy-MM-dd', 'en-US', Intl.DateTimeFormat().resolvedOptions().timeZone)
+  setCurrentDateFormat(): void {
+    this.currentDateFormat = formatDate(new Date(), 'yyyy-MM-dd', 'en-US',
+      Intl.DateTimeFormat().resolvedOptions().timeZone)
+  }
+
+  setDateFormat(weekShift: number): void {
+    let date = this.getChosenDate()
+    date.setDate(date.getDate() + 7 * weekShift)
+    this.currentDateFormat = formatDate(date, 'yyyy-MM-dd', 'en-US',
+      Intl.DateTimeFormat().resolvedOptions().timeZone)
+  }
+
+  getChosenDate(): Date {
+    let dateString = this.currentDateFormat + ' 13:00:00'
+    console.log('Date string', dateString)
+    return new Date(dateString)
+  }
+
+  setChosenDateFormat(dateEvent): void {
+    console.log(dateEvent.target.value)
+    this.currentDateFormat = dateEvent.target.value
   }
 }

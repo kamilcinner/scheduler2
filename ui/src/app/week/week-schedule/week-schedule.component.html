@@ -6,7 +6,8 @@
 
   <div class="form-group">
     <label for="date">Week day date</label>
-    <input id="date" type="date" value="{{ currentDateFormat }}" class="form-control bg-scheduler-dark-3">
+    <input id="date" type="date" value="{{ currentDateFormat }}" class="form-control bg-scheduler-dark-3"
+        (change)="setChosenDateFormat($event); setQuestsForChosenWeek()">
   </div>
 
   <div class="form-group">
