@@ -2,6 +2,10 @@ package com.github.kamilcinner.scheduler2.backend;
 
 import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
 import com.github.kamilcinner.scheduler2.backend.addons.PollubParser;
+import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingList;
+import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingListItem;
+import com.github.kamilcinner.scheduler2.backend.shopping.repositories.ShoppingListItemRepository;
+import com.github.kamilcinner.scheduler2.backend.shopping.repositories.ShoppingListRepository;
 import com.github.kamilcinner.scheduler2.backend.tasks.models.Task;
 import com.github.kamilcinner.scheduler2.backend.users.models.User;
 import com.github.kamilcinner.scheduler2.backend.activities.repositories.ActivityRepository;
@@ -12,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
@@ -23,8 +28,12 @@ import java.sql.Timestamp;
 class PopulateDatabaseByDummies {
 
     @Bean
-    CommandLineRunner initDatabase(TaskRepository taskRepository, ActivityRepository activityRepository,
-                                   UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner initDatabase(TaskRepository taskRepository,
+                                   ActivityRepository activityRepository,
+                                   ShoppingListRepository shoppingListRepository,
+                                   ShoppingListItemRepository shoppingListItemRepository,
+                                   UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder) {
         return args -> {
             // Add Tasks.
 
@@ -70,6 +79,14 @@ class PopulateDatabaseByDummies {
             log.info("Preloading " + activityRepository.save(new Activity("user1", "AI Lectures",
                     "I like to roll", Time.valueOf("12:31:00"), Time.valueOf("14:31:00"), Date.valueOf("2020-05-05"),
                     true, true)));
+
+            // Add Shopping List with Items.
+
+            shoppingListRepository.save(new ShoppingList("user1", "Test SL"));
+
+            shoppingListItemRepository.save(new ShoppingListItem(shoppingListRepository.findByOwnerUsername("user1", Sort.by(Sort.Direction.ASC, "lastEditDateTime")).get(0), "Test Item 1"));
+            shoppingListItemRepository.save(new ShoppingListItem(shoppingListRepository.findByOwnerUsername("user1", Sort.by(Sort.Direction.ASC, "lastEditDateTime")).get(0), "Test Item 2"));
+            shoppingListItemRepository.save(new ShoppingListItem(shoppingListRepository.findByOwnerUsername("user1", Sort.by(Sort.Direction.ASC, "lastEditDateTime")).get(0), "Test Item 3"));
         };
     }
 }
