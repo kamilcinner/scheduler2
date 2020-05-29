@@ -21,7 +21,8 @@ export class ShoppingService {
   // Checks if every ShoppingList field send from API is in acceptable format.
   private static checkShoppingListTypes(shoppingList): boolean {
     return !(typeof shoppingList.id !== 'string' || typeof shoppingList.ownerUsername !== 'string' ||
-      typeof shoppingList.lastEditDateTime !== 'string' || typeof shoppingList.shared !== 'boolean')
+      typeof shoppingList.name !== 'string' || typeof shoppingList.lastEditDateTime !== 'string' ||
+      typeof shoppingList.shared !== 'boolean')
   }
 
   // Checks if every ShoppingListItem field send from API is in acceptable format.
@@ -39,8 +40,8 @@ export class ShoppingService {
 
   // Returns proper ShoppingList object created from API JSON.
   private static newShoppingListFromApiJSON(shoppingList): ShoppingList {
-    const newShoppingList = new ShoppingList(shoppingList.id, shoppingList.name, shoppingList.lastEditDateTime,
-      shoppingList.shared, [])
+    const newShoppingList = new ShoppingList(shoppingList.id, shoppingList.ownerUsername, shoppingList.name,
+      shoppingList.lastEditDateTime, shoppingList.shared, [])
     console.log('Saved ShoppingList', newShoppingList)
     return newShoppingList
   }
@@ -72,9 +73,10 @@ export class ShoppingService {
 
   // Get all ShoppingListItems by ShoppingList id.
   getAllItems(id: string) {
+    console.log('service items')
     if (ValidationService.checkUUID(id)) {
       const url: string = `${environment.apiUrl}/shoppinglists/` +
-        (this.authenticated ? '' : 'shared/') + id
+        (this.authenticated ? '' : 'shared/') + `${id}/items`
 
       return this.http.get<any>(url)
         .pipe(map(shoppingListItems => {
@@ -88,6 +90,7 @@ export class ShoppingService {
             for (const item of shoppingListItems) {
               // Check field types.
               if (!ShoppingService.checkShoppingListItemTypes(item)) {
+                console.log('404 bad item types')
                 return this.push404()
               }
 
@@ -95,7 +98,7 @@ export class ShoppingService {
               newShoppingListItems.push(ShoppingService.newShoppingListItemFromApiJSON(item))
             }
             return newShoppingListItems
-          } else { return this.push404() }
+          } else { console.log('404 else on items'); return this.push404() }
         }))
     }
   }

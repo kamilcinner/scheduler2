@@ -25,8 +25,6 @@ import { ActivityConfirmDeleteComponent } from './activity/activity-confirm-dele
 import { ActivityFormComponent } from './activity/activity-form/activity-form.component';
 import { WeekScheduleComponent } from './week/week-schedule/week-schedule.component';
 import { PollubComponent } from './activity/pollub/pollub.component';
-import { ShoppinglistListComponent } from './shopping/shoppinglist-list/shoppinglist-list.component';
-import { Shopping } from './shopping/shopping.list-list/shopping.list-list.component';
 import { ShoppingListListComponent } from './shopping/shopping-list-list/shopping-list-list.component';
 
 @NgModule({
@@ -56,8 +54,6 @@ import { ShoppingListListComponent } from './shopping/shopping-list-list/shoppin
     ActivityFormComponent,
     WeekScheduleComponent,
     PollubComponent,
-    ShoppinglistListComponent,
-    Shopping.ListListComponent,
     ShoppingListListComponent
   ],
   providers: [

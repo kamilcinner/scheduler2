@@ -32,6 +32,7 @@ export class ShoppingListListComponent implements OnInit {
   }
 
   private getShoppingLists() {
+    console.log('getting shopping lists')
     return new Promise(resolve => {
       const result = this.shoppingService.getAllShoppingLists()
       if (result) {
@@ -47,6 +48,7 @@ export class ShoppingListListComponent implements OnInit {
   }
 
   private getItems(id: string) {
+    console.log('getting items for ' + id)
     return new Promise(resolve => {
       const result = this.shoppingService.getAllItems(id)
       if (result) {

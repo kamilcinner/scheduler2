@@ -1,1 +1,40 @@
-<p>shopping-list-list works!</p>
+<div *ngIf="loading" class="overlay-flex">
+  <span class="spinner-border"></span>
+</div>
+
+<div *ngIf="shoppingLists" class="list-group">
+
+  <a *ngFor="let shoppingList of shoppingLists" [routerLink]="['/shoppinglists/one', shoppingList.id]"
+     class="list-group-item mb-3 bg-scheduler-dark-2 c-scheduler-white list-group-item-action">
+
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ shoppingList.name }}</h5>
+      <small>{{ shoppingList.lastEditDateTime | date:'d MMM yyyy HH:mm' }}</small>
+    </div>
+
+    <div *ngIf="!shoppingList.isDone; else elseBlock" class="mb-0 text-secondary">
+      <small *ngFor="let item of shoppingList.items">
+        <span *ngIf="!item.done">
+          {{ item.name }},
+        </span>
+      </small>
+    </div>
+
+    <ng-template #elseBlock>
+      <p class="mb-0 text-secondary">Nothing left to buy</p>
+    </ng-template>
+
+    <p *ngIf="shoppingList.shared" class="font-weight-light my-0 text-success">Shared</p>
+  </a>
+
+</div>
+
+<div *ngIf="!loading" class="jumbotron py-0 bg-scheduler">
+  <p [ngSwitch]="shoppingLists" class="lead text-center">
+    <span *ngSwitchCase="shoppingLists">That's all! Would You mind add another </span>
+    <span *ngSwitchDefault>Would You mind add your first </span>
+
+    <a class="btn py-0 my-2 bg-scheduler-dark-2 c-scheduler btn-lg" routerLink="/shoppinglists/new"
+       role="button">Shopping List</a>
+  </p>
+</div>
