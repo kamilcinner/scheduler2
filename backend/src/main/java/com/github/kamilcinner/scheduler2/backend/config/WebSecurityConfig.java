@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http
             .authorizeRequests()
-                .antMatchers("/tasks/shared/**").permitAll()
+                .antMatchers("/tasks/shared/**", "/shoppinglists/shared/**").permitAll()
                 .antMatchers("/tasks").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()

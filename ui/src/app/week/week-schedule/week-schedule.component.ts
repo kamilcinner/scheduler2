@@ -3,7 +3,7 @@ import { ActivityService, TaskService } from '@app/_services'
 import { Quest } from '@app/week/_models'
 import { Activity, Task } from '@app/_models'
 import { formatDate } from '@angular/common'
-import { SchedulerWeekDay } from '@app/week/_helpers';
+import { SchedulerWeekDay } from '@app/week/_helpers'
 
 @Component({
   selector: 'app-week-schedule',
@@ -36,7 +36,7 @@ export class WeekScheduleComponent implements OnInit {
       // Show Quests for current week.
       this.loading = false
       this.onCurrentWeek()
-    })();
+    })()
   }
 
   setQuestsForChosenWeek() {

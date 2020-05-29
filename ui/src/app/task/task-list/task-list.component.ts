@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 
-import { TaskService} from '@app/_services';
-import { Task } from '@app/_models';
+import { TaskService} from '@app/_services'
+import { Task } from '@app/_models'
 
 @Component({
   selector: 'app-task-list',
@@ -9,24 +9,24 @@ import { Task } from '@app/_models';
   styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent implements OnInit {
-  loading = true;
-  tasks: Task[];
+  loading = true
+  tasks: Task[]
 
   constructor(
     private taskService: TaskService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Get Tasks data from server.
-    const result = this.taskService.getAll();
+    const result = this.taskService.getAll()
     if (result) {
       result.subscribe(tasks => {
         // Check if there are tasks to display.
         if (tasks) {
-          this.tasks = tasks;
+          this.tasks = tasks
         }
-        this.loading = false;
-      });
+        this.loading = false
+      })
     }
   }
 }
