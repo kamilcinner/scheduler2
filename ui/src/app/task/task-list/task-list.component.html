@@ -32,8 +32,8 @@
 
 <div *ngIf="!loading" class="jumbotron py-0 bg-scheduler">
   <p [ngSwitch]="tasks" class="lead text-center">
-    <span *ngSwitchCase="tasks">That's all! Would You mind add another </span>
-    <span *ngSwitchDefault>Would You mind add your first </span>
+    <span *ngSwitchCase="null">Would You mind add your first </span>
+    <span *ngSwitchDefault>That's all! Would You mind add another </span>
 
     <a class="btn py-0 my-2 bg-scheduler-dark-2 c-scheduler btn-lg" routerLink="/tasks/new" role="button">Task</a>
   </p>

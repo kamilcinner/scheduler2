@@ -27,6 +27,7 @@ import { WeekScheduleComponent } from './week/week-schedule/week-schedule.compon
 import { PollubComponent } from './activity/pollub/pollub.component';
 import { ShoppingListListComponent } from './shopping/shopping-list-list/shopping-list-list.component';
 import { ShoppingListDetailComponent } from './shopping/shopping-list-detail/shopping-list-detail.component';
+import { ShoppingListConfirmDeleteComponent } from './shopping/shopping-list-confirm-delete/shopping-list-confirm-delete.component';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { ShoppingListDetailComponent } from './shopping/shopping-list-detail/sho
     WeekScheduleComponent,
     PollubComponent,
     ShoppingListListComponent,
-    ShoppingListDetailComponent
+    ShoppingListDetailComponent,
+    ShoppingListConfirmDeleteComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

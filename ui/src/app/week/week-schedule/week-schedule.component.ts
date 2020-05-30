@@ -66,57 +66,61 @@ export class WeekScheduleComponent implements OnInit {
 
     let gotAtLeastOneQuest = false
 
-    for (let activity of this.activitiesList) {
-      // Skip adding inactive activities.
-      if (!activity.statusActive) {
-        continue
-      }
+    if (this.activitiesList) {
+      for (let activity of this.activitiesList) {
+        // Skip adding inactive activities.
+        if (!activity.statusActive) {
+          continue
+        }
 
-      for (let weekDay of this.weekDays) {
-        console.log(activity.date.toDateString())
-        console.log(weekDay.date.toDateString())
-        if (activity.date.toDateString() === weekDay.date.toDateString() || (activity.repeatWeekly && activity.weekDayName === weekDay.weekDayName)) {
-          weekDay.quests.push(new Quest(activity.id, activity.name, activity.description, activity.crispyTime, null))
-          gotAtLeastOneQuest = true
-          console.log('Added Activity!', activity)
-          break
+        for (let weekDay of this.weekDays) {
+          console.log(activity.date.toDateString())
+          console.log(weekDay.date.toDateString())
+          if (activity.date.toDateString() === weekDay.date.toDateString() || (activity.repeatWeekly && activity.weekDayName === weekDay.weekDayName)) {
+            weekDay.quests.push(new Quest(activity.id, activity.name, activity.description, activity.crispyTime, null))
+            gotAtLeastOneQuest = true
+            console.log('Added Activity!', activity)
+            break
+          }
         }
       }
     }
 
-    for (let task of this.taskList) {
-      // Skip adding done tasks.
-      if (task.done) {
-        continue
-      }
+    if (this.taskList) {
+      for (let task of this.taskList) {
+        // Skip adding done tasks.
+        if (task.done) {
+          continue
+        }
 
-      for (let weekDay of this.weekDays) {
-        if (task.dueDateTime.toDateString() === weekDay.date.toDateString()) {
-          let newQuest = new Quest(task.id, task.name, task.description, task.crispyTime, task.priority)
-          let newQuestDate = new Date('01/01/1900 ' + newQuest.time + ':00')
-          let newQuestTime = newQuestDate.getTime()
-          console.log('New Quest time', newQuestTime)
+        for (let weekDay of this.weekDays) {
+          if (task.dueDateTime.toDateString() === weekDay.date.toDateString()) {
+            let newQuest = new Quest(task.id, task.name, task.description, task.crispyTime, task.priority)
+            let newQuestDate = new Date('01/01/1900 ' + newQuest.time + ':00')
+            let newQuestTime = newQuestDate.getTime()
+            console.log('New Quest time', newQuestTime)
 
-          // Add task in a proper order to the week day.
-          let i = 0
-          let addedTask = false
-          for (let quest of weekDay.quests) {
-            const questDate = new Date('01/01/1900 ' + quest.time.substr(0,5) + ':00')
-            let questTime = questDate.getTime()
-            console.log('Quest time', questTime)
-            if (newQuestTime < questTime) {
-              weekDay.quests.splice(i, 0, newQuest)
-              gotAtLeastOneQuest = true
-              console.log('Added Task in loop!', task)
-              addedTask = true
-              break
+            // Add task in a proper order to the week day.
+            let i = 0
+            let addedTask = false
+            for (let quest of weekDay.quests) {
+              const questDate = new Date('01/01/1900 ' + quest.time.substr(0, 5) + ':00')
+              let questTime = questDate.getTime()
+              console.log('Quest time', questTime)
+              if (newQuestTime < questTime) {
+                weekDay.quests.splice(i, 0, newQuest)
+                gotAtLeastOneQuest = true
+                console.log('Added Task in loop!', task)
+                addedTask = true
+                break
+              }
+              i++
             }
-            i++
-          }
-          if (!addedTask) {
-            weekDay.quests.push(newQuest)
-            gotAtLeastOneQuest = true
-            console.log('Added Task end loop!', task)
+            if (!addedTask) {
+              weekDay.quests.push(newQuest)
+              gotAtLeastOneQuest = true
+              console.log('Added Task end loop!', task)
+            }
           }
         }
       }
@@ -131,7 +135,7 @@ export class WeekScheduleComponent implements OnInit {
   }
 
   private getTasks() {
-    console.log('getting tasks')
+    console.log('Getting tasks...')
     return new Promise(resolve => {
       const resultTasks = this.taskService.getAll()
       if (resultTasks) {
@@ -143,11 +147,12 @@ export class WeekScheduleComponent implements OnInit {
           resolve()
         })
       }
+      resolve()
     })
   }
 
   private getActivities() {
-    console.log('getting activities')
+    console.log('Getting activities...')
     return new Promise(resolve => {
       const resultActivities = this.activityService.getAll()
       if (resultActivities) {
@@ -159,6 +164,7 @@ export class WeekScheduleComponent implements OnInit {
           resolve()
         })
       }
+      resolve()
     })
   }
 

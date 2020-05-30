@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Activity } from '@app/_models';
-import { ActivityService } from '@app/_services';
+import { Component, OnInit } from '@angular/core'
+import { Activity } from '@app/_models'
+import { ActivityService } from '@app/_services'
 
 @Component({
   selector: 'app-activity-list',
@@ -8,8 +8,8 @@ import { ActivityService } from '@app/_services';
   styleUrls: ['./activity-list.component.css']
 })
 export class ActivityListComponent implements OnInit {
-  loading = true;
-  activities: Activity[];
+  loading = true
+  activities: Activity[]
 
   constructor(
     private activityService: ActivityService
@@ -17,16 +17,16 @@ export class ActivityListComponent implements OnInit {
 
   ngOnInit(): void {
     // Get Activities data from server.
-    const result = this.activityService.getAll();
+    const result = this.activityService.getAll()
     if (result) {
       result.subscribe(activities => {
         // Check if there are activities to display.
         if (activities) {
-          this.activities = activities;
+          this.activities = activities
         }
-        this.loading = false;
+        this.loading = false
       })
-    }
+    } else { this.loading = false }
   }
 
 }

@@ -18,7 +18,15 @@ export class ShoppingList {
     this.items = items
   }
 
+  negateShare(): void {
+    this.shared = !this.shared
+  }
+
   get isDone(): boolean {
     return !(this.items.length > 0 && this.items[0].done === false);
+  }
+
+  get toString(): string {
+    return this.name + ' (' + this.lastEditDateTime.toDateString() + ')'
   }
 }

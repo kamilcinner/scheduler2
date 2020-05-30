@@ -23,8 +23,10 @@ export class ShoppingListListComponent implements OnInit {
       await this.getShoppingLists()
 
       // Get items for each shopping list.
-      for (const shoppingList of this.shoppingLists) {
-        await this.getItems(shoppingList.id)
+      if (this.shoppingLists) {
+        for (const shoppingList of this.shoppingLists) {
+          await this.getItems(shoppingList.id)
+        }
       }
 
       this.loading = false
@@ -44,6 +46,7 @@ export class ShoppingListListComponent implements OnInit {
           resolve()
         })
       }
+      resolve()
     })
   }
 

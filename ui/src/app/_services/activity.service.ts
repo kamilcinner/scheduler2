@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Activity } from '@app/_models';
-import { map } from 'rxjs/operators';
-import { environment } from '@environments/environment';
-import { ValidationService } from '@app/_services/validation.service';
+import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { Router } from '@angular/router'
+import { Activity } from '@app/_models'
+import { map } from 'rxjs/operators'
+import { environment } from '@environments/environment'
+import { ValidationService } from '@app/_services/validation.service'
 
 @Injectable({
   providedIn: 'root'
@@ -21,14 +21,14 @@ export class ActivityService {
     return !(typeof activity.id !== 'string' || typeof activity.ownerUsername !== 'string' || typeof activity.name !== 'string' ||
       typeof activity.description !== 'string' || typeof activity.timeStart !== 'string' || typeof activity.timeEnd !== 'string' ||
       typeof activity.date !== 'string' || typeof activity.statusActive !== 'boolean' || typeof activity.repeatWeekly !== 'boolean' ||
-      typeof activity._links.self.href !== 'string');
+      typeof activity._links.self.href !== 'string')
   }
 
   // Returns proper Activity object created from API JSON.
   private static newActivityFromApiJSON(activity): Activity {
     const newActivity = new Activity(activity.id, activity.ownerUsername, activity.name, activity.description,
       new Date('01/01/1900 ' + activity.timeStart), new Date('01/01/1900 ' + activity.timeEnd),
-      new Date(activity.date), activity.statusActive, activity.repeatWeekly, activity._links.self.href);
+      new Date(activity.date), activity.statusActive, activity.repeatWeekly, activity._links.self.href)
     console.log('Saved Activity', newActivity)
     return newActivity
   }
@@ -38,25 +38,25 @@ export class ActivityService {
     return this.http.get<any>(`${environment.apiUrl}/activities`)
       .pipe(map(activities => {
         if (activities._embedded && activities._embedded.activityList) {
-          activities = activities._embedded.activityList;
+          activities = activities._embedded.activityList
 
           // Initialize Activities array.
-          const newActivities: Activity[] = [];
+          const newActivities: Activity[] = []
 
           // Loop over JSON activityList.
           for (const activity of activities) {
             // Check if every field send from API is in acceptable format.
             if (!ActivityService.checkActivityTypes(activity)) {
-              return this.push404();
+              return this.push404()
             }
 
             // Add Activity to the Activities array.
-            newActivities.push(ActivityService.newActivityFromApiJSON(activity));
+            newActivities.push(ActivityService.newActivityFromApiJSON(activity))
           }
-          return newActivities;
-        } else { return this.push404(); }
+          return newActivities
+        } else { return null }
       })
-    );
+    )
   }
 
   // Get Activity by id.
@@ -67,15 +67,15 @@ export class ActivityService {
           if (activity) {
             // Check if every field send from API is in acceptable format.
             if (!ActivityService.checkActivityTypes(activity)) {
-              return this.push404();
+              return this.push404()
             }
 
             // Return proper Activity object.
-            return ActivityService.newActivityFromApiJSON(activity);
-          } else { return this.push404(); }
-        }));
+            return ActivityService.newActivityFromApiJSON(activity)
+          } else { return this.push404() }
+        }))
     }
-    return this.push404();
+    return this.push404()
   }
 
   // Create or update Activity.
@@ -85,9 +85,9 @@ export class ActivityService {
     if (id) {
       if (ValidationService.checkUUID(id)) {
         return this.http.put<any>(`${environment.apiUrl}/activities/${id}`,
-          { name, description, timeStart, timeEnd, date, statusActive, repeatWeekly });
+          { name, description, timeStart, timeEnd, date, statusActive, repeatWeekly })
       }
-      return this.push404();
+      return this.push404()
     } else {
       return this.http.post<any>(`${environment.apiUrl}/activities`,
         { name, description, timeStart, timeEnd, date, statusActive, repeatWeekly })
@@ -97,9 +97,9 @@ export class ActivityService {
   // Delete Activity.
   delete(id: string) {
     if (ValidationService.checkUUID(id)) {
-      return this.http.delete(`${environment.apiUrl}/activities/${id}`);
+      return this.http.delete(`${environment.apiUrl}/activities/${id}`)
     }
-    return this.push404();
+    return this.push404()
   }
 
   // Add university subjects to User Activities in API.
@@ -108,7 +108,7 @@ export class ActivityService {
   }
 
   private push404(): undefined {
-    this.router.navigate(['/404']).then(r => console.log(r));
-    return undefined;
+    this.router.navigate(['/404']).then(r => console.log(r))
+    return undefined
   }
 }

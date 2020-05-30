@@ -41,7 +41,7 @@ export class ShoppingService {
   // Returns proper ShoppingList object created from API JSON.
   private static newShoppingListFromApiJSON(shoppingList): ShoppingList {
     const newShoppingList = new ShoppingList(shoppingList.id, shoppingList.ownerUsername, shoppingList.name,
-      shoppingList.lastEditDateTime, shoppingList.shared, [])
+      new Date(shoppingList.lastEditDateTime), shoppingList.shared, [])
     console.log('Saved ShoppingList', newShoppingList)
     return newShoppingList
   }
@@ -67,8 +67,30 @@ export class ShoppingService {
             newShoppingLists.push(ShoppingService.newShoppingListFromApiJSON(shoppingList))
           }
           return newShoppingLists
-        } else { return this.push404() }
+        } else { return null }
       }))
+  }
+
+  // Get one Shopping list.
+  getOneShoppingList(id: string) {
+    if (ValidationService.checkUUID(id)) {
+      const url: string = `${environment.apiUrl}/shoppinglists/` +
+        (this.authenticated ? '' : 'shared/') + id
+
+      return this.http.get<any>(url)
+        .pipe(map(shoppingList => {
+          if (shoppingList) {
+            // Check field types.
+            if (!ShoppingService.checkShoppingListTypes(shoppingList)) {
+              return this.push404()
+            }
+
+            // Return proper Shopping list object.
+            return ShoppingService.newShoppingListFromApiJSON(shoppingList)
+          } else { return this.push404() }
+        }))
+    }
+    return this.push404()
   }
 
   // Get all ShoppingListItems by ShoppingList id.
@@ -101,6 +123,22 @@ export class ShoppingService {
           } else { console.log('404 else on items'); return this.push404() }
         }))
     }
+  }
+
+  // Delete Shopping list.
+  delete(id: string) {
+    if (ValidationService.checkUUID(id)) {
+      return this.http.delete(`${environment.apiUrl}/shoppinglists/${id}`)
+    }
+    return this.push404()
+  }
+
+  // Share/Unshare Shopping list.
+  share(id: string) {
+    if (ValidationService.checkUUID(id)) {
+      return this.http.get(`${environment.apiUrl}/shoppinglists/share/${id}`)
+    }
+    return this.push404()
   }
 
   private push404(): undefined {
