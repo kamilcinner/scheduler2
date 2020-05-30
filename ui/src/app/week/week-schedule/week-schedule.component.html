@@ -30,47 +30,47 @@
 
 </div>
 <div *ngIf="!loading">
-<div *ngIf="weekDays; else elseBlock">
-  <div *ngFor="let day of weekDays">
-    <div class="jumbotron mb-3 p-2 bg-scheduler-dark-2 c-scheduler-white">
-      <div *ngIf="day.quests.length > 0; else elseBlock">
-        <h1 class="display-4">{{ day.weekDayName }}</h1>
+  <div *ngIf="weekDays; else elseBlock">
+    <div *ngFor="let day of weekDays">
+      <div class="jumbotron mb-3 p-2 bg-scheduler-dark-2 c-scheduler-white">
+        <div *ngIf="day.quests.length > 0; else elseBlock">
+          <h1 class="display-4">{{ day.weekDayName }}</h1>
 
-        <div *ngFor="let quest of day.quests" class="list-group">
-          <a class="list-group-item {% endif %}" [routerLink]="quest.absoluteUrl"
-             [ngClass]="{'bg-scheduler-dark-2 c-scheduler-white': quest.priority === 'h',
-                         'bg-scheduler-light c-scheduler-dark': quest.priority === 'l',
-                         'bg-scheduler-dark-3': quest.priority === 'n',
-                         'bg-scheduler-white c-scheduler-dark-2': !quest.priority}">
+          <div *ngFor="let quest of day.quests" class="list-group">
+            <a class="list-group-item {% endif %}" [routerLink]="quest.absoluteUrl"
+               [ngClass]="{'bg-scheduler-dark-2 c-scheduler-white': quest.priority === 'h',
+                           'bg-scheduler-light c-scheduler-dark': quest.priority === 'l',
+                           'bg-scheduler-dark-3': quest.priority === 'n',
+                           'bg-scheduler-white c-scheduler-dark-2': !quest.priority}">
 
-            <h1 class="h5 font-weight-bold">{{ quest.time }}</h1>
+              <h1 class="h5 font-weight-bold">{{ quest.time }}</h1>
 
-            <h1 class="h5 lead">{{ quest.name }}</h1>
+              <h1 class="h5 lead">{{ quest.name }}</h1>
 
-            <small class="text-muted">{{ quest.description }}</small>
+              <small class="text-muted">{{ quest.description }}</small>
 
-            <p *ngIf="quest.priority" class="my-0">
-              <small [ngClass]="{'text-warning': quest.priority === 'h',
-                       'text-muted': quest.priority === 'l',
-                       'font-weight-bold': quest.isOneOfPriorities('n', 'h')}">
-                {{ quest.priorityName }}
-              </small>
-            </p>
+              <p *ngIf="quest.priority" class="my-0">
+                <small [ngClass]="{'text-warning': quest.priority === 'h',
+                         'text-muted': quest.priority === 'l',
+                         'font-weight-bold': quest.isOneOfPriorities('n', 'h')}">
+                  {{ quest.priorityName }}
+                </small>
+              </p>
 
-          </a>
+            </a>
+          </div>
         </div>
-      </div>
 
-      <ng-template #elseBlock>
-        <h1 class="h4 lead text-muted">{{ day.weekDayName }} - no activity</h1>
-      </ng-template>
+        <ng-template #elseBlock>
+          <h1 class="h4 lead text-muted">{{ day.weekDayName }} - no activity</h1>
+        </ng-template>
+      </div>
     </div>
   </div>
-</div>
 
-<ng-template #elseBlock>
-  <div class="jumbotron py-1 bg-scheduler">
-    <p class="my-0 lead text-center">There are no activities in this week</p>
-  </div>
-</ng-template>
+  <ng-template #elseBlock>
+    <div class="jumbotron py-1 bg-scheduler">
+      <p class="my-0 lead text-center">There are no activities in this week</p>
+    </div>
+  </ng-template>
 </div>

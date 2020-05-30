@@ -146,8 +146,7 @@ export class WeekScheduleComponent implements OnInit {
           }
           resolve()
         })
-      }
-      resolve()
+      } else { resolve() }
     })
   }
 
@@ -163,8 +162,7 @@ export class WeekScheduleComponent implements OnInit {
           }
           resolve()
         })
-      }
-      resolve()
+      } else { resolve() }
     })
   }
 

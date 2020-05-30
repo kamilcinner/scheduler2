@@ -45,8 +45,7 @@ export class ShoppingListListComponent implements OnInit {
           }
           resolve()
         })
-      }
-      resolve()
+      } else { resolve() }
     })
   }
 
@@ -68,8 +67,7 @@ export class ShoppingListListComponent implements OnInit {
           }
           resolve()
         })
-      }
-      resolve()
+      } else { resolve() }
     })
   }
 }
