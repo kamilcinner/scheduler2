@@ -15,7 +15,8 @@
 
   <ul *ngIf="shoppingList.items.length > 0; else elseBlock">
     <li *ngFor="let item of shoppingList.items" class="my-0 {% if item.status %}text-muted{% endif %}">
-      <a class="{% if item.status %}text-line-through text-muted{% else %}c-scheduler-white{% endif %}">
+      <a (click)="onMark(item.id)" role="button" [ngClass]="{'text-line-through text-muted': item.done,
+                     'c-scheduler-white': !item.done}">
         <p class="lead mt-0 mb-2">{{ item.name }}</p>
       </a>
     </li>

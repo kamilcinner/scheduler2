@@ -158,7 +158,9 @@ public class ShoppingListItemController {
                             && !itemToUpdate.getShoppingList().isShared()) {
                         throw new ShoppingListItemNotFoundException(id);
                     }
-                    return itemToUpdate;
+                    itemToUpdate.setDone(!itemToUpdate.isDone());
+
+                    return shoppingListItemRepository.save(itemToUpdate);
                 })
                 .orElseThrow(() -> new ShoppingListItemNotFoundException(id));
 

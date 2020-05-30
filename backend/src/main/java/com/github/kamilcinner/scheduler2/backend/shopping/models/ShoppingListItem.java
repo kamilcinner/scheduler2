@@ -3,6 +3,8 @@ package com.github.kamilcinner.scheduler2.backend.shopping.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
@@ -20,6 +22,8 @@ public class ShoppingListItem {
             max = 100,
             message = "Name can be up to {max} characters long."
     )
+    @NotBlank(message = "Item name is required.")
+    @NotNull(message = "Item name is required.")
     private String name;
 
     private boolean done = false;

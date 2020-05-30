@@ -6,18 +6,21 @@
   <form [formGroup]="shoppingListItemsForm" (ngSubmit)="onSubmit()">
     <div id="fields-wrapper" formArrayName="items">
 
-      <div *ngFor="let item of items.controls; let i=index" class="form-group">
-        <div class="input-group">
-          <div class="input-group-prepend bg-scheduler-dark-2">
-            <span class="input-group-text px-2 bg-scheduler-dark-3 c-scheduler">{{ i+1 }}</span>
-          </div>
+      <div *ngFor="let item of items.controls; index as i" class="form-group">
+        <ng-container [formGroup]="item">
+          <div class="input-group">
+            <div class="input-group-prepend bg-scheduler-dark-2">
+              <span class="input-group-text px-2 bg-scheduler-dark-3 c-scheduler">{{ i+1 }}</span>
+            </div>
 
-          <input class="form-control bg-scheduler-dark-3" [formControlName]="i">
+            <input class="form-control bg-scheduler-dark-3" formControlName="name">
+            <input type="hidden" class="form-control bg-scheduler-dark-3" formControlName="done">
 
-          <div class="input-group-append bg-scheduler-dark-2">
-            <button (click)="removeItemInput(i)" type="button" class="btn btn-danger px-3 delete-form-row">-</button>
+            <div class="input-group-append bg-scheduler-dark-2">
+              <button (click)="removeItemInput(i)" type="button" class="btn btn-danger px-3 delete-form-row">-</button>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
 

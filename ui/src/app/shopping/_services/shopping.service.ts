@@ -131,9 +131,9 @@ export class ShoppingService {
   }
 
   // Create new Shopping list item.
-  newItem(name: string, id: string) {
+  newItem(name: string, done: boolean, id: string) {
     if (ValidationService.checkUUID(id)) {
-      return this.http.post<any>(`${environment.apiUrl}/shoppinglists/${id}/items`, { name })
+      return this.http.post<any>(`${environment.apiUrl}/shoppinglists/${id}/items`, { name, done })
     }
     return this.push404()
   }

@@ -40,17 +40,27 @@ export class ShoppingListItemsFormComponent implements OnInit {
       await this.getItems(this.shoppingList.id)
 
       // Add items input to form array.
-      let itemNamesArray = []
+      let itemsArray = []
       if (this.shoppingList.items.length > 0) {
         for (const item of this.shoppingList.items) {
-          itemNamesArray.push(item.name)
+          itemsArray.push(this.formBuilder.group({
+            name: item.name,
+            done: item.done
+          }))
         }
       }
-      itemNamesArray.push('','','')
+
+      // Add 3 dummy inputs for user comfort.
+      for (let i = 0; i < 3; i++) {
+        itemsArray.push(this.formBuilder.group({
+          name: '',
+          done: false
+        }))
+      }
 
       // Build items form.
       this.shoppingListItemsForm = this.formBuilder.group({
-        items: this.formBuilder.array(itemNamesArray)
+        items: this.formBuilder.array(itemsArray)
       })
 
       this.loadingForm = false
@@ -79,8 +89,13 @@ export class ShoppingListItemsFormComponent implements OnInit {
       // Add new items to the Shopping list.
       for (const item of this.items.controls) {
         // Skip adding empty items.
-        if (item.value !== '') {
-          await this.addItem(item.value, this.shoppingList.id)
+        if (item.value.name && item.value.name !== '') {
+          let isDone = item.value.done
+          // If the item has been changed then send it to API as undone.
+          if (item.touched) {
+            isDone = false
+          }
+          await this.addItem(item.value.name, isDone, this.shoppingList.id)
         }
       }
 
@@ -91,7 +106,10 @@ export class ShoppingListItemsFormComponent implements OnInit {
 
   // Adds empty item input.
   addItemInput(): void {
-    this.items.push(this.formBuilder.control(''))
+    this.items.push(this.formBuilder.group({
+      name: '',
+      done: false
+    }))
   }
 
   // Removes clicked item input.
@@ -142,10 +160,10 @@ export class ShoppingListItemsFormComponent implements OnInit {
     })
   }
 
-  private addItem(name: string, id: string) {
+  private addItem(name: string, done: boolean, id: string) {
     console.log('Adding item to ' + id)
     return new Promise(resolve => {
-      const result = this.shoppingService.newItem(name, id)
+      const result = this.shoppingService.newItem(name, done, id)
       if (result) {
         result.subscribe(_ => resolve())
       } else { resolve() }

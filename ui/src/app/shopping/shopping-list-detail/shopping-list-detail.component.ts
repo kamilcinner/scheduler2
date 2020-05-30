@@ -97,6 +97,23 @@ export class ShoppingListDetailComponent implements OnInit {
     }
   }
 
+  // Mark item done/undone.
+  onMark(id: string): void {
+    const result = this.shoppingService.markItem(id)
+    if (result) {
+      result.subscribe(_ => this.markLocalItem(id))
+    }
+  }
+
+  private markLocalItem(id: string): void {
+    for (const i in this.shoppingList.items) {
+      if (this.shoppingList.items[i].id === id) {
+        this.shoppingList.items[i].done = !this.shoppingList.items[i].done
+        return
+      }
+    }
+  }
+
   onShowDeleteConfirmation(): void {
     this.hideDelete = false;
   }
