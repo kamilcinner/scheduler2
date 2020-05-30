@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -104,6 +106,9 @@ public class ShoppingListItemController {
         for (ShoppingListItem item : shoppingListItems) {
             shoppingListItemRepository.deleteById(item.getId());
         }
+
+        shoppingList.setLastEditDateTime(Timestamp.valueOf(LocalDateTime.now()));
+        shoppingListRepository.save(shoppingList);
 
         return ResponseEntity.noContent().build();
     }
