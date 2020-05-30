@@ -120,7 +120,7 @@ export class ShoppingService {
               newShoppingListItems.push(ShoppingService.newShoppingListItemFromApiJSON(item))
             }
             return newShoppingListItems
-          } else { console.log('404 else on items'); return this.push404() }
+          } else { return null }
         }))
     }
   }

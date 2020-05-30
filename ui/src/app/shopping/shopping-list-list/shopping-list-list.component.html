@@ -2,7 +2,7 @@
   <span class="spinner-border"></span>
 </div>
 
-<div *ngIf="shoppingLists" class="list-group">
+<div *ngIf="!loading && shoppingLists" class="list-group">
 
   <a *ngFor="let shoppingList of shoppingLists" [routerLink]="['/shoppinglists/one', shoppingList.id]"
      class="list-group-item mb-3 bg-scheduler-dark-2 c-scheduler-white list-group-item-action">

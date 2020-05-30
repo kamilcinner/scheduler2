@@ -69,6 +69,7 @@ export class ShoppingListListComponent implements OnInit {
           resolve()
         })
       }
+      resolve()
     })
   }
 }
