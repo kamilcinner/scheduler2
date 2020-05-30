@@ -28,6 +28,8 @@ import { PollubComponent } from './activity/pollub/pollub.component';
 import { ShoppingListListComponent } from './shopping/shopping-list-list/shopping-list-list.component';
 import { ShoppingListDetailComponent } from './shopping/shopping-list-detail/shopping-list-detail.component';
 import { ShoppingListConfirmDeleteComponent } from './shopping/shopping-list-confirm-delete/shopping-list-confirm-delete.component';
+import { ShoppingListNewFormComponent } from './shopping/shopping-list-new-form/shopping-list-new-form.component';
+import { ShoppingListItemsFormComponent } from './shopping/shopping-list-items-form/shopping-list-items-form.component';
 
 @NgModule({
   imports: [
@@ -58,7 +60,9 @@ import { ShoppingListConfirmDeleteComponent } from './shopping/shopping-list-con
     PollubComponent,
     ShoppingListListComponent,
     ShoppingListDetailComponent,
-    ShoppingListConfirmDeleteComponent
+    ShoppingListConfirmDeleteComponent,
+    ShoppingListNewFormComponent,
+    ShoppingListItemsFormComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

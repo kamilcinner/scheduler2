@@ -125,8 +125,37 @@ export class ShoppingService {
     }
   }
 
+  // Create new Shopping list.
+  newShoppingList(name: string) {
+    return this.http.post<any>(`${environment.apiUrl}/shoppinglists`, { name })
+  }
+
+  // Create new Shopping list item.
+  newItem(name: string, id: string) {
+    if (ValidationService.checkUUID(id)) {
+      return this.http.post<any>(`${environment.apiUrl}/shoppinglists/${id}/items`, { name })
+    }
+    return this.push404()
+  }
+
+  // Delete all items by Shopping list.
+  deleteItems(id: string) {
+    if (ValidationService.checkUUID(id)) {
+      return this.http.delete(`${environment.apiUrl}/shoppinglists/${id}/items`)
+    }
+    return this.push404()
+  }
+
+  // Mark item done/undone.
+  markItem(id: string) {
+    if (ValidationService.checkUUID(id)) {
+      return this.http.get(`${environment.apiUrl}/shoppinglists/items/${id}/mark`)
+    }
+    return this.push404()
+  }
+
   // Delete Shopping list.
-  delete(id: string) {
+  deleteShoppingList(id: string) {
     if (ValidationService.checkUUID(id)) {
       return this.http.delete(`${environment.apiUrl}/shoppinglists/${id}`)
     }

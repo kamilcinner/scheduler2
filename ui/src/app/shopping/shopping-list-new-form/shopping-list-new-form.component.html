@@ -1,0 +1,22 @@
+<form [formGroup]="shoppingListForm" (ngSubmit)="onSubmit()">
+  <div class="jumbotron py-2 bg-scheduler-dark-2">
+    <div class="form-group">
+      <label for="name">Shopping list name</label>
+      <input id="name" class="form-control bg-scheduler-dark-3" formControlName="name">
+      <div *ngIf="errors && errors.name">
+        <small *ngFor="let error of errors.name" class="text-danger">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button [disabled]="loading" type="submit" class="btn bg-scheduler c-scheduler-dark mr-2">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Save
+      </button>
+      <a class="btn btn-warning c-scheduler-dark" role="button" routerLink="/shoppinglists">Cancel</a>
+    </div>
+
+    <small *ngIf="errors && errors.server" class="text-danger">{{ errors.server }}</small>
+  </div>
+</form>

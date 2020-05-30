@@ -1,6 +1,7 @@
 package com.github.kamilcinner.scheduler2.backend.shopping.controllers;
 
 import com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.ShoppingListItemModelAssembler;
+import com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.ShoppingListItemNotFoundException;
 import com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.ShoppingListNotFoundException;
 import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingList;
 import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingListItem;
@@ -10,10 +11,11 @@ import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.Curre
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -80,5 +82,86 @@ public class ShoppingListItemController {
 
         return new CollectionModel<>(shoppingListItems,
                 linkTo(methodOn(ShoppingListItemController.class).allByShoppingList(id)).withSelfRel());
+    }
+
+    // Delete all items by Shopping list id.
+    @DeleteMapping("/shoppinglists/{id}/items")
+    ResponseEntity<?> deleteAllItems(@PathVariable UUID id) {
+
+        ShoppingList shoppingList = shoppingListRepository.findById(id)
+                .map(shoppingListToDelete -> {
+                    if (!shoppingListToDelete.getOwnerUsername().equals(CurrentUserUsername.get())) {
+                        throw new ShoppingListNotFoundException(id);
+                    }
+
+                    return shoppingListToDelete;
+                })
+                .orElseThrow(() -> new ShoppingListNotFoundException(id));
+
+        List<ShoppingListItem> shoppingListItems = shoppingListItemRepository.findAllByShoppingList(shoppingList,
+                Sort.unsorted());
+
+        for (ShoppingListItem item : shoppingListItems) {
+            shoppingListItemRepository.deleteById(item.getId());
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // Create new Shopping list item.
+    @PostMapping("/shoppinglists/{id}/items")
+    ResponseEntity<?> newItem(@PathVariable UUID id, @Valid @RequestBody ShoppingListItem newItem) {
+
+        ShoppingList shoppingList = shoppingListRepository.findById(id)
+                .map(shoppingListToDelete -> {
+                    if (!shoppingListToDelete.getOwnerUsername().equals(CurrentUserUsername.get())) {
+                        throw new ShoppingListNotFoundException(id);
+                    }
+
+                    return shoppingListToDelete;
+                })
+                .orElseThrow(() -> new ShoppingListNotFoundException(id));
+
+        newItem.setShoppingList(shoppingList);
+
+        EntityModel<ShoppingListItem> entityModel = assembler.toModel(shoppingListItemRepository.save(newItem));
+
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
+    }
+
+    // Get one item.
+    @GetMapping("/shoppinglists/items/{id}")
+    EntityModel<ShoppingListItem> one(@PathVariable UUID id) {
+
+        ShoppingListItem shoppingListItem = shoppingListItemRepository.findById(id)
+                .map(searchedShoppingListItem -> {
+                    if (!searchedShoppingListItem.getShoppingList().getOwnerUsername().equals(CurrentUserUsername.get())
+                            && !searchedShoppingListItem.getShoppingList().isShared()) {
+                        throw new ShoppingListItemNotFoundException(id);
+                    }
+                    return searchedShoppingListItem;
+                })
+                .orElseThrow(() -> new ShoppingListItemNotFoundException(id));
+
+        return assembler.toModel(shoppingListItem);
+    }
+
+    // Negate item shared attribute.
+    @GetMapping("/shoppinglists/items/{id}/mark")
+    ResponseEntity<?> markDone(@PathVariable UUID id) {
+
+        shoppingListItemRepository.findById(id)
+                .map(itemToUpdate -> {
+                    if (!itemToUpdate.getShoppingList().getOwnerUsername().equals(CurrentUserUsername.get())
+                            && !itemToUpdate.getShoppingList().isShared()) {
+                        throw new ShoppingListItemNotFoundException(id);
+                    }
+                    return itemToUpdate;
+                })
+                .orElseThrow(() -> new ShoppingListItemNotFoundException(id));
+
+        return ResponseEntity.noContent().build();
     }
 }

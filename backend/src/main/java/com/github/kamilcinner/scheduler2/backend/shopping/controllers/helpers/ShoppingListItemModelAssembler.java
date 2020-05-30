@@ -1,5 +1,6 @@
 package com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers;
 
+import com.github.kamilcinner.scheduler2.backend.shopping.controllers.ShoppingListController;
 import com.github.kamilcinner.scheduler2.backend.shopping.controllers.ShoppingListItemController;
 import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingListItem;
 import org.springframework.hateoas.EntityModel;
@@ -21,6 +22,7 @@ public class ShoppingListItemModelAssembler implements RepresentationModelAssemb
         UUID id = entity.getShoppingList().getId();
 
         return new EntityModel<>(entity,
+                linkTo(methodOn(ShoppingListController.class).one(entity.getId())).withSelfRel(),
                 linkTo(methodOn(ShoppingListItemController.class).allByShoppingList(id)).withRel("items"));
     }
 }

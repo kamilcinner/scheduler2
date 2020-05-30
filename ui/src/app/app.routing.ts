@@ -17,6 +17,8 @@ import { WeekScheduleComponent } from '@app/week/week-schedule/week-schedule.com
 import { PollubComponent } from '@app/activity/pollub/pollub.component';
 import { ShoppingListListComponent } from '@app/shopping/shopping-list-list/shopping-list-list.component';
 import { ShoppingListDetailComponent } from '@app/shopping/shopping-list-detail/shopping-list-detail.component';
+import { ShoppingListNewFormComponent } from '@app/shopping/shopping-list-new-form/shopping-list-new-form.component';
+import { ShoppingListItemsFormComponent } from '@app/shopping/shopping-list-items-form/shopping-list-items-form.component';
 
 const routes: Routes = [
   // Home.
@@ -43,6 +45,8 @@ const routes: Routes = [
   // Shopping lists.
   { path: 'shoppinglists', canActivate: [AuthGuard], children: [
     { path: '', component: ShoppingListListComponent },
+    { path: 'new', component: ShoppingListNewFormComponent },
+    { path: 'update/:id', component: ShoppingListItemsFormComponent },
   ]},
   { path: 'shoppinglists/one/:id', component: ShoppingListDetailComponent },
 

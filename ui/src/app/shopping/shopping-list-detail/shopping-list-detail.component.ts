@@ -69,7 +69,7 @@ export class ShoppingListDetailComponent implements OnInit {
           }
           resolve()
         })
-      }
+      } else { resolve() }
     })
   }
 
@@ -89,7 +89,7 @@ export class ShoppingListDetailComponent implements OnInit {
 
   // Delete Shopping list.
   onDelete(): void {
-    const result = this.shoppingService.delete(this.shoppingList.id);
+    const result = this.shoppingService.deleteShoppingList(this.shoppingList.id);
     if (result) {
       result.subscribe(
         _ => this.router.navigate(['/shoppinglists'])

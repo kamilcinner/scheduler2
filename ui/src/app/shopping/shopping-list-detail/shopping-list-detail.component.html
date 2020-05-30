@@ -33,7 +33,7 @@
 
   <div *ngIf="currentUserIsOwner">
     <div class="d-flex w-100 justify-content-between">
-      <a class="btn bg-scheduler-dark-3 c-scheduler btn-lg" role="button">Edit</a>
+      <a class="btn bg-scheduler-dark-3 c-scheduler btn-lg" role="button" [routerLink]="['/shoppinglists/update', shoppingList.id]">Edit</a>
       <a class="btn btn-danger btn-lg" role="button" (click)="onShowDeleteConfirmation()">Delete</a>
     </div>
 
