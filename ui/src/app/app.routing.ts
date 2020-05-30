@@ -16,19 +16,22 @@ import { ActivityFormComponent } from '@app/activity/activity-form/activity-form
 import { WeekScheduleComponent } from '@app/week/week-schedule/week-schedule.component';
 import { PollubComponent } from '@app/activity/pollub/pollub.component';
 import { ShoppingListListComponent } from '@app/shopping/shopping-list-list/shopping-list-list.component';
+import { ShoppingListDetailComponent } from '@app/shopping/shopping-list-detail/shopping-list-detail.component';
 
 const routes: Routes = [
+  // Home.
+  { path: '', component: HomeComponent },
   { path: 'welcome', component: WelcomeComponent, canActivate: [AuthGuard] },
-  { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
 
+  // Tasks.
   { path: 'tasks', canActivate: [AuthGuard], children: [
     { path: '', component: TaskListComponent },
-    // { path: 'one/:id', component: TaskDetailComponent },
     { path: 'new', component: TaskFormComponent },
     { path: 'update/:id', component: TaskFormComponent }
   ]},
   { path: 'tasks/one/:id', component: TaskDetailComponent },
 
+  // Activities.
   { path: 'activities', canActivate: [AuthGuard], children:[
     { path: '', component: ActivityListComponent },
     { path: 'one/:id', component: ActivityDetailComponent },
@@ -37,16 +40,21 @@ const routes: Routes = [
     { path: 'pollub', component: PollubComponent },
   ]},
 
+  // Shopping lists.
   { path: 'shoppinglists', canActivate: [AuthGuard], children: [
     { path: '', component: ShoppingListListComponent },
   ]},
+  { path: 'shoppinglists/one/:id', component: ShoppingListDetailComponent },
 
+  // Week schedule.
   { path: 'week', component: WeekScheduleComponent, canActivate: [AuthGuard] },
 
-  { path: '', component: HomeComponent },
+  // User authorization and authentication.
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
 
+  // Errors.
   { path: '404', component: PageNotFoundComponent },
 
   // Otherwise redirect to home page.
