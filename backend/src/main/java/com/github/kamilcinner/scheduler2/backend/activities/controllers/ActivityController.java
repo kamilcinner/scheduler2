@@ -1,12 +1,12 @@
 package com.github.kamilcinner.scheduler2.backend.activities.controllers;
 
+import com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers.ActivityFinder;
 import com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers.ActivityModelAssembler;
-import com.github.kamilcinner.scheduler2.backend.activities.controllers.helpers.ActivityNotFoundException;
+import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
+import com.github.kamilcinner.scheduler2.backend.activities.repositories.ActivityRepository;
 import com.github.kamilcinner.scheduler2.backend.addons.PollubParser;
 import com.github.kamilcinner.scheduler2.backend.addons.Subject;
 import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.CurrentUserUsername;
-import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
-import com.github.kamilcinner.scheduler2.backend.activities.repositories.ActivityRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -15,10 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URISyntaxException;
 import java.sql.Date;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +37,7 @@ public class ActivityController {
         this.assembler = assembler;
     }
 
-    // Aggregate root.
-
+    // Get all Activities.
     @GetMapping("/activities")
     public CollectionModel<?> all() {
         List<EntityModel<Activity>> activities = activityRepository.findByOwnerUsername(CurrentUserUsername.get(),
@@ -52,8 +49,9 @@ public class ActivityController {
                 linkTo(methodOn(ActivityController.class).all()).withSelfRel());
     }
 
+    // Create a new Activity.
     @PostMapping("/activities")
-    ResponseEntity<?> newActivity(@Valid @RequestBody Activity newActivity) throws URISyntaxException {
+    ResponseEntity<?> newActivity(@Valid @RequestBody Activity newActivity) {
         newActivity.setOwnerUsername(CurrentUserUsername.get());
 
         EntityModel<Activity> entityModel = assembler.toModel(activityRepository.save(newActivity));
@@ -63,69 +61,56 @@ public class ActivityController {
                 .body(entityModel);
     }
 
-    // Single item.
-
+    // Get one Activity by id.
     @GetMapping("/activities/{id}")
     public EntityModel<Activity> one(@PathVariable UUID id) {
 
-        Activity activity = activityRepository.findById(id)
-                .map(searchedActivity -> {
-                    if (!searchedActivity.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new ActivityNotFoundException(id);
-                    }
-                    return searchedActivity;
-                })
-                .orElseThrow(() -> new ActivityNotFoundException(id));
+        ActivityFinder finder = new ActivityFinder(id, activityRepository);
+
+        Activity activity = finder.get(ActivityFinder.Access.OWNER);
 
         return assembler.toModel(activity);
     }
 
+    // Update an Activity with id.
     @PutMapping("/activities/{id}")
-    ResponseEntity<?> replaceActivity(@Valid @RequestBody Activity newActivity, @PathVariable UUID id) throws URISyntaxException {
+    ResponseEntity<?> replaceActivity(@Valid @RequestBody Activity newActivity, @PathVariable UUID id) {
 
-        Activity updatedActivity = activityRepository.findById(id)
-                .map(activity -> {
-                    if (!activity.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new ActivityNotFoundException(id);
-                    }
+        ActivityFinder finder = new ActivityFinder(id, activityRepository);
 
-                    activity.setName(newActivity.getName());
-                    activity.setTimeEnd(newActivity.getTimeStart());
-                    activity.setTimeEnd(newActivity.getTimeEnd());
-                    activity.setDescription(newActivity.getDescription());
-                    activity.setDate(newActivity.getDate());
-                    activity.setRepeatWeekly(newActivity.isRepeatWeekly());
-                    activity.setStatusActive(newActivity.isStatusActive());
+        Activity activity = finder.get(ActivityFinder.Access.OWNER);
 
-                    return activityRepository.save(activity);
-                })
-                .orElseThrow(() -> new ActivityNotFoundException(id));
+        activity.setName(newActivity.getName());
+        activity.setTimeEnd(newActivity.getTimeStart());
+        activity.setTimeEnd(newActivity.getTimeEnd());
+        activity.setDescription(newActivity.getDescription());
+        activity.setDate(newActivity.getDate());
+        activity.setRepeatWeekly(newActivity.isRepeatWeekly());
+        activity.setStatusActive(newActivity.isStatusActive());
 
-        EntityModel<Activity> entityModel = assembler.toModel(updatedActivity);
+        activityRepository.save(activity);
+
+        EntityModel<Activity> entityModel = assembler.toModel(activity);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(entityModel);
     }
 
+    // Delete an Activity.
     @DeleteMapping("/activities/{id}")
     ResponseEntity<?> deleteActivity(@PathVariable UUID id) {
 
-        activityRepository.findById(id)
-                .map(activityToDelete -> {
-                    if (!activityToDelete.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new ActivityNotFoundException(id);
-                    }
-                    return activityToDelete;
-                })
-                .orElseThrow(() -> new ActivityNotFoundException(id));
+        ActivityFinder finder = new ActivityFinder(id, activityRepository);
 
-        activityRepository.deleteById(id);
+        Activity activity = finder.get(ActivityFinder.Access.OWNER);
+
+        activityRepository.delete(activity);
 
         return ResponseEntity.noContent().build();
     }
 
-    // Get activities from Pollub.
+    // Get Activities from Pollub.
     @GetMapping("/activities/pollub")
     void addActivitiesFromPollubToUser() {
         PollubParser pollubParser = new PollubParser();
@@ -135,8 +120,8 @@ public class ActivityController {
             Activity activity = new Activity(CurrentUserUsername.get(),
                     subject.getName(),
                     subject.getClass_() + ", " + subject.getLecturer(),
-                    Time.valueOf(subject.getTimeStart()+":00"),
-                    Time.valueOf(subject.getTimeEnd()+":00"),
+                    Time.valueOf(subject.getTimeStart() + ":00"),
+                    Time.valueOf(subject.getTimeEnd() + ":00"),
                     Date.valueOf(LocalDate.now()),
                     false,
                     true

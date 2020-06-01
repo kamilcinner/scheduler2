@@ -27,7 +27,6 @@ public class PollubParser {
         for (Element cd : coursedivs) {
             final String text = cd.text();
             if (text.length() < 1) continue;
-//            print(text);
             int lecturerAndClassPosition = 0;
 
             String name;
@@ -67,7 +66,6 @@ public class PollubParser {
             timeEnd = timeString.substring(8);
 
             String lecturerAndClass = text.substring(lecturerAndClassPosition, timePosition - 1);
-//            print("Lecturer and class: '" + lecturerAndClass + "'");
 
             if (type.equals("wf")) {
                 lecturer = "Enter Your lecturer name";
@@ -84,20 +82,8 @@ public class PollubParser {
                 lecturer = lecturerAndClass.substring(0, classPosition - 1);
             }
 
-//            print("Name: '" + name + "'");
-//            print("Lecturer: '" + lecturer + "'");
-//            print("Class: '" + class_ + "'");
-//            print("Time start: '" + timeStart + "'");
-//            print("Time end: '" + timeEnd + "'");
-//
-//            print("");
-
             subjects.add(new Subject(name, lecturer, class_, timeStart, timeEnd));
         }
-    }
-
-    private static <T> void print(T arg) {
-        System.out.println(arg);
     }
 
     public ArrayList<Subject> getSubjects() {

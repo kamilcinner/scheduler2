@@ -15,12 +15,14 @@ import java.util.UUID;
 @Data
 @Entity
 public class Activity {
+
     private @Id @GeneratedValue UUID id;
 
     // Owner username will be added during Activity creating.
     private String ownerUsername;
 
     @NotBlank(message = "Activity name is required.")
+    @NotNull(message = "Activity name is required.")
     @Size(
             max = 100,
             message = "Name can be up to {max} characters long."

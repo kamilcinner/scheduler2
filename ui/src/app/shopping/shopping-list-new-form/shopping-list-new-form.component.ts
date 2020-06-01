@@ -44,8 +44,7 @@ export class ShoppingListNewFormComponent implements OnInit {
     this.shoppingService.newShoppingList(this.f.name.value).subscribe(
       shoppingList => {
         if (shoppingList && shoppingList.id && ValidationService.checkUUID(shoppingList.id)) {
-          // this.router.navigate(['/shoppinglists/update', shoppingList.id]).then(r => console.log(r))
-          this.router.navigate(['/shoppinglists']).then(r => console.log(r))
+          this.router.navigate(['/shoppinglists/update', shoppingList.id]).then(r => console.log(r))
         } else {
           alert('Something went wrong.')
         }

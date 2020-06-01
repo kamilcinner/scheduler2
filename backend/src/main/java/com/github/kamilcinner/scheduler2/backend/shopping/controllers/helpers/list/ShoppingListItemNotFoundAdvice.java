@@ -1,6 +1,5 @@
-package com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers;
+package com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.list;
 
-import com.github.kamilcinner.scheduler2.backend.shopping.controllers.ShoppingListController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,12 +7,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class ShoppingListNotFoundAdvice {
+public class ShoppingListItemNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(ShoppingListNotFoundException.class)
+    @ExceptionHandler(ShoppingListItemNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String shoppingListNotFoundHandler(ShoppingListNotFoundException e) {
+    String shoppingListItemNotFoundHandler(ShoppingListItemNotFoundException e) {
         return e.getMessage();
     }
 }

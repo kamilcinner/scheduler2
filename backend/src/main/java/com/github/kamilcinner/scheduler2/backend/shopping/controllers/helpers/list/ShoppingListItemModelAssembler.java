@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers;
+package com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.list;
 
 import com.github.kamilcinner.scheduler2.backend.shopping.controllers.ShoppingListController;
 import com.github.kamilcinner.scheduler2.backend.shopping.controllers.ShoppingListItemController;

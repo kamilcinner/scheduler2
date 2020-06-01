@@ -2,7 +2,6 @@ package com.github.kamilcinner.scheduler2.backend.users.controllers;
 
 import com.github.kamilcinner.scheduler2.backend.users.models.User;
 import com.github.kamilcinner.scheduler2.backend.users.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,14 +12,14 @@ import javax.validation.Valid;
 
 @RestController
 public class UserController {
+
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    UserController(UserRepository repository) {
+    UserController(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     // Register User
     @PostMapping("/users")

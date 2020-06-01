@@ -13,12 +13,14 @@ import java.util.UUID;
 @Data
 @Entity
 public class Task {
+
     private @Id @GeneratedValue UUID id;
 
     // Owner username will be added during Task creating.
     private String ownerUsername;
 
     @NotBlank(message = "Task name is required.")
+    @NotNull(message = "Task name is required.")
     private String name;
 
     @NotNull(message = "Task due date and time is required.")

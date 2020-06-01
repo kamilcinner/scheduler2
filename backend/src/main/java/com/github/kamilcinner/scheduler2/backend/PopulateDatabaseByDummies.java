@@ -1,7 +1,6 @@
 package com.github.kamilcinner.scheduler2.backend;
 
 import com.github.kamilcinner.scheduler2.backend.activities.models.Activity;
-import com.github.kamilcinner.scheduler2.backend.addons.PollubParser;
 import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingList;
 import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingListItem;
 import com.github.kamilcinner.scheduler2.backend.shopping.repositories.ShoppingListItemRepository;

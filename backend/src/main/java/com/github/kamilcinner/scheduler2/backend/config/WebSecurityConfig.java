@@ -90,31 +90,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
-//        builder.inMemoryAuthentication()
-//                .withUser("user")
-//                .password("{noop}pass")
-//                .roles("USER")
-//                .and()
-//                .withUser("testowo")
-//                .password("{noop}pass")
-//                .roles("USER");
-//    }
-
-//    @Autowired
-//    protected void configure(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
-//        auth.jdbcAuthentication()
-//                .dataSource(dataSource)
-//                .and()
-//                .userDetailsService(userDetailsService);
-////                .withDefaultSchema()
-////                .withUser(
-////                        User.withUsername("user")
-////                        .password("{noop}pass")
-////                        .roles("USER"));
-//    }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
@@ -124,9 +99,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService);
-//    }
 }

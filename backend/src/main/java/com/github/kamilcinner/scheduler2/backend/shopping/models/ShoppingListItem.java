@@ -14,16 +14,17 @@ public class ShoppingListItem {
 
     private @Id @GeneratedValue UUID id;
 
+    // Foreign key definition.
     @ManyToOne
     @JoinColumn
     private ShoppingList shoppingList;
 
+    @NotBlank(message = "Item name is required.")
+    @NotNull(message = "Item name is required.")
     @Size(
             max = 100,
             message = "Name can be up to {max} characters long."
     )
-    @NotBlank(message = "Item name is required.")
-    @NotNull(message = "Item name is required.")
     private String name;
 
     private boolean done = false;

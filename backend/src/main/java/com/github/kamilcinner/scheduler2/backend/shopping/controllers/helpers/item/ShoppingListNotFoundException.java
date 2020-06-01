@@ -1,4 +1,4 @@
-package com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers;
+package com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.item;
 
 import java.util.UUID;
 

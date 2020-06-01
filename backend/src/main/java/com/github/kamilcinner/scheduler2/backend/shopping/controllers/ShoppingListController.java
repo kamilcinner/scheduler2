@@ -1,14 +1,11 @@
 package com.github.kamilcinner.scheduler2.backend.shopping.controllers;
 
-import com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.ShoppingListModelAssembler;
-import com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.ShoppingListNotFoundException;
+import com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.ShoppingFinder;
+import com.github.kamilcinner.scheduler2.backend.shopping.controllers.helpers.item.ShoppingListModelAssembler;
 import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingList;
-import com.github.kamilcinner.scheduler2.backend.shopping.models.ShoppingListItem;
-import com.github.kamilcinner.scheduler2.backend.shopping.models.helpers.ShoppingListWithItems;
 import com.github.kamilcinner.scheduler2.backend.shopping.repositories.ShoppingListItemRepository;
 import com.github.kamilcinner.scheduler2.backend.shopping.repositories.ShoppingListRepository;
 import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.CurrentUserUsername;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -17,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,49 +28,33 @@ public class ShoppingListController {
     private final ShoppingListItemRepository shoppingListItemRepository;
     private final ShoppingListModelAssembler assembler;
 
-    ShoppingListController(ShoppingListRepository shoppingListRepository, ShoppingListItemRepository shoppingListItemRepository, ShoppingListModelAssembler assembler) {
+    ShoppingListController(ShoppingListRepository shoppingListRepository,
+                           ShoppingListItemRepository shoppingListItemRepository,
+                           ShoppingListModelAssembler assembler) {
+
         this.shoppingListRepository = shoppingListRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.assembler = assembler;
     }
 
-    // Aggregate root.
-
+    // Get all Shopping lists.
     @GetMapping("/shoppinglists")
     public CollectionModel<?> all() {
-//        List<ShoppingList> shoppingLists = shoppingListRepository.findByOwnerUsername(CurrentUserUsername.get(),
-//                Sort.by(Sort.Direction.ASC, "lastEditDateTime"));
-//
-//        List<ShoppingListWithItems> shoppingListsWithItems = new ArrayList<>();
-//        for (ShoppingList shoppingList : shoppingLists) {
-//            List<ShoppingListItem> shoppingListItems = shoppingListItemRepository.findByShoppingList(shoppingList,
-//                    Sort.by(Sort.Direction.ASC, "done", "name"));
-//
-//            shoppingListsWithItems.add(new ShoppingListWithItems(shoppingList.getId(), shoppingList.getOwnerUsername(),
-//                    shoppingList.getName(), shoppingList.getLastEditDateTime(), shoppingList.isShared(), shoppingListItems));
-//        }
-//
-//        List<EntityModel<ShoppingListWithItems>> shoppingListsWithItemsEntities = shoppingListsWithItems.stream()
-//                .map(assembler::toModel)
-//                .collect(Collectors.toList());
-//
-//        return new CollectionModel<>(shoppingListsWithItemsEntities,
-//                linkTo(methodOn(ShoppingListController.class).all()).withSelfRel());
 
-        List<EntityModel<ShoppingList>> shoppingLists = shoppingListRepository.findByOwnerUsername(CurrentUserUsername.get(),
+        List<EntityModel<ShoppingList>> shoppingLists = shoppingListRepository.findByOwnerUsername(
+                CurrentUserUsername.get(),
                 Sort.by(Sort.Direction.ASC, "lastEditDateTime")).stream()
-                .map(assembler::toModel)
-                .collect(Collectors.toList());
+                    .map(assembler::toModel)
+                    .collect(Collectors.toList());
 
         return new CollectionModel<>(shoppingLists,
                 linkTo(methodOn(ShoppingListController.class).all()).withSelfRel());
     }
 
-    // Get shared ShoppingList by id.
-    // Endpoint for anonymous users.
-
+    // Create a new Shopping list.
     @PostMapping("/shoppinglists")
     ResponseEntity<?> newShoppingList(@Valid @RequestBody ShoppingList newShoppingList) {
+
         newShoppingList.setOwnerUsername(CurrentUserUsername.get());
 
         EntityModel<ShoppingList> entityModel = assembler.toModel(shoppingListRepository.save(newShoppingList));
@@ -84,40 +64,30 @@ public class ShoppingListController {
                 .body(entityModel);
     }
 
-    // Single item.
-
-    // Get ShoppingList by id.
-    // Can be accessed always by ShoppingList owner.
-    // Can be accessed by other users only if ShoppingList is shared.
+    // Get one Shopping list by id.
+    // Can be accessed always by Shopping list owner.
+    // Can be accessed by other users only if Shopping list is shared.
     @GetMapping("/shoppinglists/{id}")
     public EntityModel<ShoppingList> one(@PathVariable UUID id) {
 
-        ShoppingList shoppingList = shoppingListRepository.findById(id)
-                .map(searchedShoppingList -> {
-                    if (!searchedShoppingList.getOwnerUsername().equals(CurrentUserUsername.get()) && !searchedShoppingList.isShared()) {
-                        throw new ShoppingListNotFoundException(id);
-                    }
-                    return searchedShoppingList;
-                })
-                .orElseThrow(() -> new ShoppingListNotFoundException(id));
+        ShoppingFinder finder = new ShoppingFinder(id, shoppingListRepository, shoppingListItemRepository);
+
+        ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.OWNER_OR_SHARED);
 
         return assembler.toModel(shoppingList);
     }
 
-    // Negate ShoppingList shared attribute.
-    @GetMapping("/shoppinglists/share/{id}")
+    // Negate Shopping list shared attribute.
+    @GetMapping("/shoppinglists/{id}/share")
     ResponseEntity<?> share(@PathVariable UUID id) {
 
-        shoppingListRepository.findById(id)
-                .map(shoppingListToUpdate -> {
-                    if (!shoppingListToUpdate.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new ShoppingListNotFoundException(id);
-                    }
-                    shoppingListToUpdate.setShared(!shoppingListToUpdate.isShared());
+        ShoppingFinder finder = new ShoppingFinder(id, shoppingListRepository, shoppingListItemRepository);
 
-                    return shoppingListRepository.save(shoppingListToUpdate);
-                })
-                .orElseThrow(() -> new ShoppingListNotFoundException(id));
+        ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.OWNER);
+
+        shoppingList.setShared(!shoppingList.isShared());
+
+        shoppingListRepository.save(shoppingList);
 
         return ResponseEntity.noContent().build();
     }
@@ -127,63 +97,40 @@ public class ShoppingListController {
     @GetMapping("/shoppinglists/shared/{id}")
     EntityModel<ShoppingList> shared(@PathVariable UUID id) {
 
-        ShoppingList shoppingList = shoppingListRepository.findById(id)
-                .map(searchedShoppingList -> {
-                    if (!searchedShoppingList.isShared()) {
-                        throw new ShoppingListNotFoundException(id);
-                    }
-                    return searchedShoppingList;
-                })
-                .orElseThrow(() -> new ShoppingListNotFoundException(id));
+        ShoppingFinder finder = new ShoppingFinder(id, shoppingListRepository, shoppingListItemRepository);
+
+        ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.SHARED);
 
         return assembler.toModel(shoppingList);
     }
 
-    // Update existing ShoppingList.
+    // Update an existing Shopping list.
     @PutMapping("/shoppinglists/{id}")
     ResponseEntity<?> replaceShoppingList(@Valid @RequestBody ShoppingList newShoppingList, @PathVariable UUID id) {
-        ShoppingList updatedShoppingList = shoppingListRepository.findById(id)
-                .map(shoppingList -> {
-                    if (shoppingList.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new ShoppingListNotFoundException(id);
-                    }
 
-                    shoppingList.setName(newShoppingList.getName());
-                    shoppingList.setLastEditDateTime(newShoppingList.getLastEditDateTime());
+        ShoppingFinder finder = new ShoppingFinder(id, shoppingListRepository, shoppingListItemRepository);
 
-                    return shoppingListRepository.save(shoppingList);
-                })
-                .orElseThrow(() -> new ShoppingListNotFoundException(id));
+        ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.OWNER);
 
-        EntityModel<ShoppingList> entityModel = assembler.toModel(updatedShoppingList);
+        shoppingList.setName(newShoppingList.getName());
+        shoppingList.setLastEditDateTime(newShoppingList.getLastEditDateTime());
+
+        shoppingListRepository.save(shoppingList);
+
+        EntityModel<ShoppingList> entityModel = assembler.toModel(shoppingList);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(entityModel);
     }
 
-    // Delete existing ShoppingList.
+    // Delete an existing Shopping list.
     @DeleteMapping("/shoppinglists/{id}")
     ResponseEntity<?> deleteShoppingList(@PathVariable UUID id) {
 
-        ShoppingList shoppingList = shoppingListRepository.findById(id)
-                .map(shoppingListToDelete -> {
-                    if (!shoppingListToDelete.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new ShoppingListNotFoundException(id);
-                    }
+        ShoppingFinder finder = new ShoppingFinder(id, shoppingListRepository, shoppingListItemRepository);
 
-                    return shoppingListToDelete;
-                })
-                .orElseThrow(() -> new ShoppingListNotFoundException(id));
-
-        List<ShoppingListItem> shoppingListItems = shoppingListItemRepository.findAllByShoppingList(shoppingList,
-                Sort.unsorted());
-
-        for (ShoppingListItem item : shoppingListItems) {
-            shoppingListItemRepository.deleteById(item.getId());
-        }
-
-        shoppingListRepository.deleteById(id);
+        finder.deleteListAndItems(ShoppingFinder.Access.OWNER);
 
         return ResponseEntity.noContent().build();
     }

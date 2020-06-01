@@ -165,7 +165,7 @@ export class ShoppingService {
   // Share/Unshare Shopping list.
   share(id: string) {
     if (ValidationService.checkUUID(id)) {
-      return this.http.get(`${environment.apiUrl}/shoppinglists/share/${id}`)
+      return this.http.get(`${environment.apiUrl}/shoppinglists/${id}/share`)
     }
     return this.push404()
   }

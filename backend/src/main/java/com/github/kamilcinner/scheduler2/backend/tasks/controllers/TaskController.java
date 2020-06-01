@@ -1,10 +1,10 @@
 package com.github.kamilcinner.scheduler2.backend.tasks.controllers;
 
+import com.github.kamilcinner.scheduler2.backend.tasks.controllers.helpers.TaskFinder;
 import com.github.kamilcinner.scheduler2.backend.tasks.controllers.helpers.TaskModelAssembler;
-import com.github.kamilcinner.scheduler2.backend.tasks.controllers.helpers.TaskNotFoundException;
-import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.CurrentUserUsername;
 import com.github.kamilcinner.scheduler2.backend.tasks.models.Task;
 import com.github.kamilcinner.scheduler2.backend.tasks.repositories.TaskRepository;
+import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.CurrentUserUsername;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,8 +31,7 @@ public class TaskController {
         this.assembler = assembler;
     }
 
-    // Aggregate root.
-
+    // Get all Tasks.
     @GetMapping("/tasks")
     public CollectionModel<?> all() {
         List<EntityModel<Task>> tasks = taskRepository.findByOwnerUsername(CurrentUserUsername.get(),
@@ -45,8 +43,9 @@ public class TaskController {
                 linkTo(methodOn(TaskController.class).all()).withSelfRel());
     }
 
+    // Create a new Task.
     @PostMapping("/tasks")
-    ResponseEntity<?> newTask(@Valid @RequestBody Task newTask) throws URISyntaxException {
+    ResponseEntity<?> newTask(@Valid @RequestBody Task newTask) {
         newTask.setOwnerUsername(CurrentUserUsername.get());
 
         EntityModel<Task> entityModel = assembler.toModel(taskRepository.save(newTask));
@@ -56,58 +55,45 @@ public class TaskController {
                 .body(entityModel);
     }
 
-    // Single item.
-
-    // Get Task by id.
+    // Get one Task by id.
     // Can be accessed always by Task owner.
     // Can be accessed by other users only if Task is shared.
     @GetMapping("/tasks/{id}")
     public EntityModel<Task> one(@PathVariable UUID id) {
 
-        Task task = taskRepository.findById(id)
-                .map(searchedTask -> {
-                    if (!searchedTask.getOwnerUsername().equals(CurrentUserUsername.get()) && !searchedTask.isShared()) {
-                        throw new TaskNotFoundException(id);
-                    }
-                    return searchedTask;
-                })
-                .orElseThrow(() -> new TaskNotFoundException(id));
+        TaskFinder finder = new TaskFinder(id, taskRepository);
+
+        Task task = finder.get(TaskFinder.Access.OWNER_OR_SHARED);
 
         return assembler.toModel(task);
     }
 
     // Negate Task shared attribute.
-    @GetMapping("/tasks/share/{id}")
+    @GetMapping("/tasks/{id}/share")
     ResponseEntity<?> share(@PathVariable UUID id) {
 
-        taskRepository.findById(id)
-                .map(taskToUpdate -> {
-                    if (!taskToUpdate.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new TaskNotFoundException(id);
-                    }
-                    taskToUpdate.setShared(!taskToUpdate.isShared());
+        TaskFinder finder = new TaskFinder(id, taskRepository);
 
-                    return taskRepository.save(taskToUpdate);
-                })
-                .orElseThrow(() -> new TaskNotFoundException(id));
+        Task task = finder.get(TaskFinder.Access.OWNER);
+
+        task.setShared(!task.isShared());
+
+        taskRepository.save(task);
 
         return ResponseEntity.noContent().build();
     }
 
     // Negate Task done attribute.
-    @GetMapping("/tasks/mark/{id}")
+    @GetMapping("/tasks/{id}/mark")
     ResponseEntity<?> mark(@PathVariable UUID id) {
 
-        taskRepository.findById(id)
-                .map(taskToUpdate -> {
-                    if (!taskToUpdate.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new TaskNotFoundException(id);
-                    }
-                    taskToUpdate.setDone(!taskToUpdate.isDone());
+        TaskFinder finder = new TaskFinder(id, taskRepository);
 
-                    return taskRepository.save(taskToUpdate);
-                })
-                .orElseThrow(() -> new TaskNotFoundException(id));
+        Task task = finder.get(TaskFinder.Access.OWNER);
+
+        task.setDone(!task.isDone());
+
+        taskRepository.save(task);
 
         return ResponseEntity.noContent().build();
     }
@@ -117,38 +103,29 @@ public class TaskController {
     @GetMapping("/tasks/shared/{id}")
     EntityModel<Task> shared(@PathVariable UUID id) {
 
-        Task task = taskRepository.findById(id)
-                .map(searchedTask -> {
-                    if (!searchedTask.isShared()) {
-                        throw new TaskNotFoundException(id);
-                    }
-                    return searchedTask;
-                })
-                .orElseThrow(() -> new TaskNotFoundException(id));
+        TaskFinder finder = new TaskFinder(id, taskRepository);
+
+        Task task = finder.get(TaskFinder.Access.SHARED);
 
         return assembler.toModel(task);
     }
 
-    // Update existing Task.
+    // Update an existing Task with id.
     @PutMapping("/tasks/{id}")
-    ResponseEntity<?> replaceTask(@Valid @RequestBody Task newTask, @PathVariable UUID id) throws URISyntaxException {
+    ResponseEntity<?> replaceTask(@Valid @RequestBody Task newTask, @PathVariable UUID id) {
 
-        Task updatedTask = taskRepository.findById(id)
-                .map(task -> {
-                    if (!task.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new TaskNotFoundException(id);
-                    }
+        TaskFinder finder = new TaskFinder(id, taskRepository);
 
-                    task.setName(newTask.getName());
-                    task.setDueDateTime(newTask.getDueDateTime());
-                    task.setDescription(newTask.getDescription());
-                    task.setPriority(newTask.getPriority());
+        Task task = finder.get(TaskFinder.Access.OWNER);
 
-                    return taskRepository.save(task);
-                })
-                .orElseThrow(() -> new TaskNotFoundException(id));
+        task.setName(newTask.getName());
+        task.setDueDateTime(newTask.getDueDateTime());
+        task.setDescription(newTask.getDescription());
+        task.setPriority(newTask.getPriority());
 
-        EntityModel<Task> entityModel = assembler.toModel(updatedTask);
+        taskRepository.save(task);
+
+        EntityModel<Task> entityModel = assembler.toModel(task);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -159,17 +136,11 @@ public class TaskController {
     @DeleteMapping("/tasks/{id}")
     ResponseEntity<?> deleteTask(@PathVariable UUID id) {
 
-        taskRepository.findById(id)
-                .map(taskToDelete -> {
-                    if (!taskToDelete.getOwnerUsername().equals(CurrentUserUsername.get())) {
-                        throw new TaskNotFoundException(id);
-                    }
+        TaskFinder finder = new TaskFinder(id, taskRepository);
 
-                    return taskToDelete;
-                })
-                .orElseThrow(() -> new TaskNotFoundException(id));
+        Task task = finder.get(TaskFinder.Access.OWNER);
 
-        taskRepository.deleteById(id);
+        taskRepository.delete(task);
 
         return ResponseEntity.noContent().build();
     }

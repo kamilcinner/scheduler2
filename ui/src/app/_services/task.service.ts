@@ -109,7 +109,7 @@ export class TaskService {
   // Share/Unshare Task.
   share(id: string) {
     if (ValidationService.checkUUID(id)) {
-      return this.http.get(`${environment.apiUrl}/tasks/share/${id}`)
+      return this.http.get(`${environment.apiUrl}/tasks/${id}/share`)
     }
     return this.push404()
   }
@@ -117,7 +117,7 @@ export class TaskService {
   // Mark Task done/undone.
   mark(id: string) {
     if (ValidationService.checkUUID(id)) {
-      return this.http.get(`${environment.apiUrl}/tasks/mark/${id}`)
+      return this.http.get(`${environment.apiUrl}/tasks/${id}/mark`)
     }
     return this.push404()
   }

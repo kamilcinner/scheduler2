@@ -8,5 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TaskRepository extends JpaRepository<Task, UUID> {
+
     List<Task> findByOwnerUsername(String username, Sort sort);
 }
