@@ -48,6 +48,8 @@ public class ShoppingListItemController {
 
         ShoppingFinder finder = new ShoppingFinder(id, shoppingListRepository, shoppingListItemRepository);
 
+        // Get all Items by Shopping list id using finder.
+        // Assemble their models.
         List<EntityModel<ShoppingListItem>> shoppingListItems = finder.getItems(ShoppingFinder.Access.OWNER_OR_SHARED).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
@@ -81,13 +83,15 @@ public class ShoppingListItemController {
 
         ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.OWNER);
 
+        // Update last edit date and time.
         shoppingList.setLastEditDateTime(Timestamp.valueOf(LocalDateTime.now()));
+
         shoppingListRepository.save(shoppingList);
 
         return ResponseEntity.noContent().build();
     }
 
-    // Create new Shopping list item.
+    // Create new Shopping list Item.
     @PostMapping("/shoppinglists/{id}/items")
     ResponseEntity<?> newItem(@PathVariable UUID id, @Valid @RequestBody ShoppingListItem newItem) {
 
@@ -95,6 +99,7 @@ public class ShoppingListItemController {
 
         ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.OWNER);
 
+        // Assign Shopping list to Item.
         newItem.setShoppingList(shoppingList);
 
         EntityModel<ShoppingListItem> entityModel = assembler.toModel(shoppingListItemRepository.save(newItem));
@@ -123,6 +128,7 @@ public class ShoppingListItemController {
 
         ShoppingListItem shoppingListItem = finder.getItem(ShoppingFinder.Access.OWNER);
 
+        // Negate attribute.
         shoppingListItem.setDone(!shoppingListItem.isDone());
 
         shoppingListItemRepository.save(shoppingListItem);

@@ -33,6 +33,7 @@ public class ActivityController {
     private final ActivityModelAssembler assembler;
 
     public ActivityController(ActivityRepository activityRepository, ActivityModelAssembler assembler) {
+
         this.activityRepository = activityRepository;
         this.assembler = assembler;
     }
@@ -40,6 +41,9 @@ public class ActivityController {
     // Get all Activities.
     @GetMapping("/activities")
     public CollectionModel<?> all() {
+
+        // Get all Activities by current user name.
+        // Assemble their models.
         List<EntityModel<Activity>> activities = activityRepository.findByOwnerUsername(CurrentUserUsername.get(),
                 Sort.by(Sort.Direction.ASC, "date", "timeStart", "statusActive")).stream()
                 .map(assembler::toModel)
@@ -52,6 +56,7 @@ public class ActivityController {
     // Create a new Activity.
     @PostMapping("/activities")
     ResponseEntity<?> newActivity(@Valid @RequestBody Activity newActivity) {
+
         newActivity.setOwnerUsername(CurrentUserUsername.get());
 
         EntityModel<Activity> entityModel = assembler.toModel(activityRepository.save(newActivity));
@@ -80,6 +85,7 @@ public class ActivityController {
 
         Activity activity = finder.get(ActivityFinder.Access.OWNER);
 
+        // Update activity attributes.
         activity.setName(newActivity.getName());
         activity.setTimeEnd(newActivity.getTimeStart());
         activity.setTimeEnd(newActivity.getTimeEnd());
@@ -113,10 +119,13 @@ public class ActivityController {
     // Get Activities from Pollub.
     @GetMapping("/activities/pollub")
     void addActivitiesFromPollubToUser() {
+
         PollubParser pollubParser = new PollubParser();
         ArrayList<Subject> subjects = pollubParser.getSubjects();
 
+        // Loop through each Subject.
         for (Subject subject : subjects) {
+            // Create Activity from Subject.
             Activity activity = new Activity(CurrentUserUsername.get(),
                     subject.getName(),
                     subject.getClass_() + ", " + subject.getLecturer(),
@@ -126,6 +135,8 @@ public class ActivityController {
                     false,
                     true
                     );
+
+            // Save Activity in database.
             activityRepository.save(activity);
         }
     }

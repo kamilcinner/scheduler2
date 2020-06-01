@@ -14,8 +14,8 @@ import java.util.UUID;
 
 /**
  * Finds Shopping list or Item by id (UUID).
- * Provide methods for deleting list Items and list itself.
- * Provide getters for Shopping lists and Items.
+ * Provides methods for deleting list Items and list itself.
+ * Provides getters for Shopping lists and Items.
  */
 public class ShoppingFinder {
 
@@ -37,34 +37,32 @@ public class ShoppingFinder {
     }
 
     /**
-     * @param list on which access condition will be checked.
+     * Checks if the access conditions are met for the List.
+     * @param list on which access condition will be check.
      * @param access condition of access to the list.
-     * @return True if access condition to the list is met; False otherwise.
+     * @return true if access condition to the list is met; false otherwise.
      */
     private boolean checkAccess(ShoppingList list, Access access) {
 
         switch (access) {
             case OWNER:
-                if (!list.getOwnerUsername().equals(CurrentUserUsername.get())) return false;
-                break;
+                return list.getOwnerUsername().equals(CurrentUserUsername.get());
 
             case OWNER_OR_SHARED:
-                if (!list.getOwnerUsername().equals(CurrentUserUsername.get()) && !list.isShared()) return false;
-                break;
+                return list.getOwnerUsername().equals(CurrentUserUsername.get()) || list.isShared();
 
             case SHARED:
-                if (!list.isShared()) return false;
-                break;
+                return list.isShared();
 
             default: return false;
         }
-        return true;
     }
 
     /**
+     * Gets List by id.
      * @param access condition of access to the list.
      * @return ShoppingList if it exist and access condition is met.
-     * @throws ShoppingListNotFoundException if the Shopping list cannot be found or if the condition access is not met.
+     * @throws ShoppingListNotFoundException if the Shopping list cannot be found or if the access condition isn't met.
      */
     public ShoppingList getList(Access access) throws ShoppingListNotFoundException {
 
@@ -81,9 +79,9 @@ public class ShoppingFinder {
     }
 
     /**
-     * Delete all Items from Shopping list.
+     * Deletes all Items from Shopping list.
      * @param access condition of access to the list.
-     * @throws ShoppingListNotFoundException if the Shopping list cannot be found or if the condition access is not met.
+     * @throws ShoppingListNotFoundException if the Shopping list cannot be found or if the access condition isn't met.
      */
     public void deleteItems(Access access) throws ShoppingListNotFoundException {
 
@@ -98,7 +96,7 @@ public class ShoppingFinder {
     }
 
     /**
-     * Delete Shopping list with all its Items.
+     * Deletes Shopping list with all its Items.
      * @param access condition of access to the list.
      * @throws ShoppingListNotFoundException if the Shopping list cannot be found or if the condition access is not met.
      */
@@ -110,6 +108,7 @@ public class ShoppingFinder {
     }
 
     /**
+     * Gets all Items from the List.
      * @param access condition of access to the list.
      * @return Sorted by "done" and "name" List of Items if parent Shopping list exist and access condition is met.
      * @throws ShoppingListNotFoundException if the Shopping list cannot be found or if the condition access is not met.
@@ -120,6 +119,7 @@ public class ShoppingFinder {
     }
 
     /**
+     * Gets one Item by id.
      * @param access condition of access to the Item.
      * @return ShoppingListItem if it exist and access condition is met.
      * @throws ShoppingListItemNotFoundException if the Item cannot be found or if the condition access is not met.

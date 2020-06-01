@@ -7,6 +7,9 @@ import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.Curre
 
 import java.util.UUID;
 
+/**
+ * Finds Activity by id (UUID).
+ */
 public class ActivityFinder {
 
     public enum Access {
@@ -21,22 +24,31 @@ public class ActivityFinder {
         this.repository = repository;
     }
 
+    /**
+     * @param activity on which access condition will be check.
+     * @param access condition of access to the list.
+     * @return true if access condition to the list is met; false otherwise.
+     */
     private boolean checkAccess(Activity activity, Access access) {
 
         switch (access) {
             case OWNER:
-                if (!activity.getOwnerUsername().equals(CurrentUserUsername.get())) return false;
-                break;
+                return activity.getOwnerUsername().equals(CurrentUserUsername.get());
+
             default: return false;
         }
-        return true;
     }
 
+    /**
+     * @param access condition of access to the Activity.
+     * @return Activity if exist and access condition is met.
+     * @throws ActivityNotFoundException if Activity doesn't exist or the access condition isn't met.
+     */
     public Activity get(Access access) throws ActivityNotFoundException {
 
         return repository.findById(id)
                 .map(activity -> {
-                    // Check access to the Ativity.
+                    // Check access to the Activity.
                     if (!checkAccess(activity, access)) {
                         throw new ShoppingListNotFoundException(id);
                     }

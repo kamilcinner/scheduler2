@@ -27,6 +27,7 @@ public class TaskController {
     private final TaskModelAssembler assembler;
 
     TaskController(TaskRepository taskRepository, TaskModelAssembler assembler) {
+
         this.taskRepository = taskRepository;
         this.assembler = assembler;
     }
@@ -34,6 +35,10 @@ public class TaskController {
     // Get all Tasks.
     @GetMapping("/tasks")
     public CollectionModel<?> all() {
+
+        // Get all Tasks by current user name.
+        // Sort them by its done, due date and time, priority attributes.
+        // Assemble their models.
         List<EntityModel<Task>> tasks = taskRepository.findByOwnerUsername(CurrentUserUsername.get(),
                 Sort.by(Sort.Direction.ASC, "done", "dueDateTime", "priority")).stream()
                 .map(assembler::toModel)
@@ -46,6 +51,8 @@ public class TaskController {
     // Create a new Task.
     @PostMapping("/tasks")
     ResponseEntity<?> newTask(@Valid @RequestBody Task newTask) {
+
+        // Set Task owner.
         newTask.setOwnerUsername(CurrentUserUsername.get());
 
         EntityModel<Task> entityModel = assembler.toModel(taskRepository.save(newTask));
@@ -76,6 +83,7 @@ public class TaskController {
 
         Task task = finder.get(TaskFinder.Access.OWNER);
 
+        // Negate attribute.
         task.setShared(!task.isShared());
 
         taskRepository.save(task);
@@ -91,6 +99,7 @@ public class TaskController {
 
         Task task = finder.get(TaskFinder.Access.OWNER);
 
+        // Negate attribute.
         task.setDone(!task.isDone());
 
         taskRepository.save(task);
@@ -118,6 +127,7 @@ public class TaskController {
 
         Task task = finder.get(TaskFinder.Access.OWNER);
 
+        // Update attributes.
         task.setName(newTask.getName());
         task.setDueDateTime(newTask.getDueDateTime());
         task.setDescription(newTask.getDescription());

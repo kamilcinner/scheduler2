@@ -6,6 +6,9 @@ import com.github.kamilcinner.scheduler2.backend.users.controllers.helpers.Curre
 
 import java.util.UUID;
 
+/**
+ * Finds Task by id (UUID).
+ */
 public class TaskFinder {
 
     public enum Access {
@@ -22,26 +25,32 @@ public class TaskFinder {
         this.repository = repository;
     }
 
+    /**
+     * @param task on which access condition will be check.
+     * @param access condition of access to the Task.
+     * @return true if access condition to the list is met; false otherwise.
+     */
     private boolean checkAccess(Task task, Access access) {
 
         switch (access) {
             case OWNER:
-                if (!task.getOwnerUsername().equals(CurrentUserUsername.get())) return false;
-                break;
+                return task.getOwnerUsername().equals(CurrentUserUsername.get());
 
             case OWNER_OR_SHARED:
-                if (!task.getOwnerUsername().equals(CurrentUserUsername.get()) && !task.isShared()) return false;
-                break;
+                return task.getOwnerUsername().equals(CurrentUserUsername.get()) || task.isShared();
 
             case SHARED:
-                if (!task.isShared()) return false;
-                break;
+                return task.isShared();
 
             default: return false;
         }
-        return true;
     }
 
+    /**
+     * @param access condition of access to the Task.
+     * @return Task if exist and access condition is met.
+     * @throws TaskNotFoundException if Task doesn't exist or the access condition isn't met.
+     */
     public Task get(Access access) throws TaskNotFoundException {
 
         return repository.findById(id)

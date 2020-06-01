@@ -41,6 +41,9 @@ public class ShoppingListController {
     @GetMapping("/shoppinglists")
     public CollectionModel<?> all() {
 
+        // Get all Shopping lists by current user name.
+        // Sort them by last edit date and time.
+        // Assemble their models.
         List<EntityModel<ShoppingList>> shoppingLists = shoppingListRepository.findByOwnerUsername(
                 CurrentUserUsername.get(),
                 Sort.by(Sort.Direction.ASC, "lastEditDateTime")).stream()
@@ -55,6 +58,7 @@ public class ShoppingListController {
     @PostMapping("/shoppinglists")
     ResponseEntity<?> newShoppingList(@Valid @RequestBody ShoppingList newShoppingList) {
 
+        // Set owner.
         newShoppingList.setOwnerUsername(CurrentUserUsername.get());
 
         EntityModel<ShoppingList> entityModel = assembler.toModel(shoppingListRepository.save(newShoppingList));
@@ -85,6 +89,7 @@ public class ShoppingListController {
 
         ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.OWNER);
 
+        // Negate attribute.
         shoppingList.setShared(!shoppingList.isShared());
 
         shoppingListRepository.save(shoppingList);
@@ -112,6 +117,7 @@ public class ShoppingListController {
 
         ShoppingList shoppingList = finder.getList(ShoppingFinder.Access.OWNER);
 
+        // Update attributes.
         shoppingList.setName(newShoppingList.getName());
         shoppingList.setLastEditDateTime(newShoppingList.getLastEditDateTime());
 
