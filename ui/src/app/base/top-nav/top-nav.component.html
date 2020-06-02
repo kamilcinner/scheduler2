@@ -1,6 +1,6 @@
 <header class="sticky-top">
   <nav class="navbar navbar-light bg-scheduler navbar-expand-lg">
-    <a class="navbar-brand c-scheduler-dark-2" routerLink="/" (click)="hide()">
+    <a class="navbar-brand c-scheduler-dark-2" routerLink="/">
       <img class="d-inline-block mr-1 align-bottom" [src]="'assets/images/logo.png'"
            alt="logo" width="30" height="30">Scheduler2
     </a>
@@ -13,33 +13,33 @@
 
     <div class="collapse navbar-collapse" id="mainmenu">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item"><a class="nav-link" routerLink="/" (click)="hide()">Start</a></li>
-        <li *ngIf="!authenticated" class="nav-item"><a class="nav-link" routerLink="/login" (click)="hide()">Login</a></li>
-        <li *ngIf="!authenticated" class="nav-item"><a class="nav-link" routerLink="/register" (click)="hide()">Register</a></li>
-        <li *ngIf="authenticated" class="nav-item"><a class="nav-link" routerLink="/week" (click)="hide()">Schedule Week</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/">Start</a></li>
+        <li *ngIf="!authenticated" class="nav-item"><a class="nav-link" routerLink="/login">Login</a></li>
+        <li *ngIf="!authenticated" class="nav-item"><a class="nav-link" routerLink="/register">Register</a></li>
+        <li *ngIf="authenticated" class="nav-item"><a class="nav-link" routerLink="/week">Schedule Week</a></li>
 
         <li *ngIf="authenticated" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown"
              aria-haspopup="true">Treasure</a>
           <div class="dropdown-menu" aria-labelledby="submenu">
-            <a class="dropdown-item" routerLink="/activities" (click)="hide()">Activities</a>
+            <a class="dropdown-item" routerLink="/activities">Activities</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" routerLink="/tasks" (click)="hide()">Tasks</a>
+            <a class="dropdown-item" routerLink="/tasks">Tasks</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" routerLink="/shoppinglists" (click)="hide()">Shopping Lists</a>
+            <a class="dropdown-item" routerLink="/shoppinglists">Shopping Lists</a>
           </div>
         </li>
 
         <li *ngIf="authenticated" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">Manage</a>
           <div class="dropdown-menu" aria-labelledby="submenu">
-            <a class="dropdown-item" routerLink="/activities/new" (click)="hide()">Create Activity</a>
+            <a class="dropdown-item" routerLink="/activities/new">Create Activity</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" routerLink="/tasks/new" (click)="hide()">Create Task</a>
+            <a class="dropdown-item" routerLink="/tasks/new">Create Task</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" routerLink="/shoppinglists/new" (click)="hide()">Create Shopping List</a>
+            <a class="dropdown-item" routerLink="/shoppinglists/new">Create Shopping List</a>
 <!--            <div class="dropdown-divider"></div>-->
-<!--            <a class="dropdown-item text-danger" routerLink="" (click)="hide()">Delete all Activities</a>-->
+<!--            <a class="dropdown-item text-danger" routerLink="">Delete all Activities</a>-->
           </div>
         </li>
 
@@ -47,7 +47,7 @@
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
              aria-expanded="false" aria-haspopup="true">Addons</a>
           <div class="dropdown-menu" aria-labelledby="submenu">
-            <a class="dropdown-item" routerLink="/activities/pollub" (click)="hide()">Get Subjects from Pollub</a>
+            <a class="dropdown-item" routerLink="/activities/pollub">Get Subjects from Pollub</a>
           </div>
         </li>
 
@@ -55,13 +55,13 @@
 <!--          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button"-->
 <!--             aria-expanded="false" aria-haspopup="true">About</a>-->
 <!--          <div class="dropdown-menu" aria-labelledby="submenu">-->
-<!--            <a class="dropdown-item" href="#" (click)="hide()">Scheduler</a>-->
+<!--            <a class="dropdown-item" href="#">Scheduler</a>-->
 <!--            <div class="dropdown-divider"></div>-->
-<!--            <a class="dropdown-item" href="#" (click)="hide()">Other projects</a>-->
+<!--            <a class="dropdown-item" href="#">Other projects</a>-->
 <!--          </div>-->
 <!--        </li>-->
 
-        <li *ngIf="authenticated" class="nav-item"><a class="nav-link" routerLink="/logout" (click)="hide()">Logout</a></li>
+        <li *ngIf="authenticated" class="nav-item"><a class="nav-link" routerLink="/logout">Logout</a></li>
       </ul>
     </div>
   </nav>

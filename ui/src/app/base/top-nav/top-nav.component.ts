@@ -19,10 +19,7 @@ export class TopNavComponent implements OnInit {
     return this.authenticationService.authenticated
   }
 
-  hide(): void {
-    const toggler = document.getElementById('navbar-toggler-button')
-    if (!toggler.classList.contains('collapsed')) {
-      toggler.click()
-    }
+  onMouseOut() {
+    alert('done')
   }
 }

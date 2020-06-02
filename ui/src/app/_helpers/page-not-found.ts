@@ -1,5 +1,8 @@
 import { Router } from '@angular/router'
 
+/**
+ * Provide redirect with proper console warn.
+ */
 export class PageNotFound {
 
   public static redirect(router: Router): void {

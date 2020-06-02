@@ -9,6 +9,7 @@ import { PageNotFound } from '@app/_helpers/page-not-found';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
+
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
@@ -22,7 +23,10 @@ export class ErrorInterceptor implements HttpInterceptor {
         case 401: {
           // Auto logout if 401 response returned from api.
           this.authenticationService.logout()
-          this.router.navigate(['/login']).then(() => console.warn('User has been logged out.'))
+          this.router.navigate(['/login']).then(
+            () => console.warn('User has been logged out.')
+          )
+          errors = { server: 'Authorization error.'}
           break
         }
 
@@ -88,7 +92,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         }
 
         default: {
-          errors = { server: err.error.message } || { server: err.statusText } || { server: 'Server connection error.' }
+          errors = { server: err.error.message }
+            || { server: err.statusText }
+            || { server: 'Server connection error.' }
         }
       }
 

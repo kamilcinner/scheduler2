@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthenticationService} from '@app/_services';
+import { Component, OnInit } from '@angular/core'
+import {Router} from '@angular/router'
+import {AuthenticationService} from '@app/_services'
 
 @Component({
   selector: 'app-home',
@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
     private authenticationService: AuthenticationService,
   ) {
     if (this.authenticationService.currentUserValue) {
-      this.router.navigate(['/welcome']);
+      this.router.navigate(['/welcome'])
     }
   }
 

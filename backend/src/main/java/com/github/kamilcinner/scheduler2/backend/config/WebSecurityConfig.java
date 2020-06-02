@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/tasks/shared/**", "/shoppinglists/shared/**",
-                        "/shoppinglists/items/*/mark").permitAll()
+                        "/shoppinglists/items/*/mark", "/users").permitAll()
 
                 .antMatchers("/tasks").hasRole("USER")
                 .anyRequest().authenticated()

@@ -78,8 +78,12 @@ export class WeekScheduleComponent implements OnInit {
         for (let weekDay of this.weekDays) {
           console.log(activity.date.toDateString())
           console.log(weekDay.date.toDateString())
-          if (activity.date.toDateString() === weekDay.date.toDateString() || (activity.repeatWeekly && activity.weekDayName === weekDay.weekDayName)) {
-            weekDay.quests.push(new Quest(activity.id, activity.name, activity.description, activity.crispyTime, null))
+          if (activity.date.toDateString() === weekDay.date.toDateString() ||
+              (activity.repeatWeekly && activity.weekDayName === weekDay.weekDayName)) {
+
+            weekDay.quests.push(new Quest(activity.id, activity.name, activity.description,
+              activity.crispyTime, null))
+
             gotAtLeastOneQuest = true
             console.log('Added Activity!', activity)
             break
@@ -139,32 +143,26 @@ export class WeekScheduleComponent implements OnInit {
   private getTasks() {
     console.log('Getting tasks...')
     return new Promise(resolve => {
-      const resultTasks = this.taskService.getAll()
-      if (resultTasks) {
-        resultTasks.subscribe(tasks => {
-          // Check if there are tasks to save.
-          if (tasks) {
-            this.taskList = tasks
-          }
-          resolve()
-        })
-      } else { resolve() }
+      this.taskService.getAll().subscribe(tasks => {
+        // Check if there are tasks to save.
+        if (tasks) {
+          this.taskList = tasks
+        }
+        resolve()
+      })
     })
   }
 
   private getActivities() {
     console.log('Getting activities...')
     return new Promise(resolve => {
-      const resultActivities = this.activityService.getAll()
-      if (resultActivities) {
-        resultActivities.subscribe(activities => {
-          // Check if there are activities to save.
-          if (activities) {
-            this.activitiesList = activities
-          }
-          resolve()
-        })
-      } else { resolve() }
+      this.activityService.getAll().subscribe(activities => {
+        // Check if there are activities to save.
+        if (activities) {
+          this.activitiesList = activities
+        }
+        resolve()
+      })
     })
   }
 

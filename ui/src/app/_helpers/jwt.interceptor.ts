@@ -6,10 +6,16 @@ import { AuthenticationService } from '@app/_services'
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
+
   constructor(
     private authenticationService: AuthenticationService
   ) { }
 
+  /**
+   * Catch every Http request and add Authorization header to it.
+   * @param request
+   * @param next
+   */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Add authorization header with jwt token if available.
     const currentUser = this.authenticationService.currentUserValue

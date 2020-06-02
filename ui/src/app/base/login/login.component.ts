@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core'
+import { Router, ActivatedRoute } from '@angular/router'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { first } from 'rxjs/operators'
 
-import { AuthenticationService } from '@app/_services';
+import { AuthenticationService } from '@app/_services'
 
 @Component({
   templateUrl: 'login.component.html'
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
-  loading = false;
-  submitted = false;
-  returnUrl: string;
-  errors;
+  loginForm: FormGroup
+  loading = false
+  returnUrl: string
+  submitted = false
+  errors
 
   constructor(
     private formBuilder: FormBuilder,
@@ -21,44 +21,50 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
-    // redirect to home if already logged in
+    // Redirect to home if already logged in.
     if (this.authenticationService.currentUserValue) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/']).then(
+        () => console.warn('User is already logged in!')
+      )
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
-    });
+    })
 
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
+    // Get return url from route parameters or default to '/'.
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/'
   }
 
-  // convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  // Convenience getter for easy access to form fields.
+  get f() { return this.loginForm.controls }
 
   onSubmit() {
-    this.submitted = true;
+    this.loading = true
+    this.submitted = true
 
-    // stop here if form is invalid
+    // Stop here if form is invalid.
     if (this.loginForm.invalid) {
-      return;
+      this.loading = false
+      return
     }
 
-    this.loading = true;
+    // Send credentials to API.
     this.authenticationService.login(this.f.username.value, this.f.password.value)
       .pipe(first())
       .subscribe(
-        _ => {
-          this.router.navigate([this.returnUrl]);
+        () => {
+          this.router.navigate([this.returnUrl]).then(
+            () => console.warn(`User ${this.f.username.value} logged in successfully!`)
+          )
         },
         errors => {
-          this.errors = errors;
-          this.loading = false;
+          this.errors = errors
+          this.loading = false
         }
-      );
+      )
   }
 }

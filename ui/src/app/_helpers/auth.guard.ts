@@ -7,6 +7,7 @@ import { AuthenticationService } from '@app/_services'
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
@@ -21,7 +22,7 @@ export class AuthGuard implements CanActivate {
 
     // User is not logged in so redirect to login page with the return url.
     this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } })
-      .then(r => console.log(r))
+      .then(() => console.warn('You must be logged in to access this page!'))
     return false
   }
 }

@@ -11,6 +11,12 @@ export class RegistrationService {
     private http: HttpClient,
   ) { }
 
+  /**
+   * Sends new User data to API.
+   * @param username for new User.
+   * @param password for new User.
+   * @param email for new User.
+   */
   register(username: string, password: string, email: string) {
     return this.http.post<any>(`${environment.apiUrl}/users`, { username, password, email })
   }

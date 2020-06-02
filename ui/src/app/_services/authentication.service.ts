@@ -16,7 +16,9 @@ export class AuthenticationService {
   constructor(
     private http: HttpClient,
   ) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')))
+    this.currentUserSubject = new BehaviorSubject<User>(
+      JSON.parse(localStorage.getItem('currentUser'))
+    )
     this.currentUser = this.currentUserSubject.asObservable()
   }
 
@@ -24,20 +26,32 @@ export class AuthenticationService {
     return this.currentUserSubject.value
   }
 
+  /**
+   * Sends User credentials to the API requesting new Authorization token.
+   * @param username User name.
+   * @param password User password.
+   */
   login(username: string, password: string) {
-    return this.http.post<any>(`${environment.apiUrl}/login`, { username, password }).pipe(
-      map(user => {
+    return this.http.post<any>(`${environment.apiUrl}/login`, { username, password })
+      .pipe(map(user => {
         // Store user details and jwt token in local storage to keep user logged in between page refreshes.
         localStorage.setItem('currentUser', JSON.stringify(user))
-        console.warn('User stored in local mem.', JSON.stringify(user))
+        console.warn('User stored in local mem.', user)
+
+        // Update current User subject.
         this.currentUserSubject.next(user)
         return user
       }))
   }
 
+  /**
+   * Logout the User.
+   */
   logout() {
     // Remove user from local storage to log user out.
     localStorage.removeItem('currentUser')
+
+    // Update current User subject value.
     this.currentUserSubject.next(null)
   }
 
