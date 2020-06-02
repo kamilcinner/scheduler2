@@ -4,7 +4,7 @@
       <img class="d-inline-block mr-1 align-bottom" [src]="'assets/images/logo.png'"
            alt="logo" width="30" height="30">Scheduler2
     </a>
-    <button id="navbar-toggler-button" class="navbar-toggler" type="button"
+    <button id="navbar-toggler-button" class="navbar-toggler collapsed" type="button"
             data-toggle="collapse" data-target="#mainmenu"
             aria-controls="mainmenu" aria-expanded="false"
             aria-label="Navigation toggler">
@@ -51,15 +51,15 @@
           </div>
         </li>
 
-<!--        <li class="nav-item dropdown">-->
-<!--          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button"-->
-<!--             aria-expanded="false" aria-haspopup="true">About</a>-->
-<!--          <div class="dropdown-menu" aria-labelledby="submenu">-->
-<!--            <a class="dropdown-item" href="#">Scheduler</a>-->
-<!--            <div class="dropdown-divider"></div>-->
-<!--            <a class="dropdown-item" href="#">Other projects</a>-->
-<!--          </div>-->
-<!--        </li>-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+             aria-expanded="false" aria-haspopup="true">About</a>
+          <div class="dropdown-menu" aria-labelledby="submenu">
+            <a class="dropdown-item" routerLink="/about">Scheduler</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/other/projects">Other projects</a>
+          </div>
+        </li>
 
         <li *ngIf="authenticated" class="nav-item"><a class="nav-link" routerLink="/logout">Logout</a></li>
       </ul>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { TopNavComponent } from '@app/base/top-nav';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +8,9 @@ export class AppComponent {
 
   constructor() { }
 
+  // Smooth scrolls up the page.
   onActivate(event) {
-    AppComponent.hideTopNav()
+    this.hideTopNav()
     let scrollToTop = window.setInterval(() => {
       let pos = window.pageYOffset
       if (pos > 0) {
@@ -22,18 +22,19 @@ export class AppComponent {
     }, 16)
   }
 
+  // Called when mouse leaves top nav.
+  onMouseLeave() {
+    this.hideTopNav()
+  }
+
   /**
    * Hides top nav if it is not collapsed.
    */
-  static hideTopNav(): void {
+  hideTopNav(): void {
     const toggler = document.getElementById('navbar-toggler-button')
     if (!toggler.classList.contains('collapsed')) {
       toggler.click()
     }
-  }
-
-  onMouseLeave() {
-    AppComponent.hideTopNav()
   }
 
 }

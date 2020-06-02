@@ -34,8 +34,6 @@
       <button [disabled]="loading" type="submit" class="btn mb-3 bg-scheduler c-scheduler-dark">
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Login
       </button>
-<!--      <p><a class="text-decoration-none text-muted">Lost password?</a></p>-->
-<!--   TODO: add password recovery method   -->
     </div>
 
     <small *ngIf="errors && errors.server" class="text-danger">{{errors.server}}</small>

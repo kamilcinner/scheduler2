@@ -23,10 +23,13 @@ export class ErrorInterceptor implements HttpInterceptor {
         case 401: {
           // Auto logout if 401 response returned from api.
           this.authenticationService.logout()
-          this.router.navigate(['/login']).then(
-            () => console.warn('User has been logged out.')
+
+          const errorMessage = 'Authorization error. Probably Your token has expired. Please log in again.'
+
+          this.router.navigate(['/login'], { queryParams: { authorizationError: errorMessage } }).then(
+            () => console.warn('User token is invalid or has expired. Logged out.')
           )
-          errors = { server: 'Authorization error.'}
+          errors = { server: errorMessage }
           break
         }
 
@@ -83,7 +86,8 @@ export class ErrorInterceptor implements HttpInterceptor {
 
         case 404: {
           PageNotFound.redirect(this.router)
-          return null
+          errors = { server: 'Page not found.' }
+          break
         }
 
         case 500: {

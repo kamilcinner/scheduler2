@@ -18,8 +18,4 @@ export class TopNavComponent implements OnInit {
   get authenticated(): boolean {
     return this.authenticationService.authenticated
   }
-
-  onMouseOut() {
-    alert('done')
-  }
 }

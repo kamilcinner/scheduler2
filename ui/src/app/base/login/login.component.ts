@@ -37,6 +37,12 @@ export class LoginComponent implements OnInit {
 
     // Get return url from route parameters or default to '/'.
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/'
+
+    // Check of there is authorization error caused redirection.
+    const authorizationError = this.route.snapshot.queryParams.authorizationError
+    if (authorizationError) {
+      this.errors = { server: authorizationError}
+    }
   }
 
   // Convenience getter for easy access to form fields.
