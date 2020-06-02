@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Task } from '@app/_models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Task } from '@app/task/_models'
 
 @Component({
   selector: 'app-task-confirm-delete',
@@ -8,10 +8,10 @@ import { Task } from '@app/_models';
 })
 export class TaskConfirmDeleteComponent implements OnInit {
 
-  @Input() task: Task;
+  @Input() task: Task
 
-  @Output() confirmDelete = new EventEmitter();
-  @Output() abortDelete = new EventEmitter();
+  @Output() confirmDelete = new EventEmitter()
+  @Output() abortDelete = new EventEmitter()
 
   constructor() { }
 

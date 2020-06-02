@@ -1,3 +1,1 @@
-export * from './user';
-export * from './task';
-export * from './activity';
+export * from './user'

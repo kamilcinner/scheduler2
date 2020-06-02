@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ShoppingService } from '@app/shopping/_services/shopping.service';
-import { ShoppingList } from '@app/shopping/_models';
+import { Component } from '@angular/core'
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { ShoppingService } from '@app/shopping/_services/shopping.service'
+import { ShoppingList } from '@app/shopping/_models'
+import { ShoppingListDetailComponent } from '@app/shopping/shopping-list-detail';
+import { AuthenticationService } from '@app/_services';
+import { PageNotFound } from '@app/_helpers';
 
 @Component({
   selector: 'app-shopping-list-items-form',
   templateUrl: './shopping-list-items-form.component.html',
   styleUrls: ['./shopping-list-items-form.component.css']
 })
-export class ShoppingListItemsFormComponent implements OnInit {
+export class ShoppingListItemsFormComponent extends ShoppingListDetailComponent {
   shoppingListItemsForm: FormGroup
-  submitted = false
   loading = false
   loadingForm = true
   errors
@@ -20,26 +22,32 @@ export class ShoppingListItemsFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
-    private route: ActivatedRoute,
-    private shoppingService: ShoppingService
-  ) { }
+    protected router: Router,
+    protected route: ActivatedRoute,
+    protected shoppingService: ShoppingService,
+
+    protected authenticationService: AuthenticationService
+  ) {
+    super(shoppingService, route, router, authenticationService);
+  }
 
   ngOnInit(): void {
     // Get Shopping list id from URL.
-    let id;
+    let id
     this.route.paramMap.subscribe(params => {
       id = params.get('id')
     });
 
+    // Get Shopping list data from server.
+    // Synchronize.
     (async () => {
       // Get Shopping list data.
       await this.getShoppingList(id)
 
-      // Get Shopping list items.
+      // Get Shopping list Items.
       await this.getItems(this.shoppingList.id)
 
-      // Add items input to form array.
+      // Add Items input to form array.
       let itemsArray = []
       if (this.shoppingList.items.length > 0) {
         for (const item of this.shoppingList.items) {
@@ -73,7 +81,6 @@ export class ShoppingListItemsFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitted = true
     this.loading = true
 
     // Stop here if form is invalid.
@@ -83,15 +90,15 @@ export class ShoppingListItemsFormComponent implements OnInit {
 
     // Synchronize.
     (async () => {
-      // Delete all old items from Shopping list.
-      await this.deleteItems(this.shoppingList.id)
+      // Delete all old Items from Shopping list.
+      await this.removeItems(this.shoppingList.id)
 
-      // Add new items to the Shopping list.
+      // Add new Items to the Shopping list.
       for (const item of this.items.controls) {
-        // Skip adding empty items.
+        // Skip adding Items with empty name inputs.
         if (item.value.name && item.value.name !== '') {
           let isDone = item.value.done
-          // If the item has been changed then send it to API as undone.
+          // If the Item has been changed then send it to API as undone.
           if (item.touched) {
             isDone = false
           }
@@ -100,11 +107,13 @@ export class ShoppingListItemsFormComponent implements OnInit {
       }
 
       // Navigate to Shopping list detail view.
-      await this.router.navigate(['/shoppinglists/one', this.shoppingList.id])
+      await this.router.navigate(['/shoppinglists/one', this.shoppingList.id]).then(
+        () => console.log(`Redirecting to Shopping list ${this.shoppingList.id} detail view.`)
+      )
     })()
   }
 
-  // Adds empty item input.
+  // Adds empty Item input.
   addItemInput(): void {
     this.items.push(this.formBuilder.group({
       name: '',
@@ -112,61 +121,42 @@ export class ShoppingListItemsFormComponent implements OnInit {
     }))
   }
 
-  // Removes clicked item input.
+  // Removes clicked Item input.
   removeItemInput(index: number) {
     this.items.removeAt(index)
   }
 
-  private getShoppingList(id: string) {
-    console.log('Getting shopping list')
+  private removeItems(id: string) {
     return new Promise(resolve => {
-      const result = this.shoppingService.getOneShoppingList(id)
+      const result = this.shoppingService.deleteItems(id)
       if (result) {
-        result.subscribe(shoppingList => {
-          // Check if there is Shopping list to display.
-          if (shoppingList) {
-            this.shoppingList = shoppingList
-          }
+        result.subscribe(() => {
+          console.log(`Deleted all Items from ${id}.`)
           resolve()
         })
+      }
+      else {
+        // If id is invalid UUID.
+        PageNotFound.redirect(this.router)
+        resolve()
       }
     })
   }
 
-  private getItems(id: string) {
-    console.log('getting items for ' + id)
-    return new Promise(resolve => {
-      const result = this.shoppingService.getAllItems(id)
-      if (result) {
-        result.subscribe(items => {
-          // Check if there are items to display.
-          if (items) {
-            // Add items to Shopping list.
-            this.shoppingList.items = items
-          }
-          resolve()
-        })
-      } else { resolve() }
-    })
-  }
-
-  private deleteItems(id: string) {
-    console.log('Deleting items... for ' + id)
-    return new Promise(resolve => {
-      const result = this.shoppingService.deleteItems(id)
-      if (result) {
-        result.subscribe(_ => resolve())
-      } else { resolve() }
-    })
-  }
-
   private addItem(name: string, done: boolean, id: string) {
-    console.log('Adding item to ' + id)
     return new Promise(resolve => {
       const result = this.shoppingService.newItem(name, done, id)
       if (result) {
-        result.subscribe(_ => resolve())
-      } else { resolve() }
+        result.subscribe(() => {
+          console.log(`Added an Item to ${id}.`)
+          resolve()
+        })
+      }
+      else {
+        // If id is invalid UUID.
+        PageNotFound.redirect(this.router)
+        resolve()
+      }
     })
   }
 }

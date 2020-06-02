@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ShoppingList } from '@app/shopping/_models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { ShoppingList } from '@app/shopping/_models'
 
 @Component({
   selector: 'app-shopping-list-confirm-delete',

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ShoppingService } from '@app/shopping/_services/shopping.service';
-import { ValidationService } from '@app/_services/validation.service';
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { ShoppingService } from '@app/shopping/_services/shopping.service'
+import { ValidationService } from '@app/_services/validation.service'
 
 @Component({
   selector: 'app-shopping-list-new-form',
@@ -11,7 +11,6 @@ import { ValidationService } from '@app/_services/validation.service';
 })
 export class ShoppingListNewFormComponent implements OnInit {
   shoppingListForm: FormGroup
-  submitted = false
   loading = false
   errors
 
@@ -33,7 +32,6 @@ export class ShoppingListNewFormComponent implements OnInit {
   get f() { return this.shoppingListForm.controls; }
 
   onSubmit() {
-    this.submitted = true
     this.loading = true
 
     // Stop here if form is invalid.
@@ -44,9 +42,13 @@ export class ShoppingListNewFormComponent implements OnInit {
     this.shoppingService.newShoppingList(this.f.name.value).subscribe(
       shoppingList => {
         if (shoppingList && shoppingList.id && ValidationService.checkUUID(shoppingList.id)) {
-          this.router.navigate(['/shoppinglists/update', shoppingList.id]).then(r => console.log(r))
-        } else {
-          alert('Something went wrong.')
+          this.router.navigate(['/shoppinglists/update', shoppingList.id]).then(
+            () => console.log(`Created Shopping list ${shoppingList.id}.`)
+          )
+        }
+        else {
+          alert('Something went wrong :( Try again :)')
+          this.loading = false
         }
       },
       errors => {

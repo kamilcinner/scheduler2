@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { AuthenticationService } from '@app/_services';
-import { ShoppingList, ShoppingListItem } from '@app/shopping/_models';
-import { environment } from '@environments/environment';
-import { map } from 'rxjs/operators';
-import { ValidationService } from '@app/_services/validation.service';
+import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { AuthenticationService } from '@app/_services'
+import { ShoppingList, ShoppingListItem } from '@app/shopping/_models'
+import { environment } from '@environments/environment'
+import { map } from 'rxjs/operators'
+import { ValidationService } from '@app/_services/validation.service'
 
 @Injectable({
   providedIn: 'root'
@@ -14,115 +13,127 @@ export class ShoppingService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
     private authenticationService: AuthenticationService
   ) { }
 
-  // Checks if every ShoppingList field send from API is in acceptable format.
+  // Checks if every Shopping list field send from API is in acceptable format.
   private static checkShoppingListTypes(shoppingList): boolean {
     return !(typeof shoppingList.id !== 'string' || typeof shoppingList.ownerUsername !== 'string' ||
       typeof shoppingList.name !== 'string' || typeof shoppingList.lastEditDateTime !== 'string' ||
       typeof shoppingList.shared !== 'boolean')
   }
 
-  // Checks if every ShoppingListItem field send from API is in acceptable format.
+  // Checks if every Shopping list Item field send from API is in acceptable format.
   private static checkShoppingListItemTypes(shoppingListItem): boolean {
     return !(typeof shoppingListItem.id !== 'string' || typeof shoppingListItem.name !== 'string' ||
       typeof shoppingListItem.done !== 'boolean')
   }
 
-  // Returns proper ShoppingListItem object created from API JSON.
+  // Returns proper Shopping list Item object created from API JSON.
   private static newShoppingListItemFromApiJSON(shoppingListItem): ShoppingListItem {
     const newShoppingListItem = new ShoppingListItem(shoppingListItem.id, shoppingListItem.name, shoppingListItem.done)
-    console.log('Saved ShoppingListItem', newShoppingListItem)
+    console.log('Saved Shopping list Item.', newShoppingListItem)
     return newShoppingListItem
   }
 
-  // Returns proper ShoppingList object created from API JSON.
+  // Returns proper Shopping list object created from API JSON.
   private static newShoppingListFromApiJSON(shoppingList): ShoppingList {
     const newShoppingList = new ShoppingList(shoppingList.id, shoppingList.ownerUsername, shoppingList.name,
       new Date(shoppingList.lastEditDateTime), shoppingList.shared, [])
-    console.log('Saved ShoppingList', newShoppingList)
+    console.log('Saved Shopping list.', newShoppingList)
     return newShoppingList
   }
 
-  // Get all ShoppingLists.
+  /**
+   * Gets all Shopping lists from API.
+   * @return Observable<ShoppingList[]> or Observable<null> if there is no any Shopping list returned from API.
+   */
   getAllShoppingLists() {
     return this.http.get<any>(`${environment.apiUrl}/shoppinglists`)
       .pipe(map(shoppingLists => {
         if (shoppingLists._embedded && shoppingLists._embedded.shoppingListList) {
           shoppingLists = shoppingLists._embedded.shoppingListList
 
-          // Initialize ShoppingLists array.
+          // Initialize Shopping lists array.
           const newShoppingLists: ShoppingList[] = []
 
           // Loop over JSON shoppingListList.
           for (const shoppingList of shoppingLists) {
             // Check field types.
             if (!ShoppingService.checkShoppingListTypes(shoppingList)) {
-              return this.push404()
+              return null
             }
 
-            // Add ShoppingList to the ShoppingLists array.
+            // Add Shopping list to the Shopping lists array.
             newShoppingLists.push(ShoppingService.newShoppingListFromApiJSON(shoppingList))
           }
           return newShoppingLists
-        } else { return null }
+        }
+        else { return null }
       }))
   }
 
-  // Get one Shopping list.
+  /**
+   * Gets one Shopping list from API by id.
+   * @param id (UUID string) of the Shopping list.
+   * @return Observable or null if id is invalid UUID.
+   */
   getOneShoppingList(id: string) {
     if (ValidationService.checkUUID(id)) {
       const url: string = `${environment.apiUrl}/shoppinglists/` +
-        (this.authenticated ? '' : 'shared/') + id
+        (this.authenticationService.authenticated ? '' : 'shared/') + id
 
       return this.http.get<any>(url)
         .pipe(map(shoppingList => {
           if (shoppingList) {
             // Check field types.
             if (!ShoppingService.checkShoppingListTypes(shoppingList)) {
-              return this.push404()
+              return null
             }
 
             // Return proper Shopping list object.
             return ShoppingService.newShoppingListFromApiJSON(shoppingList)
-          } else { return this.push404() }
+          } else { return null }
         }))
     }
-    return this.push404()
+    // Id is invalid UUID.
+    return null
   }
 
-  // Get all ShoppingListItems by ShoppingList id.
+  /**
+   * Get all Shopping list Items by Shopping list id.
+   * @param id (UUID string) of the parent Shopping list.
+   * @return Observable or null if id is invalid UUID.
+   */
   getAllItems(id: string) {
-    console.log('service items')
     if (ValidationService.checkUUID(id)) {
       const url: string = `${environment.apiUrl}/shoppinglists/` +
-        (this.authenticated ? '' : 'shared/') + `${id}/items`
+        (this.authenticationService.authenticated ? '' : 'shared/') + `${id}/items`
 
       return this.http.get<any>(url)
         .pipe(map(shoppingListItems => {
           if (shoppingListItems._embedded && shoppingListItems._embedded.shoppingListItemList) {
             shoppingListItems = shoppingListItems._embedded.shoppingListItemList
 
-            // Initialize ShoppingListItems array.
+            // Initialize Shopping list Items array.
             const newShoppingListItems: ShoppingListItem[] = []
 
-            // Loop over JSON shoppingListItemList.
+            // Loop over JSON shopping list Item List.
             for (const item of shoppingListItems) {
               // Check field types.
               if (!ShoppingService.checkShoppingListItemTypes(item)) {
-                console.log('404 bad item types')
-                return this.push404()
+                return null
               }
 
-              // Add item to the ShoppingListItems array.
+              // Add item to the Shopping list Items array.
               newShoppingListItems.push(ShoppingService.newShoppingListItemFromApiJSON(item))
             }
             return newShoppingListItems
           } else { return null }
         }))
     }
+    // Id is invalid UUID.
+    return null
   }
 
   // Create new Shopping list.
@@ -135,7 +146,8 @@ export class ShoppingService {
     if (ValidationService.checkUUID(id)) {
       return this.http.post<any>(`${environment.apiUrl}/shoppinglists/${id}/items`, { name, done })
     }
-    return this.push404()
+    // Id is invalid UUID.
+    return null
   }
 
   // Delete all items by Shopping list.
@@ -143,15 +155,17 @@ export class ShoppingService {
     if (ValidationService.checkUUID(id)) {
       return this.http.delete(`${environment.apiUrl}/shoppinglists/${id}/items`)
     }
-    return this.push404()
+    // Id is invalid UUID.
+    return null
   }
 
-  // Mark item done/undone.
+  // Mark Item done/undone.
   markItem(id: string) {
     if (ValidationService.checkUUID(id)) {
       return this.http.get(`${environment.apiUrl}/shoppinglists/items/${id}/mark`)
     }
-    return this.push404()
+    // Id is invalid UUID.
+    return null
   }
 
   // Delete Shopping list.
@@ -159,23 +173,16 @@ export class ShoppingService {
     if (ValidationService.checkUUID(id)) {
       return this.http.delete(`${environment.apiUrl}/shoppinglists/${id}`)
     }
-    return this.push404()
+    // Id is invalid UUID.
+    return null
   }
 
   // Share/Unshare Shopping list.
-  share(id: string) {
+  shareShoppingList(id: string) {
     if (ValidationService.checkUUID(id)) {
       return this.http.get(`${environment.apiUrl}/shoppinglists/${id}/share`)
     }
-    return this.push404()
-  }
-
-  private push404(): undefined {
-    this.router.navigate(['/404']).then(r => console.log(r));
-    return undefined;
-  }
-
-  private get authenticated(): boolean {
-    return !!this.authenticationService.currentUserValue;
+    // Id is invalid UUID.
+    return null
   }
 }

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ShoppingList } from '@app/shopping/_models';
-import { ShoppingService } from '@app/shopping/_services/shopping.service';
+import { Component, OnInit } from '@angular/core'
+import { ShoppingList } from '@app/shopping/_models'
+import { ShoppingService } from '@app/shopping/_services/shopping.service'
+import { Router } from '@angular/router';
+import { PageNotFound } from '@app/_helpers';
 
 @Component({
   selector: 'app-shopping-list-list',
@@ -12,20 +14,22 @@ export class ShoppingListListComponent implements OnInit {
   shoppingLists: ShoppingList[]
 
   constructor(
-    private shoppingService: ShoppingService
+    private shoppingService: ShoppingService,
+    private router: Router
   ) { }
 
 
   ngOnInit(): void {
-    // Get ShoppingList data from server.
+    // Get Shopping lists data from server.
+    // Synchronize.
     (async () => {
-      // Get shopping lists.
+      // Get Shopping lists.
       await this.getShoppingLists()
 
-      // Get items for each shopping list.
+      // Add Items to each Shopping list.
       if (this.shoppingLists) {
         for (const shoppingList of this.shoppingLists) {
-          await this.getItems(shoppingList.id)
+          await this.addItems(shoppingList.id)
         }
       }
 
@@ -34,30 +38,27 @@ export class ShoppingListListComponent implements OnInit {
   }
 
   private getShoppingLists() {
-    console.log('getting shopping lists')
+    console.log('Getting Shopping lists...')
     return new Promise(resolve => {
-      const result = this.shoppingService.getAllShoppingLists()
-      if (result) {
-        result.subscribe(shoppingLists => {
-          // Check if there are shopping lists to display.
-          if (shoppingLists) {
-            this.shoppingLists = shoppingLists
-          }
-          resolve()
-        })
-      } else { resolve() }
+      this.shoppingService.getAllShoppingLists().subscribe(shoppingLists => {
+        // Check if there are shopping lists to display.
+        if (shoppingLists) {
+          this.shoppingLists = shoppingLists
+        }
+        resolve()
+      })
     })
   }
 
-  private getItems(id: string) {
-    console.log('getting items for ' + id)
+  private addItems(id: string) {
+    console.log(`Getting Items from Shopping list ${id}.`)
     return new Promise(resolve => {
       const result = this.shoppingService.getAllItems(id)
       if (result) {
         result.subscribe(items => {
-          // Check if there are items to display.
+          // Check if there are items to add.
           if (items) {
-            // Loop to find shopping list by id and add items to it.
+            // Loop to find Shopping list by id and add Items to it.
             for (const i in this.shoppingLists) {
               if (this.shoppingLists[i].id === id) {
                 this.shoppingLists[i].items = items
@@ -67,7 +68,12 @@ export class ShoppingListListComponent implements OnInit {
           }
           resolve()
         })
-      } else { resolve() }
+      }
+      else {
+        // If id is invalid UUID.
+        PageNotFound.redirect(this.router)
+        resolve()
+      }
     })
   }
 }

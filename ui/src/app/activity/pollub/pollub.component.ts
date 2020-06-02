@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivityService } from '@app/_services';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core'
+import { ActivityService } from '@app/activity/_services'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-pollub',

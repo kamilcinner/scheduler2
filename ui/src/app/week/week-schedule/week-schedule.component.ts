@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { ActivityService, TaskService } from '@app/_services'
+import { ActivityService } from '@app/activity/_services'
+import { TaskService } from '@app/task/_services'
 import { Quest } from '@app/week/_models'
-import { Activity, Task } from '@app/_models'
+import { Activity } from '@app/activity/_models'
+import { Task } from '@app/task/_models'
 import { formatDate } from '@angular/common'
 import { SchedulerWeekDay } from '@app/week/_helpers'
 

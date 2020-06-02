@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '@environments/environment';
+import { Injectable } from '@angular/core'
+import {HttpClient} from '@angular/common/http'
+import {environment} from '@environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,6 @@ export class RegistrationService {
   ) { }
 
   register(username: string, password: string, email: string) {
-    return this.http.post<any>(`${environment.apiUrl}/users`, { username, password, email });
+    return this.http.post<any>(`${environment.apiUrl}/users`, { username, password, email })
   }
 }

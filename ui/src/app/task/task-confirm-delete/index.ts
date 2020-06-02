@@ -1,1 +1,1 @@
-export * from './task-confirm-delete.component';
+export * from './task-confirm-delete.component'

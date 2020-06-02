@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http'
 import { environment } from '@environments/environment'
 import { map } from 'rxjs/operators'
 import { Router } from '@angular/router'
-import { Task } from '@app/_models'
+import { Task } from '@app/task/_models'
 import { AuthenticationService } from '@app/_services/authentication.service'
 import { ValidationService } from '@app/_services/validation.service'
 

@@ -1,16 +1,16 @@
 export class Quest {
-  id: string;
-  name: string;
-  description: string;
-  time: string;
-  priority: string;
+  id: string
+  name: string
+  description: string
+  time: string
+  priority: string
 
   constructor(id: string, name: string, description: string, time: string, priority: string) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.time = time;
-    this.priority = priority;
+    this.id = id
+    this.name = name
+    this.description = description
+    this.time = time
+    this.priority = priority
   }
 
   get absoluteUrl(): string {
@@ -25,17 +25,14 @@ export class Quest {
   }
 
   isOneOfPriorities(prior1: string, prior2: string): boolean {
-    if (this.priority === prior1 || this.priority === prior2) {
-      return true;
-    }
-    return false;
+    return this.priority === prior1 || this.priority === prior2;
   }
 
   get priorityName(): string {
     switch (this.priority) {
-      case 'h': return 'High';
-      case 'l': return 'Low';
-      default: return 'Normal';
+      case 'h': return 'High'
+      case 'l': return 'Low'
+      default: return 'Normal'
     }
   }
 }

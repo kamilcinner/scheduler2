@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Activity } from '@app/_models';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ActivityService } from '@app/_services';
+import { Component, OnInit } from '@angular/core'
+import { Activity } from '@app/activity/_models'
+import { ActivatedRoute, Router } from '@angular/router'
+import { ActivityService } from '@app/activity/_services'
 
 @Component({
   selector: 'app-activity-detail',
@@ -9,9 +9,9 @@ import { ActivityService } from '@app/_services';
   styleUrls: ['./activity-detail.component.css']
 })
 export class ActivityDetailComponent implements OnInit {
-  activity: Activity;
-  loadingDetail = true;
-  hideDelete = true;
+  activity: Activity
+  loadingDetail = true
+  hideDelete = true
 
   constructor(
     private route: ActivatedRoute,
@@ -21,45 +21,45 @@ export class ActivityDetailComponent implements OnInit {
 
   ngOnInit(): void {
     // Get Activity id from URL.
-    let id;
+    let id
     this.route.paramMap.subscribe(params => {
-      id = params.get('id');
-    });
+      id = params.get('id')
+    })
 
     // Get Activity data from server.
-    const result = this.activityService.getOne(id);
+    const result = this.activityService.getOne(id)
     if (result) {
       result.subscribe(activity => {
         // Check if there is an Activity.
         if (activity) {
           // Save Activity in component object.
-          this.activity = activity;
+          this.activity = activity
 
           // Log.
           // TODO: delete this
-          console.warn('New Activity', this.activity);
+          console.warn('New Activity', this.activity)
         }
-        this.loadingDetail = false;
-      });
+        this.loadingDetail = false
+      })
     }
   }
 
   // Delete Activity.
   onDelete(): void {
-    const result = this.activityService.delete(this.activity.id);
+    const result = this.activityService.delete(this.activity.id)
     if (result) {
       result.subscribe(
         _ => this.router.navigate(['/activities'])
-      );
+      )
     }
   }
 
   onShowDeleteConfirmation(): void {
-    this.hideDelete = false;
+    this.hideDelete = false
   }
 
   onHideDeleteConfirmation(): void {
-    this.hideDelete = true;
+    this.hideDelete = true
   }
 
 }

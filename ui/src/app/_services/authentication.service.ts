@@ -27,17 +27,21 @@ export class AuthenticationService {
   login(username: string, password: string) {
     return this.http.post<any>(`${environment.apiUrl}/login`, { username, password }).pipe(
       map(user => {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        // Store user details and jwt token in local storage to keep user logged in between page refreshes.
         localStorage.setItem('currentUser', JSON.stringify(user))
-        console.warn('User stored in local mem', JSON.stringify(user)) // TODO delete this
+        console.warn('User stored in local mem.', JSON.stringify(user))
         this.currentUserSubject.next(user)
         return user
       }))
   }
 
   logout() {
-    // remove user from local storage to log user out
+    // Remove user from local storage to log user out.
     localStorage.removeItem('currentUser')
     this.currentUserSubject.next(null)
+  }
+
+  public get authenticated(): boolean {
+    return !!this.currentUserValue
   }
 }

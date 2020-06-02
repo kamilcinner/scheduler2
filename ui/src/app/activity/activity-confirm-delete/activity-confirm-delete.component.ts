@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Activity } from '@app/_models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Activity } from '@app/activity/_models'
 
 @Component({
   selector: 'app-activity-confirm-delete',
@@ -8,10 +8,10 @@ import { Activity } from '@app/_models';
 })
 export class ActivityConfirmDeleteComponent implements OnInit {
 
-  @Input() activity: Activity;
+  @Input() activity: Activity
 
-  @Output() confirmDelete = new EventEmitter();
-  @Output() abortDelete = new EventEmitter();
+  @Output() confirmDelete = new EventEmitter()
+  @Output() abortDelete = new EventEmitter()
 
   constructor() { }
 
