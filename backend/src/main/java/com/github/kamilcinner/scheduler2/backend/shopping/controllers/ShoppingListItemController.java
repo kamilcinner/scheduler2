@@ -121,12 +121,13 @@ public class ShoppingListItemController {
     }
 
     // Negate item done attribute.
+    // Accessible for owners only or also others if Shopping list is shared.
     @GetMapping("/shoppinglists/items/{id}/mark")
     ResponseEntity<?> markDone(@PathVariable UUID id) {
 
         ShoppingFinder finder = new ShoppingFinder(id, shoppingListRepository, shoppingListItemRepository);
 
-        ShoppingListItem shoppingListItem = finder.getItem(ShoppingFinder.Access.OWNER);
+        ShoppingListItem shoppingListItem = finder.getItem(ShoppingFinder.Access.OWNER_OR_SHARED);
 
         // Negate attribute.
         shoppingListItem.setDone(!shoppingListItem.isDone());

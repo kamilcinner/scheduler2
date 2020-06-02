@@ -25,8 +25,8 @@ import java.util.Collections;
 @EnableWebSecurity() // default means "debug = false"
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private RestAuthenticationSuccessHandler authenticationSuccessHandler;
-    private RestAuthenticationFailureHandler authenticationFailureHandler;
+    private final RestAuthenticationSuccessHandler authenticationSuccessHandler;
+    private final RestAuthenticationFailureHandler authenticationFailureHandler;
     private final UserDetailsService userDetailsService;
     private final String secret;
 
@@ -46,13 +46,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http
             .authorizeRequests()
-                .antMatchers("/tasks/shared/**", "/shoppinglists/shared/**").permitAll()
+                .antMatchers("/tasks/shared/**", "/shoppinglists/shared/**",
+                        "/shoppinglists/items/*/mark").permitAll()
+
                 .antMatchers("/tasks").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
+
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+
             .addFilter(authenticationFilter())
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService, secret))
             .exceptionHandling()
@@ -72,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setMaxAge(0L);
         // setAllowCredentials(true) is important, otherwise:
         // The value of the 'Access-Control-Allow-Origin' header
