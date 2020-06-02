@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "my-first-project-8dce1": {
+      "hosting": {
+        "ui": [
+          "my-first-project-8dce1"
+        ]
+      }
+    }
+  }
+}
