@@ -1,4 +1,4 @@
-import { DatePipe, formatDate } from '@angular/common'
+import { formatDate } from '@angular/common'
 
 export class Task {
   id: string
@@ -11,8 +11,9 @@ export class Task {
   shared: boolean
   selfLink: string
 
-  constructor(id: string, ownerUsername: string, name: string, dueDateTime: Date, description: string, priority: string,
-              done: boolean, shared: boolean, selfLink: string) {
+  constructor(id: string, ownerUsername: string, name: string, dueDateTime: Date, description: string,
+              priority: string, done: boolean, shared: boolean, selfLink: string) {
+
     this.id = id
     this.ownerUsername = ownerUsername
     this.name = name
@@ -41,10 +42,7 @@ export class Task {
   }
 
   isOneOfPriorities(prior1: string, prior2: string): boolean {
-    if (this.priority === prior1 || this.priority === prior2) {
-      return true
-    }
-    return false
+    return this.priority === prior1 || this.priority === prior2;
   }
 
   negateDone(): void {

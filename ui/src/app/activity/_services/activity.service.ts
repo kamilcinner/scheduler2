@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Router } from '@angular/router'
 import { Activity } from '@app/activity/_models'
 import { map } from 'rxjs/operators'
 import { environment } from '@environments/environment'
@@ -12,8 +11,7 @@ import { ValidationService } from '@app/_services/validation.service'
 export class ActivityService {
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
+    private http: HttpClient
   ) { }
 
   // Checks if every Activity field send from API is in acceptable format.
@@ -33,7 +31,9 @@ export class ActivityService {
     return newActivity
   }
 
-  // Get all Activities.
+  /**
+   * Gets all Activities from API.
+   */
   getAll() {
     return this.http.get<any>(`${environment.apiUrl}/activities`)
       .pipe(map(activities => {
@@ -47,7 +47,7 @@ export class ActivityService {
           for (const activity of activities) {
             // Check if every field send from API is in acceptable format.
             if (!ActivityService.checkActivityTypes(activity)) {
-              return this.push404()
+              return null
             }
 
             // Add Activity to the Activities array.
@@ -59,7 +59,11 @@ export class ActivityService {
     )
   }
 
-  // Get Activity by id.
+  /**
+   * Gets Activity by id from API.
+   * @param id (UUID string) of demanded Activity.
+   * @return Observable or null if id is an invalid UUID.
+   */
   getOne(id: string) {
     if (ValidationService.checkUUID(id)) {
       return this.http.get<any>(`${environment.apiUrl}/activities/${id}`)
@@ -67,48 +71,66 @@ export class ActivityService {
           if (activity) {
             // Check if every field send from API is in acceptable format.
             if (!ActivityService.checkActivityTypes(activity)) {
-              return this.push404()
+              return null
             }
 
             // Return proper Activity object.
             return ActivityService.newActivityFromApiJSON(activity)
-          } else { return this.push404() }
+          } else { return null }
         }))
     }
-    return this.push404()
+    // If id is an invalid UUID.
+    return null
   }
 
-  // Create or update Activity.
-  // 'timeStart' and 'timeEnd' parameters must be provided as strings format.
+  /**
+   * Creates or updates Activity.
+   * @param id (UUID string) if update or null if a new Activity should be created.
+   * @param name (string) name of the Activity.
+   * @param description (string) description of the Activity.
+   * @param timeStart (time string) time when the Activity is starting.
+   * @param timeEnd (time string) time when the Activity is ending.
+   * @param date (Date) date when the Activity occurs.
+   * @param statusActive (boolean) true if the Activity should be displayed in Week Schedule.
+   * @param repeatWeekly (boolean) true if the Activity should be displayed every week in Week Schedule.
+   * @return Observable with optional Activity or null if id is an invalid UUID.
+   */
   update(id: string, name: string, description: string, timeStart: string,
          timeEnd: string, date: Date, statusActive: boolean, repeatWeekly: boolean) {
+
+    // If id is specified then update an existing Activity.
     if (id) {
       if (ValidationService.checkUUID(id)) {
         return this.http.put<any>(`${environment.apiUrl}/activities/${id}`,
           { name, description, timeStart, timeEnd, date, statusActive, repeatWeekly })
       }
-      return this.push404()
-    } else {
+      // If id is an invalid UUID.
+      return null
+    }
+    // If a new Activity should be created.
+    else {
       return this.http.post<any>(`${environment.apiUrl}/activities`,
         { name, description, timeStart, timeEnd, date, statusActive, repeatWeekly })
     }
   }
 
-  // Delete Activity.
+  /**
+   * Deletes Activity from API.
+   * @param id (UUID string) of Activity to delete.
+   * @return Observable or null if id is an invalid UUID.
+   */
   delete(id: string) {
     if (ValidationService.checkUUID(id)) {
       return this.http.delete(`${environment.apiUrl}/activities/${id}`)
     }
-    return this.push404()
+    // If id is an invalid UUID.
+    return null
   }
 
-  // Add university subjects to User Activities in API.
+  /**
+   * Adds university subjects to User Activities in API.
+   */
   addActivitiesFromPollub() {
     return this.http.get(`${environment.apiUrl}/activities/pollub`)
-  }
-
-  private push404(): undefined {
-    this.router.navigate(['/404']).then(r => console.log(r))
-    return undefined
   }
 }

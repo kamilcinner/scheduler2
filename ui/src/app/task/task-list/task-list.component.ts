@@ -18,15 +18,12 @@ export class TaskListComponent implements OnInit {
 
   ngOnInit(): void {
     // Get Tasks data from server.
-    const result = this.taskService.getAll()
-    if (result) {
-      result.subscribe(tasks => {
-        // Check if there are tasks to display.
-        if (tasks) {
-          this.tasks = tasks
-        }
-        this.loading = false
-      })
-    } else { this.loading= false }
+    this.taskService.getAll().subscribe(tasks => {
+      // Check if there are tasks to display.
+      if (tasks) {
+        this.tasks = tasks
+      }
+      this.loading = false
+    })
   }
 }

@@ -17,16 +17,13 @@ export class ActivityListComponent implements OnInit {
 
   ngOnInit(): void {
     // Get Activities data from server.
-    const result = this.activityService.getAll()
-    if (result) {
-      result.subscribe(activities => {
-        // Check if there are activities to display.
-        if (activities) {
-          this.activities = activities
-        }
-        this.loading = false
-      })
-    } else { this.loading = false }
+    this.activityService.getAll().subscribe(activities => {
+      // Check if there are activities to display.
+      if (activities) {
+        this.activities = activities
+      }
+      this.loading = false
+    })
   }
 
 }

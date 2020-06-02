@@ -36,6 +36,7 @@ export class ShoppingListNewFormComponent implements OnInit {
 
     // Stop here if form is invalid.
     if (this.shoppingListForm.invalid) {
+      this.loading = false
       return
     }
 
@@ -47,7 +48,7 @@ export class ShoppingListNewFormComponent implements OnInit {
           )
         }
         else {
-          alert('Something went wrong :( Try again :)')
+          alert('Something went wrong :( Please, try again :)')
           this.loading = false
         }
       },

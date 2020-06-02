@@ -14,6 +14,7 @@ export class Activity {
 
   constructor(id: string, ownerUsername: string, name: string, description: string, timeStart: Date,
               timeEnd: Date, date: Date, statusActive: boolean, repeatWeekly: boolean, selfLink: string) {
+
     this.id = id
     this.ownerUsername = ownerUsername
     this.name = name

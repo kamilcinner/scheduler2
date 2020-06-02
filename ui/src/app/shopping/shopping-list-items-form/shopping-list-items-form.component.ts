@@ -3,9 +3,9 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ShoppingService } from '@app/shopping/_services/shopping.service'
 import { ShoppingList } from '@app/shopping/_models'
-import { ShoppingListDetailComponent } from '@app/shopping/shopping-list-detail';
-import { AuthenticationService } from '@app/_services';
-import { PageNotFound } from '@app/_helpers';
+import { ShoppingListDetailComponent } from '@app/shopping/shopping-list-detail'
+import { AuthenticationService } from '@app/_services'
+import { PageNotFound } from '@app/_helpers'
 
 @Component({
   selector: 'app-shopping-list-items-form',
@@ -85,6 +85,7 @@ export class ShoppingListItemsFormComponent extends ShoppingListDetailComponent 
 
     // Stop here if form is invalid.
     if (this.shoppingListItemsForm.invalid) {
+      this.loading = false
       return
     }
 
@@ -136,7 +137,7 @@ export class ShoppingListItemsFormComponent extends ShoppingListDetailComponent 
         })
       }
       else {
-        // If id is invalid UUID.
+        // If id is an invalid UUID.
         PageNotFound.redirect(this.router)
         resolve()
       }
@@ -153,7 +154,7 @@ export class ShoppingListItemsFormComponent extends ShoppingListDetailComponent 
         })
       }
       else {
-        // If id is invalid UUID.
+        // If id is an invalid UUID.
         PageNotFound.redirect(this.router)
         resolve()
       }

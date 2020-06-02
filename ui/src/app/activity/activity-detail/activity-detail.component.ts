@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { Activity } from '@app/activity/_models'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ActivityService } from '@app/activity/_services'
+import { PageNotFound } from '@app/_helpers';
 
 @Component({
   selector: 'app-activity-detail',
@@ -21,7 +22,7 @@ export class ActivityDetailComponent implements OnInit {
 
   ngOnInit(): void {
     // Get Activity id from URL.
-    let id
+    let id = ''
     this.route.paramMap.subscribe(params => {
       id = params.get('id')
     })
@@ -34,13 +35,18 @@ export class ActivityDetailComponent implements OnInit {
         if (activity) {
           // Save Activity in component object.
           this.activity = activity
-
-          // Log.
-          // TODO: delete this
-          console.warn('New Activity', this.activity)
         }
+        // If API can't return a proper Activity object and doesn't throw error.
+        else {
+          PageNotFound.redirect(this.router)
+        }
+
         this.loadingDetail = false
       })
+    }
+    // If id is an invalid UUID.
+    else {
+      PageNotFound.redirect(this.router)
     }
   }
 
@@ -49,8 +55,14 @@ export class ActivityDetailComponent implements OnInit {
     const result = this.activityService.delete(this.activity.id)
     if (result) {
       result.subscribe(
-        _ => this.router.navigate(['/activities'])
+        () => this.router.navigate(['/activities']).then(
+          () => console.log(`Deleted Activity ${this.activity.id}.`)
+        )
       )
+    }
+    // If id is an invalid UUID.
+    else {
+      PageNotFound.redirect(this.router)
     }
   }
 
@@ -61,5 +73,4 @@ export class ActivityDetailComponent implements OnInit {
   onHideDeleteConfirmation(): void {
     this.hideDelete = true
   }
-
 }

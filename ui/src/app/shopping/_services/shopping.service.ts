@@ -101,7 +101,7 @@ export class ShoppingService {
   }
 
   /**
-   * Get all Shopping list Items by Shopping list id.
+   * Gets all Shopping list Items by Shopping list id.
    * @param id (UUID string) of the parent Shopping list.
    * @return Observable or null if id is invalid UUID.
    */

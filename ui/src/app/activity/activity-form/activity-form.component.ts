@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ActivityService } from '@app/activity/_services'
 import { formatDate } from '@angular/common'
+import { PageNotFound } from '@app/_helpers';
 
 @Component({
   selector: 'app-activity-form',
@@ -25,11 +26,13 @@ export class ActivityFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Get id from url if there is one.
     let id
     this.route.paramMap.subscribe(params => {
       id = params.get('id')
     })
 
+    // If id is specified then get Activity data from API.
     if (id) {
       this.loadingForm = true
 
@@ -42,10 +45,6 @@ export class ActivityFormComponent implements OnInit {
             // Save activity to component object.
             this.activity = activity
 
-            // Log.
-            // TODO: delete this
-            console.warn('Activity to edit', this.activity)
-
             // Build form with edited activity data.
             this.buildActivityForm(activity.name, activity.description,
               formatDate(activity.timeStart, 'HH:mm', 'en-US'),
@@ -53,9 +52,17 @@ export class ActivityFormComponent implements OnInit {
               formatDate(activity.date, 'yyyy-MM-dd', 'en-US'),
               activity.statusActive, activity.repeatWeekly)
           }
+          // If API can't return proper Activity for some reason and doesn't throw any error by itself.
+          else {
+            PageNotFound.redirect(this.router)
+          }
 
           this.loadingForm = false
         })
+      }
+      // If id is an invalid UUID.
+      else {
+        PageNotFound.redirect(this.router)
       }
     }
 
@@ -86,10 +93,7 @@ export class ActivityFormComponent implements OnInit {
       id = this.activity.id
     }
 
-    // Get time start parameter.
-    // const timeStartAsDate = new Date(this.f.timeStart.value)
-    // let timeStart =
-
+    // Send request to API with proper data.
     const result = this.activityService.update(
       id,
       this.f.name.value,
@@ -107,7 +111,8 @@ export class ActivityFormComponent implements OnInit {
           if (activity) {
             this.router.navigate(['/activities/one', activity.id]).then(r => console.log(r))
           } else {
-            alert('Something went wrong.')
+            alert('Something went wrong :( Please, try again :)')
+            this.loading = false
           }
         },
         errors => {
@@ -116,10 +121,15 @@ export class ActivityFormComponent implements OnInit {
         }
       )
     }
+    // If id is an invalid UUID.
+    else {
+      PageNotFound.redirect(this.router)
+    }
   }
 
   private buildActivityForm(name: string, description: string, timeStartFormat: string, timeEndFormat: string,
                             dateFormat: string, statusActive: boolean, repeatWeekly: boolean) {
+
     this.activityForm = this.formBuilder.group({
       name,
       description,
