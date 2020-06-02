@@ -39,9 +39,9 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/'
 
     // Check of there is authorization error caused redirection.
-    const authorizationError = this.route.snapshot.queryParams.authorizationError
-    if (authorizationError) {
-      this.errors = { server: authorizationError}
+    const authenticationError = this.route.snapshot.queryParams.authenticationError
+    if (authenticationError) {
+      this.errors = { server: authenticationError}
     }
   }
 

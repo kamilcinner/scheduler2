@@ -26,7 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
           const errorMessage = 'Authorization error. Probably Your token has expired. Please log in again.'
 
-          this.router.navigate(['/login'], { queryParams: { authorizationError: errorMessage } }).then(
+          this.router.navigate(['/login'], { queryParams: { authenticationError: errorMessage } }).then(
             () => console.warn('User token is invalid or has expired. Logged out.')
           )
           errors = { server: errorMessage }

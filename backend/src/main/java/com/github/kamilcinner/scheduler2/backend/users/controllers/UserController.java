@@ -21,12 +21,18 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Register User
+    // Register User.
     @PostMapping("/users")
     ResponseEntity<String> addUser(@Valid @RequestBody User user) {
         // Check if the username is available.
         if (repository.existsById(user.getUsername())) {
-            return ResponseEntity.badRequest().body("{\"errors\":[{\"field\":\"username\",\"defaultMessage\":\"The given login is already in use.\"}]}");
+            return ResponseEntity.badRequest().body(
+                    "{\"errors\":[" +
+                        "{" +
+                            "\"field\":\"username\"," +
+                            "\"defaultMessage\":\"The given login is already in use.\"" +
+                        "}" +
+                    "]}");
         }
 
         // Encode password and add User to database.
